@@ -1,0 +1,36 @@
+{
+  "name": "rideal-razorpay-backend",
+  "version": "1.0.0",
+  "description": "Production-ready Razorpay payment backend for RiDeal Driver App",
+  "main": "backend_razorpay_server.js",
+  "scripts": {
+    "start": "node backend_razorpay_server.js",
+    "dev": "nodemon backend_razorpay_server.js",
+    "test": "node test/test_payments.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "razorpay": "^2.9.2",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "body-parser": "^1.20.2",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "razorpay",
+    "payment",
+    "flutter",
+    "subscription",
+    "rideal"
+  ],
+  "author": "RiDeal Team",
+  "license": "MIT"
+}
