@@ -18,8 +18,11 @@ class DeleteAccountScreen extends StatelessWidget {
         elevation: 0.5,
       ),
       body: Obx(() {
-        if (controller.isLoading.value && controller.deleteStatus.value.isEmpty) {
-          return const Center(child: CircularProgressIndicator(color: Colors.red));
+        if (controller.isLoading.value &&
+            controller.deleteStatus.value.isEmpty) {
+          return const Center(
+            child: CircularProgressIndicator(color: Colors.red),
+          );
         }
 
         // If a request is already pending
@@ -30,7 +33,11 @@ class DeleteAccountScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.hourglass_empty, size: 64, color: Colors.orange[400]),
+                  Icon(
+                    Icons.hourglass_empty,
+                    size: 64,
+                    color: Colors.orange[400],
+                  ),
                   const SizedBox(height: 16),
                   const Text(
                     'Deletion Request Pending',
@@ -63,7 +70,11 @@ class DeleteAccountScreen extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.warning_amber_rounded, color: Colors.red[700], size: 28),
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: Colors.red[700],
+                      size: 28,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -94,10 +105,7 @@ class DeleteAccountScreen extends StatelessWidget {
               const SizedBox(height: 32),
               const Text(
                 'Why are you leaving us?',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 12),
               TextField(
@@ -126,39 +134,48 @@ class DeleteAccountScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 54,
                 child: ElevatedButton(
-                  onPressed: controller.isLoading.value ? null : () {
-                    // Show confirmation dialog before calling submit
-                    Get.dialog(
-                      AlertDialog(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                        title: const Row(
-                          children: [
-                            Icon(Icons.warning, color: Colors.red),
-                            SizedBox(width: 10),
-                            Text('Confirm Deletion'),
-                          ],
-                        ),
-                        content: const Text('Are you absolutely sure you want to submit a request to delete your account?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Get.back(),
-                            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Get.back(); // close dialog
-                              controller.submitDeleteRequest();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () {
+                          // Show confirmation dialog before calling submit
+                          Get.dialog(
+                            AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              title: const Row(
+                                children: [
+                                  Icon(Icons.warning, color: Colors.red),
+                                  SizedBox(width: 10),
+                                  Text('Confirm Deletion'),
+                                ],
+                              ),
+                              content: const Text(
+                                'Are you absolutely sure you want to submit a request to delete your account?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Get.back(),
+                                  child: const Text(
+                                    'Cancel',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Get.back(); // close dialog
+                                    controller.submitDeleteRequest();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  child: const Text('Submit Request'),
+                                ),
+                              ],
                             ),
-                            child: const Text('Submit Request'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                          );
+                        },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red[600],
                     foregroundColor: Colors.white,
@@ -171,11 +188,17 @@ class DeleteAccountScreen extends StatelessWidget {
                       ? const SizedBox(
                           height: 24,
                           width: 24,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
                         )
                       : const Text(
                           'Submit Deletion Request',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                 ),
               ),

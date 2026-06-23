@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/utils/app_snackbar.dart';
 import '../controllers/auth_controller.dart';
+import '../core/app_theme.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -20,7 +23,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController referralCodeController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final ImagePicker _imagePicker = ImagePicker();
-  
+
   File? _profileImage;
   final AuthController authController = Get.find();
 
@@ -31,7 +34,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     String cleaned = value.replaceAll(RegExp(r'[\s\-\+]'), '');
-    
+
     if (cleaned.startsWith('91') && cleaned.length > 10) {
       cleaned = cleaned.substring(2);
     }
@@ -145,400 +148,306 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.green[50]!, Colors.white, Colors.orange[50]!],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+        title: Text(
+          'Register with Vehicle',
+          style: GoogleFonts.inter(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 18.sp,
           ),
         ),
+        centerTitle: false,
+      ),
+      body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                elevation: 12,
-                shadowColor: Colors.green.withOpacity(0.3),
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 140,
-                          height: 140,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white.withOpacity(0.2),
-                                blurRadius: 20,
-                                offset: const Offset(0, 10),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'assets/images/logo.png',
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [Colors.green[600]!, Colors.orange[600]!],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      'RiDeal',
-                                      style: TextStyle(
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        letterSpacing: 2.0,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        Text(
-                          'Join RiDeal!',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[800],
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Start your driving journey today',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[600],
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 40),
-                        
-                        // Profile Image Picker
-                        GestureDetector(
-                          onTap: _showImageSourceDialog,
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.green[600]!,
-                                    width: 3,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.green.withOpacity(0.3),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 5),
-                                    ),
-                                  ],
-                                ),
-                                child: CircleAvatar(
-                                  radius: 58,
-                                  backgroundColor: Colors.grey[100],
-                                  backgroundImage: _profileImage != null
-                                      ? FileImage(_profileImage!)
-                                      : null,
-                                  child: _profileImage == null
-                                      ? Icon(
-                                          Icons.person,
-                                          size: 60,
-                                          color: Colors.grey[400],
-                                        )
-                                      : null,
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.green[600],
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 3,
-                                    ),
-                                  ),
-                                  child: const Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          _profileImage != null ? 'Tap to change photo' : 'Tap to add profile photo (Optional)',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-                        
-                        // Name Field with Validation
-                        TextFormField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                            labelText: 'Name',
-                            hintText: 'Enter your full name',
-                            prefixIcon: Icon(Icons.person, color: Colors.green[600]),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.grey[300]!),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.green[600]!, width: 2),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.red[400]!, width: 1.5),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.red[600]!, width: 2),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                          ),
-                          validator: _validateName,
-                          textCapitalization: TextCapitalization.words,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                        
-                        // Phone Number Field with Validation
-                        TextFormField(
-                          controller: phoneController,
-                          keyboardType: TextInputType.phone,
-                          decoration: InputDecoration(
-                            labelText: 'Phone Number',
-                            hintText: 'Enter 10 digit mobile number',
-                            prefixText: '+91 ',
-                            prefixIcon: Icon(Icons.phone, color: Colors.green[600]),
-                            helperText: 'Enter your mobile number',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.grey[300]!),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.green[600]!, width: 2),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.red[400]!, width: 1.5),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.red[600]!, width: 2),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                          ),
-                          validator: _validatePhoneNumber,
-                          maxLength: 10,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(10),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                        
-                        // Referral Code Field (Optional)
-                        TextFormField(
-                          controller: referralCodeController,
-                          decoration: InputDecoration(
-                            labelText: 'Referral Code (Optional)',
-                            hintText: 'Enter referral code',
-                            prefixIcon: Icon(Icons.card_giftcard, color: Colors.green[600]),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.grey[300]!),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: Colors.green[600]!, width: 2),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                          ),
-                          textCapitalization: TextCapitalization.characters,
-                        ),
-                        const SizedBox(height: 40),
-                        
-                        // Create Account Button
-                        Obx(() => Container(
-                          width: double.infinity,
-                          height: 56,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: authController.isLoading.value
-                                  ? [Colors.grey[400]!, Colors.grey[300]!]
-                                  : [Colors.green[600]!, Colors.green[400]!],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: (authController.isLoading.value ? Colors.grey : Colors.green).withOpacity(0.4),
-                                blurRadius: 15,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            onPressed: authController.isLoading.value ? null : () async {
-                              if (!formKey.currentState!.validate()) {
-                                return;
-                              }
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 20.h),
 
-                              String cleanedPhone = phoneController.text.replaceAll(RegExp(r'[\s\-\+]'), '');
-                              if (cleanedPhone.startsWith('91') && cleanedPhone.length > 10) {
-                                cleanedPhone = cleanedPhone.substring(2);
-                              }
-
-                              bool success = await authController.register(
-                                cleanedPhone,
-                                nameController.text.trim(),
-                                referralCode: referralCodeController.text.trim().isNotEmpty
-                                    ? referralCodeController.text.trim()
-                                    : null,
-                                profileImage: _profileImage,
-                              );
-
-                              if (success) {
-                                Get.toNamed(Routes.OTP_VERIFICATION, arguments: {
-                                  'phone': cleanedPhone,
-                                  'isLoginFlow': false,
-                                });
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                              disabledBackgroundColor: Colors.transparent,
-                            ),
-                            child: authController.isLoading.value
-                                ? const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                        ),
-                                      ),
-                                      SizedBox(width: 12),
-                                      Text(
-                                        'Creating Account...',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                          letterSpacing: 0.5,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : const Text(
-                                    'Create Account',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      letterSpacing: 1.0,
-                                    ),
-                                  ),
-                          ),
-                        )),
-                        
-                        const SizedBox(height: 16),
-                        
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Already have an account? ",
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 15,
+                    // Profile Image Picker
+                    GestureDetector(
+                      onTap: _showImageSourceDialog,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 120.w,
+                            height: 120.w,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppTheme.primary,
+                                width: 3,
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 10.r,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                try {
-                                  if (Navigator.canPop(context)) {
-                                    Navigator.pop(context);
-                                  } else {
-                                    Get.offAllNamed(Routes.LOGIN);
-                                  }
-                                } catch (e) {
-                                  Get.offAllNamed(Routes.LOGIN);
-                                }
-                              },
-                              child: Text(
-                                'Sign in',
-                                style: TextStyle(
-                                  color: Colors.green[600],
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
+                            child: CircleAvatar(
+                              radius: 58.r,
+                              backgroundColor: Colors.grey[100],
+                              backgroundImage: _profileImage != null
+                                  ? FileImage(_profileImage!)
+                                  : null,
+                              child: _profileImage == null
+                                  ? Icon(
+                                      Icons.person,
+                                      size: 60.w,
+                                      color: Colors.grey[400],
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              padding: EdgeInsets.all(8.w),
+                              decoration: BoxDecoration(
+                                color: AppTheme.primary,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 3,
                                 ),
                               ),
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                                size: 20.w,
+                              ),
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      _profileImage != null
+                          ? 'Tap to change photo'
+                          : 'Tap to add profile photo (Optional)',
+                      style: GoogleFonts.inter(
+                        fontSize: 12.sp,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                    SizedBox(height: 32.h),
+
+                    // Name Field with Validation
+                    TextFormField(
+                      controller: nameController,
+                      style: GoogleFonts.inter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppTheme.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        hintText: 'Enter your full name',
+                        prefixIcon: Icon(
+                          Icons.person_rounded,
+                          color: AppTheme.primary,
+                          size: 20.w,
+                        ),
+                      ),
+                      validator: _validateName,
+                      textCapitalization: TextCapitalization.words,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'[a-zA-Z\s]'),
                         ),
                       ],
                     ),
-                  ),
+                    SizedBox(height: 24.h),
+
+                    // Phone Number Field with Validation
+                    TextFormField(
+                      controller: phoneController,
+                      keyboardType: TextInputType.phone,
+                      style: GoogleFonts.inter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppTheme.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Phone Number',
+                        hintText: 'Enter 10 digit mobile number',
+                        prefixText: '+91 ',
+                        prefixStyle: GoogleFonts.inter(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.phone_rounded,
+                          color: AppTheme.primary,
+                          size: 20.w,
+                        ),
+                        helperText: 'Enter your mobile number',
+                      ),
+                      validator: _validatePhoneNumber,
+                      maxLength: 10,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(10),
+                      ],
+                    ),
+                    SizedBox(height: 24.h),
+
+                    // Referral Code Field (Optional)
+                    TextFormField(
+                      controller: referralCodeController,
+                      style: GoogleFonts.inter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppTheme.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Referral Code (Optional)',
+                        hintText: 'Enter referral code',
+                        prefixIcon: Icon(
+                          Icons.card_giftcard_rounded,
+                          color: AppTheme.primary,
+                          size: 20.w,
+                        ),
+                      ),
+                      textCapitalization: TextCapitalization.characters,
+                    ),
+                    SizedBox(height: 40.h),
+
+                    // Create Account Button
+                    Obx(
+                      () => SizedBox(
+                        width: double.infinity,
+                        height: 56.h,
+                        child: ElevatedButton(
+                          onPressed: authController.isLoading.value
+                              ? null
+                              : () async {
+                                  if (!formKey.currentState!.validate()) {
+                                    return;
+                                  }
+
+                                  String cleanedPhone = phoneController.text
+                                      .replaceAll(RegExp(r'[\s\-\+]'), '');
+                                  if (cleanedPhone.startsWith('91') &&
+                                      cleanedPhone.length > 10) {
+                                    cleanedPhone = cleanedPhone.substring(2);
+                                  }
+
+                                  bool success = await authController.register(
+                                    cleanedPhone,
+                                    nameController.text.trim(),
+                                    referralCode:
+                                        referralCodeController.text
+                                            .trim()
+                                            .isNotEmpty
+                                        ? referralCodeController.text.trim()
+                                        : null,
+                                    profileImage: _profileImage,
+                                  );
+
+                                  if (success) {
+                                    Get.toNamed(
+                                      Routes.OTP_VERIFICATION,
+                                      arguments: {
+                                        'phone': cleanedPhone,
+                                        'isLoginFlow': false,
+                                      },
+                                    );
+                                  }
+                                },
+                          child: authController.isLoading.value
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 20.w,
+                                      height: 20.w,
+                                      child: const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Text(
+                                      'Creating Account...',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  'Create Account',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 24.h),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account? ",
+                          style: GoogleFonts.inter(
+                            color: AppTheme.textSecondary,
+                            fontSize: 15.sp,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            try {
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              } else {
+                                Get.offAllNamed(Routes.LOGIN);
+                              }
+                            } catch (e) {
+                              Get.offAllNamed(Routes.LOGIN);
+                            }
+                          },
+                          child: Text(
+                            'Sign in',
+                            style: GoogleFonts.inter(
+                              color: AppTheme.primary,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

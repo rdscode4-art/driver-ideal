@@ -2,6 +2,7 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   static const HOME = '/';
+  static const ROLE_SELECTION = '/role-selection';
   static const LOGIN = '/login';
   static const SIGNUP = '/signup';
   static const OTP_VERIFICATION = '/otp-verification';
@@ -45,7 +46,6 @@ abstract class Routes {
   static const SUBSCRIPTION = '/subscription';
   static const NONVEHICHLEDASHBOARD = '/nonvehichledashboard';
   // ✨ Non-Vehicle Driver Routes
-  static const NON_VEHICLE_OPTION = '/non-vehicle-option';
   static const NON_VEHICLE_REGISTER = '/non-vehicle-register';
   static const NON_VEHICLE_DOCUMENTS = '/non-vehicle-documents';
   static const NON_VEHICLE_LOGIN = '/non-vehicle-login';

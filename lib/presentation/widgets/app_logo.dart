@@ -5,12 +5,7 @@ class AppLogo extends StatelessWidget {
   final double? height;
   final EdgeInsetsGeometry? margin;
 
-  const AppLogo({
-    super.key,
-    this.width,
-    this.height,
-    this.margin,
-  });
+  const AppLogo({super.key, this.width, this.height, this.margin});
 
   @override
   Widget build(BuildContext context) {

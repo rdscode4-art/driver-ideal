@@ -15,13 +15,14 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateMixin {
+class _ProfileScreenState extends State<ProfileScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late List<AnimationController> _itemAnimationControllers;
   late List<Animation<double>> _itemAnimations;
   late List<Animation<Offset>> _slideAnimations;
   late final ProfileController controller;
-  
+
   @override
   void initState() {
     super.initState();
@@ -30,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     } else {
       controller = Get.put(ProfileController());
     }
-    
+
     // Main animation controller
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
@@ -38,26 +39,35 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     );
 
     // Create individual controllers for each contact item
-    _itemAnimationControllers = List.generate(8, (index) =>
-        AnimationController(
-          duration: const Duration(milliseconds: 600),
-          vsync: this,
-        )
+    _itemAnimationControllers = List.generate(
+      8,
+      (index) => AnimationController(
+        duration: const Duration(milliseconds: 600),
+        vsync: this,
+      ),
     );
 
     // Create fade animations for each item
-    _itemAnimations = _itemAnimationControllers.map((controller) =>
-        Tween<double>(begin: 0.0, end: 1.0).animate(
-          CurvedAnimation(parent: controller, curve: Curves.easeInOut),
+    _itemAnimations = _itemAnimationControllers
+        .map(
+          (controller) => Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(parent: controller, curve: Curves.easeInOut),
+          ),
         )
-    ).toList();
+        .toList();
 
     // Create slide animations for each item
-    _slideAnimations = _itemAnimationControllers.map((controller) =>
-        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-          CurvedAnimation(parent: controller, curve: Curves.easeOutBack),
+    _slideAnimations = _itemAnimationControllers
+        .map(
+          (controller) =>
+              Tween<Offset>(
+                begin: const Offset(0, 0.3),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(parent: controller, curve: Curves.easeOutBack),
+              ),
         )
-    ).toList();
+        .toList();
 
     // Start animations with staggered delays
     _startStaggeredAnimations();
@@ -148,15 +158,17 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Obx(() => Text(
-                    '₹${controller.walletBalance.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: 28,
-                      color: Colors.grey[800],
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
+                  Obx(
+                    () => Text(
+                      '₹${controller.walletBalance.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: 28,
+                        color: Colors.grey[800],
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
+                      ),
                     ),
-                  )),
+                  ),
                 ],
               ),
             ),
@@ -178,12 +190,15 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             elevation: 0,
             pinned: true,
             automaticallyImplyLeading: false,
-            flexibleSpace:
-             FlexibleSpaceBar(
+            flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.orange[500]!, Colors.orange[400]!],
+                    colors: [
+                      Color(0xFF065F46), // Emerald 800
+                      Color(0xFF10B981), // Emerald 500
+                      Color(0xFF34D399), // Emerald 400
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -198,18 +213,15 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const AppLogo(
-                          width: 120,
-                          height: 120,
-                          margin: EdgeInsets.only(bottom: 20),
-                        ),
+                        // Removed App Logo
+                        const SizedBox(height: 10),
                         // 🔥 FIXED Profile Section with proper image & verification handling
                         Row(
                           children: [
-                        Obx(() {
+                            Obx(() {
                               final profilePic = controller.profilePicUrl.value;
                               print('📸 ProfileScreen image: $profilePic');
-                              
+
                               return CircleAvatar(
                                 radius: 35,
                                 backgroundColor: Colors.white,
@@ -220,16 +232,38 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                                           width: 70,
                                           height: 70,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            print('❌ ProfileScreen image error: $error');
-                                            return Icon(Icons.person, size: 35, color: Colors.orange[600]);
-                                          },
-                                          loadingBuilder: (context, child, loadingProgress) {
-                                            if (loadingProgress == null) return child;
-                                            return const Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                          },
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                                print(
+                                                  '❌ ProfileScreen image error: $error',
+                                                );
+                                                return Icon(
+                                                  Icons.person,
+                                                  size: 35,
+                                                  color: Color(0xFF10B981),
+                                                );
+                                              },
+                                          loadingBuilder:
+                                              (
+                                                context,
+                                                child,
+                                                loadingProgress,
+                                              ) {
+                                                if (loadingProgress == null)
+                                                  return child;
+                                                return const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                      ),
+                                                );
+                                              },
                                         )
-                                      : Icon(Icons.person, size: 35, color: Colors.orange[600]),
+                                      : Icon(
+                                          Icons.person,
+                                          size: 35,
+                                          color: Color(0xFF10B981),
+                                        ),
                                 ),
                               );
                             }),
@@ -246,51 +280,65 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                                       fontSize: 22,
                                     ),
                                   ),
-                                  Obx(() => Text(
-                                    controller.name,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
+                                  Obx(
+                                    () => Text(
+                                      controller.name,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  )),
+                                  ),
                                   const SizedBox(height: 4),
                                   Row(
                                     children: [
-                                      Obx(() => Text(
-                                        controller.phone,
-                                        style: const TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 14,
+                                      Obx(
+                                        () => Text(
+                                          controller.phone,
+                                          style: const TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 14,
+                                          ),
                                         ),
-                                      )),
+                                      ),
                                       const SizedBox(width: 8),
                                       // 🔥 FIXED Verification badge
                                       Obx(() {
-                                        final isVerified = controller.isVerified;
-                                        final status = controller.verificationStatus;
-                                        
-                                        print('🔍 Verification badge: $isVerified - $status');
-                                        
+                                        final isVerified =
+                                            controller.isVerified;
+                                        final status =
+                                            controller.verificationStatus;
+
+                                        print(
+                                          '🔍 Verification badge: $isVerified - $status',
+                                        );
+
                                         return Container(
                                           key: ValueKey('verify_$isVerified'),
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 6, vertical: 2),
+                                            horizontal: 6,
+                                            vertical: 2,
+                                          ),
                                           decoration: BoxDecoration(
                                             color: isVerified
                                                 ? Colors.green[100]
-                                                : Colors.orange[100],
-                                            borderRadius: BorderRadius.circular(8),
+                                                : Colors.amber[100],
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
                                           ),
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                isVerified ? Icons.verified : Icons.pending,
+                                                isVerified
+                                                    ? Icons.verified
+                                                    : Icons.pending,
                                                 size: 12,
                                                 color: isVerified
                                                     ? Colors.green[700]
-                                                    : Colors.orange[700],
+                                                    : Colors.amber[700],
                                               ),
                                               const SizedBox(width: 2),
                                               Text(
@@ -300,7 +348,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                                                   fontWeight: FontWeight.w600,
                                                   color: isVerified
                                                       ? Colors.green[700]
-                                                      : Colors.orange[700],
+                                                      : Colors.amber[700],
                                                 ),
                                               ),
                                             ],
@@ -310,23 +358,27 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                                     ],
                                   ),
                                   const SizedBox(height: 2),
-                                  Obx(() => Text(
-                                    'Member since ${controller.memberSince}',
-                                    style: const TextStyle(
-                                      color: Colors.white60,
-                                      fontSize: 12,
+                                  Obx(
+                                    () => Text(
+                                      'Member since ${controller.memberSince}',
+                                      style: const TextStyle(
+                                        color: Colors.white60,
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                  )),
+                                  ),
                                   const SizedBox(height: 10),
-                                  Obx(() => Text(
-                                    controller.ridealid.isNotEmpty
-                                        ? 'RiDeal ID: ${controller.ridealid}'
-                                        : '',
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 14,
+                                  Obx(
+                                    () => Text(
+                                      controller.ridealid.isNotEmpty
+                                          ? 'RiDeal ID: ${controller.ridealid}'
+                                          : '',
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  )),
+                                  ),
                                 ],
                               ),
                             ),
@@ -336,7 +388,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                                 await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const EditProfileScreen()),
+                                    builder: (context) =>
+                                        const EditProfileScreen(),
+                                  ),
                                 );
                                 if (mounted) {
                                   await controller.refreshProfile();
@@ -345,7 +399,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 6),
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(15),
@@ -353,7 +409,11 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                                 child: const Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.edit, color: Colors.white, size: 16),
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
                                     SizedBox(width: 4),
                                     Text(
                                       'Edit',
@@ -375,7 +435,6 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 ),
               ),
             ),
-       
           ),
 
           SliverToBoxAdapter(
@@ -399,7 +458,10 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildVehicleInfoCard(ProfileController controller, BuildContext context) {
+  Widget _buildVehicleInfoCard(
+    ProfileController controller,
+    BuildContext context,
+  ) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 2,
@@ -442,35 +504,41 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
               ],
             ),
             const SizedBox(height: 20),
-            Obx(() => _buildEnhancedVehicleInfoRow(
-              icon: Icons.directions_car_filled,
-              iconColor: Colors.blue[700]!,
-              label: 'Vehicle Name',
-              value: controller.carModel.value.isNotEmpty
-                  ? controller.carModel.value
-                  : 'Not Set',
-              backgroundColor: Colors.blue[50]!,
-            )),
+            Obx(
+              () => _buildEnhancedVehicleInfoRow(
+                icon: Icons.directions_car_filled,
+                iconColor: Colors.blue[700]!,
+                label: 'Vehicle Name',
+                value: controller.carModel.value.isNotEmpty
+                    ? controller.carModel.value
+                    : 'Not Set',
+                backgroundColor: Colors.blue[50]!,
+              ),
+            ),
             const SizedBox(height: 16),
-            Obx(() => _buildEnhancedVehicleInfoRow(
-              icon: Icons.palette_outlined,
-              iconColor: Colors.purple[700]!,
-              label: 'Vehicle Color/Type',
-              value: controller.carColor.value.isNotEmpty
-                  ? controller.carColor.value
-                  : 'Not Set',
-              backgroundColor: Colors.purple[50]!,
-            )),
+            Obx(
+              () => _buildEnhancedVehicleInfoRow(
+                icon: Icons.palette_outlined,
+                iconColor: Colors.purple[700]!,
+                label: 'Vehicle Color/Type',
+                value: controller.carColor.value.isNotEmpty
+                    ? controller.carColor.value
+                    : 'Not Set',
+                backgroundColor: Colors.purple[50]!,
+              ),
+            ),
             const SizedBox(height: 16),
-            Obx(() => _buildEnhancedVehicleInfoRow(
-              icon: Icons.confirmation_number_outlined,
-              iconColor: Colors.orange[700]!,
-              label: 'Vehicle Number',
-              value: controller.carNumber.value.isNotEmpty
-                  ? controller.carNumber.value
-                  : 'Not Set',
-              backgroundColor: Colors.orange[50]!,
-            )),
+            Obx(
+              () => _buildEnhancedVehicleInfoRow(
+                icon: Icons.confirmation_number_outlined,
+                iconColor: Colors.amber[700]!,
+                label: 'Vehicle Number',
+                value: controller.carNumber.value.isNotEmpty
+                    ? controller.carNumber.value
+                    : 'Not Set',
+                backgroundColor: Colors.amber[50]!,
+              ),
+            ),
           ],
         ),
       ),
@@ -584,7 +652,12 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
               title: 'Delete Account',
               subtitle: 'Permanently remove your account',
               color: Colors.red[800]!,
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const DeleteAccountScreen())),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DeleteAccountScreen(),
+                ),
+              ),
             ),
           ],
         ),
@@ -629,10 +702,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                   ),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -666,10 +736,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
         ),
         content: const Text('Are you sure you want to log out?'),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               Get.back();

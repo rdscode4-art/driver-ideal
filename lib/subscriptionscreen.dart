@@ -122,12 +122,20 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
     final controller = Get.put(SubscriptionController());
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Subscription Plans'),
+        title: const Text(
+          'Subscription Plans',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
         elevation: 0,
-        backgroundColor: Colors.orange[700],
+        backgroundColor: Colors.white,
+        centerTitle: false,
         automaticallyImplyLeading: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             // Always allow back navigation
             Navigator.of(context).pop();
@@ -159,7 +167,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
             return const SizedBox.shrink();
           }),
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Colors.black),
             onPressed: () => controller.refreshSubscriptionStatus(),
             tooltip: 'Refresh',
           ),
@@ -198,7 +206,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                 ElevatedButton(
                   onPressed: () => controller.loadSubscriptionPlans(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[700],
+                    backgroundColor: Colors.green[600],
                   ),
                   child: const Text(
                     'Retry',
@@ -278,38 +286,28 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                   // Header Section
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.orange[600]!, Colors.deepOrange[700]!],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      color: Colors.green[50],
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(30),
                         bottomRight: Radius.circular(30),
                       ),
                     ),
-                    child: const Column(
+                    child: Column(
                       children: [
-                        Image(
-                          image: AssetImage("assets/images/logo.png"),
-                          width: 180,
-                          height: 90,
-                        ),
-                        SizedBox(height: 12),
                         Text(
                           'Choose Your Plan',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.green[900],
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           'Select the best plan for your needs',
-                          style: TextStyle(color: Colors.white70, fontSize: 15),
+                          style: TextStyle(color: Colors.green[700], fontSize: 15),
                         ),
                       ],
                     ),
@@ -697,7 +695,7 @@ class PlanCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
-            colors: [Colors.white, Colors.orange[50]!],
+            colors: [Colors.white, Colors.green[50]!],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -715,7 +713,7 @@ class PlanCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.orange[900],
+                      color: Colors.green[900],
                     ),
                   ),
                 ),
@@ -751,13 +749,13 @@ class PlanCard extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                Icon(Icons.currency_rupee, color: Colors.orange[700], size: 32),
+                Icon(Icons.currency_rupee, color: Colors.green[700], size: 32),
                 Text(
                   '${plan.rate}',
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange[700],
+                    color: Colors.green[700],
                   ),
                 ),
                 Text(
@@ -776,7 +774,7 @@ class PlanCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Divider(color: Colors.orange[200], thickness: 1.5),
+            Divider(color: Colors.green[200], thickness: 1.5),
             const SizedBox(height: 12),
 
             // Features
@@ -796,7 +794,7 @@ class PlanCard extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: isProcessing
                       ? [Colors.grey[400]!, Colors.grey[500]!]
-                      : [Colors.orange[600]!, Colors.deepOrange[700]!],
+                      : [Colors.green[600]!, Colors.green[700]!],
                 ),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [

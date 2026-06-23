@@ -54,7 +54,7 @@ class SubscriptionPlan {
 class NonVehicleSubscriptionController extends GetxController {
   // Razorpay Configuration
   static const String _razorpayKeyId = 'rzp_live_RoLpvsh1Qs9Cfs';
-  
+
   late Razorpay _razorpay;
 
   // Base URL for non-vehicle APIs
@@ -189,7 +189,10 @@ class NonVehicleSubscriptionController extends GetxController {
     }
 
     // Show immediate success feedback
-    showSuccessSnackBar('Verifying payment... Please wait', title: 'Payment Successful! ✅');
+    showSuccessSnackBar(
+      'Verifying payment... Please wait',
+      title: 'Payment Successful! ✅',
+    );
 
     // Close any dialogs
     if (Get.isDialogOpen == true) {
@@ -323,7 +326,10 @@ class NonVehicleSubscriptionController extends GetxController {
   void _handleExternalWallet(ExternalWalletResponse response) {
     print('💳 External Wallet: ${response.walletName}');
 
-    showInfoSnackBar('Payment via ${response.walletName}', title: 'External Wallet');
+    showInfoSnackBar(
+      'Payment via ${response.walletName}',
+      title: 'External Wallet',
+    );
   }
 
   /// Load current subscription status from API

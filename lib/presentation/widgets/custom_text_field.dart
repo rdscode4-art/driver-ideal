@@ -33,21 +33,11 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.grey[800],
-        ),
+        style: TextStyle(fontSize: 16, color: Colors.grey[800]),
         decoration: InputDecoration(
-          prefixIcon: Icon(
-            icon,
-            color: Colors.orange[600],
-            size: 22,
-          ),
+          prefixIcon: Icon(icon, color: Colors.orange[600], size: 22),
           labelText: label,
-          labelStyle: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 15,
-          ),
+          labelStyle: TextStyle(color: Colors.grey[600], fontSize: 15),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
@@ -62,7 +52,10 @@ class CustomTextField extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 18,
+          ),
         ),
       ),
     );

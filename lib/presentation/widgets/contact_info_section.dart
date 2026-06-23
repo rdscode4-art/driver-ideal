@@ -81,29 +81,27 @@ class _ContactInfoSectionState extends State<ContactInfoSection>
       vsync: this,
     );
 
-    _headerFadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _headerAnimationController,
-      curve: Curves.easeInOut,
-    ));
+    _headerFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _headerAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
-    _headerSlideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _headerAnimationController,
-      curve: Curves.easeOutBack,
-    ));
+    _headerSlideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _headerAnimationController,
+            curve: Curves.easeOutBack,
+          ),
+        );
 
-    _buttonScaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _buttonAnimationController,
-      curve: Curves.elasticOut,
-    ));
+    _buttonScaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _buttonAnimationController,
+        curve: Curves.elasticOut,
+      ),
+    );
 
     // Start animations with delay
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -341,7 +339,10 @@ class _ContactInfoSectionState extends State<ContactInfoSection>
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
+              colors: [
+                color.withValues(alpha: 0.1),
+                color.withValues(alpha: 0.05),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -473,9 +474,7 @@ class _ContactInfoSectionState extends State<ContactInfoSection>
                           ),
                         ),
                         Icon(
-                          item.icon == Icons.phone
-                              ? Icons.call
-                              : Icons.send,
+                          item.icon == Icons.phone ? Icons.call : Icons.send,
                           color: item.icon == Icons.phone
                               ? Colors.green[600]
                               : Colors.blue[600],

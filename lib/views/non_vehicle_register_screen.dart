@@ -21,7 +21,7 @@
 //   final TextEditingController dlController = TextEditingController();
 //   final TextEditingController aadhaarController = TextEditingController();
 //   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  
+
 //   final NonVehicleAuthController authController = Get.put(NonVehicleAuthController());
 
 //   String selectedGender = 'male';
@@ -30,19 +30,19 @@
 //   File? profileImage; // ⭐ Profile image
 //   File? dlImage;
 //   File? aadhaarImage;
-  
+
 //   final ImagePicker _picker = ImagePicker();
 
 //   // Calculate age from DOB
 //   int _calculateAge(DateTime birthDate) {
 //     DateTime today = DateTime.now();
 //     int age = today.year - birthDate.year;
-    
-//     if (today.month < birthDate.month || 
+
+//     if (today.month < birthDate.month ||
 //         (today.month == birthDate.month && today.day < birthDate.day)) {
 //       age--;
 //     }
-    
+
 //     return age;
 //   }
 
@@ -71,7 +71,7 @@
 //         );
 //       },
 //     );
-    
+
 //     if (picked != null) {
 //       setState(() {
 //         selectedDOB = picked;
@@ -85,17 +85,17 @@
 //     if (selectedDOB == null) {
 //       return 'Please select your date of birth';
 //     }
-    
+
 //     int age = _calculateAge(selectedDOB!);
-    
+
 //     if (age < 18) {
 //       return 'You must be at least 18 years old to register';
 //     }
-    
+
 //     if (age > 100) {
 //       return 'Please select a valid date of birth';
 //     }
-    
+
 //     return null;
 //   }
 
@@ -106,7 +106,7 @@
 //     }
 
 //     String cleaned = value.replaceAll(RegExp(r'[\s\-\+]'), '');
-    
+
 //     if (cleaned.startsWith('91') && cleaned.length > 10) {
 //       cleaned = cleaned.substring(2);
 //     }
@@ -145,25 +145,25 @@
 //     if (value == null || value.isEmpty) {
 //       return 'Please enter driving license number';
 //     }
-    
+
 //     String cleaned = value.replaceAll(RegExp(r'[\s\-]'), '');
-    
+
 //     if (cleaned.length != 15) {
 //       return 'Driving license must be exactly 15 characters';
 //     }
-    
+
 //     if (!RegExp(r'^[A-Z]{2}').hasMatch(cleaned.toUpperCase())) {
 //       return 'DL must start with 2 letters (State code)';
 //     }
-    
+
 //     if (!RegExp(r'^[A-Z]{2}[0-9]{2}').hasMatch(cleaned.toUpperCase())) {
 //       return 'Invalid DL format (RTO code must be 2 digits)';
 //     }
-    
+
 //     if (!RegExp(r'^[A-Z]{2}[0-9]{13}$').hasMatch(cleaned.toUpperCase())) {
 //       return 'Invalid DL format (must be AA00 00000000000)';
 //     }
-    
+
 //     return null;
 //   }
 
@@ -172,17 +172,17 @@
 //     if (value == null || value.isEmpty) {
 //       return 'Please enter Aadhaar number';
 //     }
-    
+
 //     String cleaned = value.replaceAll(RegExp(r'[\s\-]'), '');
-    
+
 //     if (!RegExp(r'^[0-9]+$').hasMatch(cleaned)) {
 //       return 'Aadhaar must contain only digits';
 //     }
-    
+
 //     if (cleaned.length != 12) {
 //       return 'Aadhaar number must be 12 digits';
 //     }
-    
+
 //     return null;
 //   }
 
@@ -195,7 +195,7 @@
 //       final newPath = path.join(tempDir.path, '${prefix}_$timestamp.jpg');
 //       final newFile = File(newPath);
 //       await newFile.writeAsBytes(bytes);
-      
+
 //       print('✅ Image converted: ${imageFile.path} -> $newPath');
 //       return newFile;
 //     } catch (e) {
@@ -211,18 +211,18 @@
 //         source: ImageSource.gallery,
 //         imageQuality: 80,
 //       );
-      
+
 //       if (pickedFile != null) {
 //         File originalFile = File(pickedFile.path);
-        
-//         String prefix = imageType == 'profile' 
-//             ? 'profile_image' 
-//             : imageType == 'dl' 
-//                 ? 'dl_image' 
+
+//         String prefix = imageType == 'profile'
+//             ? 'profile_image'
+//             : imageType == 'dl'
+//                 ? 'dl_image'
 //                 : 'aadhaar_image';
-        
+
 //         File convertedFile = await _convertToJpeg(originalFile, prefix);
-        
+
 //         setState(() {
 //           if (imageType == 'profile') {
 //             profileImage = convertedFile;
@@ -232,7 +232,7 @@
 //             aadhaarImage = convertedFile;
 //           }
 //         });
-        
+
 //         print('✅ $imageType image picked and converted: ${convertedFile.path}');
 //       }
 //     } catch (e) {
@@ -291,8 +291,8 @@
 //                   ? Column(
 //                       mainAxisAlignment: MainAxisAlignment.center,
 //                       children: [
-//                         Icon(Icons.person_add, 
-//                           size: 50, 
+//                         Icon(Icons.person_add,
+//                           size: 50,
 //                           color: Colors.orange[600]
 //                         ),
 //                         const SizedBox(height: 8),
@@ -327,8 +327,8 @@
 //                               border: Border.all(color: Colors.white, width: 2),
 //                             ),
 //                             child: const Icon(
-//                               Icons.check, 
-//                               color: Colors.white, 
+//                               Icons.check,
+//                               color: Colors.white,
 //                               size: 20
 //                             ),
 //                           ),
@@ -381,7 +381,7 @@
 //                   ],
 //                 ),
 //               ),
-              
+
 //               Expanded(
 //                 child: SingleChildScrollView(
 //                   child: Padding(
@@ -407,7 +407,7 @@
 //                                 ),
 //                               ),
 //                               const SizedBox(height: 20),
-                              
+
 //                               // Name Field
 //                               TextFormField(
 //                                 controller: nameController,
@@ -428,7 +428,7 @@
 //                                 ],
 //                               ),
 //                               const SizedBox(height: 16),
-                              
+
 //                               // Phone Field
 //                               TextFormField(
 //                                 controller: phoneController,
@@ -453,7 +453,7 @@
 //                                 ],
 //                               ),
 //                               const SizedBox(height: 16),
-                              
+
 //                               // Date of Birth Field
 //                               GestureDetector(
 //                                 onTap: () => _selectDateOfBirth(context),
@@ -485,24 +485,24 @@
 //                                         Container(
 //                                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
 //                                           decoration: BoxDecoration(
-//                                             color: calculatedAge! >= 18 
-//                                                 ? Colors.green[50] 
+//                                             color: calculatedAge! >= 18
+//                                                 ? Colors.green[50]
 //                                                 : Colors.red[50],
 //                                             borderRadius: BorderRadius.circular(8),
 //                                             border: Border.all(
-//                                               color: calculatedAge! >= 18 
-//                                                   ? Colors.green[300]! 
+//                                               color: calculatedAge! >= 18
+//                                                   ? Colors.green[300]!
 //                                                   : Colors.red[300]!,
 //                                             ),
 //                                           ),
 //                                           child: Row(
 //                                             children: [
 //                                               Icon(
-//                                                 calculatedAge! >= 18 
-//                                                     ? Icons.check_circle 
+//                                                 calculatedAge! >= 18
+//                                                     ? Icons.check_circle
 //                                                     : Icons.error,
-//                                                 color: calculatedAge! >= 18 
-//                                                     ? Colors.green[700] 
+//                                                 color: calculatedAge! >= 18
+//                                                     ? Colors.green[700]
 //                                                     : Colors.red[700],
 //                                                 size: 20,
 //                                               ),
@@ -511,8 +511,8 @@
 //                                                 'Your age: $calculatedAge years',
 //                                                 style: TextStyle(
 //                                                   fontWeight: FontWeight.w600,
-//                                                   color: calculatedAge! >= 18 
-//                                                       ? Colors.green[700] 
+//                                                   color: calculatedAge! >= 18
+//                                                       ? Colors.green[700]
 //                                                       : Colors.red[700],
 //                                                 ),
 //                                               ),
@@ -525,7 +525,7 @@
 //                                 ),
 //                               ),
 //                               const SizedBox(height: 16),
-                              
+
 //                               // Gender Selection
 //                               Text(
 //                                 'Gender',
@@ -566,12 +566,11 @@
 //                                   ),
 //                                 ],
 //                               ),
-                              
+
 //                               const SizedBox(height: 24),
-                              
+
 //                               // ⭐ Profile Image Section
-                              
-                              
+
 //                               Text(
 //                                 'Documents',
 //                                 style: TextStyle(
@@ -581,7 +580,7 @@
 //                                 ),
 //                               ),
 //                               const SizedBox(height: 20),
-                              
+
 //                               // DL Number Field
 //                               TextFormField(
 //                                 controller: dlController,
@@ -605,7 +604,7 @@
 //                                 ],
 //                               ),
 //                               const SizedBox(height: 16),
-                              
+
 //                               // DL Image Upload - ⭐ FIXED: Changed to String parameter
 //                               _buildImageUploadCard(
 //                                 'Upload DL Image',
@@ -613,7 +612,7 @@
 //                                 () => _pickImage('dl'),
 //                               ),
 //                               const SizedBox(height: 16),
-                              
+
 //                               // Aadhaar Number Field
 //                               TextFormField(
 //                                 controller: aadhaarController,
@@ -636,16 +635,16 @@
 //                                 ],
 //                               ),
 //                               const SizedBox(height: 16),
-                              
+
 //                               // Aadhaar Image Upload - ⭐ FIXED: Changed to String parameter
 //                               _buildImageUploadCard(
 //                                 'Upload Aadhaar Image',
 //                                 aadhaarImage,
 //                                 () => _pickImage('aadhaar'),
 //                               ),
-                              
+
 //                               const SizedBox(height: 32),
-                              
+
 //                               // Register Button
 //                               Obx(() => Container(
 //                                 width: double.infinity,
@@ -676,7 +675,7 @@
 //                                             if (cleanedPhone.startsWith('91') && cleanedPhone.length > 10) {
 //                                               cleanedPhone = cleanedPhone.substring(2);
 //                                             }
-                                            
+
 //                                             // ⭐ FIXED: Added profileImage parameter
 //                                             bool success = await authController.register(
 //                                               name: nameController.text.trim(),
@@ -689,7 +688,7 @@
 //                                               aadhaarImage: aadhaarImage!,
 //                                               profileImage: profileImage!, // ⭐ Added this
 //                                             );
-                                            
+
 //                                             if (success) {
 //                                               Get.toNamed(
 //                                                 '/non-vehicle-otp',
@@ -796,7 +795,7 @@
 //     if (!formKey.currentState!.validate()) {
 //       return false;
 //     }
-    
+
 //     // Validate DOB
 //     if (selectedDOB == null) {
 //       Get.snackbar(
@@ -808,7 +807,7 @@
 //       );
 //       return false;
 //     }
-    
+
 //     // Validate age
 //     if (calculatedAge == null || calculatedAge! < 18) {
 //       Get.snackbar(
@@ -820,7 +819,7 @@
 //       );
 //       return false;
 //     }
-    
+
 //     // ⭐ Check profile image
 //     if (profileImage == null) {
 //       Get.snackbar(
@@ -832,7 +831,7 @@
 //       );
 //       return false;
 //     }
-    
+
 //     // Check DL image
 //     if (dlImage == null) {
 //       Get.snackbar(
@@ -844,7 +843,7 @@
 //       );
 //       return false;
 //     }
-    
+
 //     // Check Aadhaar image
 //     if (aadhaarImage == null) {
 //       Get.snackbar(
@@ -856,7 +855,7 @@
 //       );
 //       return false;
 //     }
-    
+
 //     return true;
 //   }
 

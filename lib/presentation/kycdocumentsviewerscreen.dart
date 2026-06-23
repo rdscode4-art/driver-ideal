@@ -107,9 +107,9 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                   color: Colors.orange,
                   onTap: controller.aadhaarImages.isNotEmpty
                       ? () => _showAadhaarGallery(
-                            context,
-                            controller.aadhaarImages,
-                          )
+                          context,
+                          controller.aadhaarImages,
+                        )
                       : null,
                   hasMultipleImages: controller.aadhaarImages.length > 1,
                   imageCount: controller.aadhaarImages.length,
@@ -126,10 +126,10 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                   color: Colors.blue,
                   onTap: controller.dlImage.value.isNotEmpty
                       ? () => _showImageDialog(
-                            context,
-                            controller.dlImage.value,
-                            'Driving License',
-                          )
+                          context,
+                          controller.dlImage.value,
+                          'Driving License',
+                        )
                       : null,
                 ),
 
@@ -162,10 +162,10 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                   color: Colors.purple,
                   onTap: controller.vehicleImage.value.isNotEmpty
                       ? () => _showImageDialog(
-                            context,
-                            controller.vehicleImage.value,
-                            'Vehicle Photo',
-                          )
+                          context,
+                          controller.vehicleImage.value,
+                          'Vehicle Photo',
+                        )
                       : null,
                 ),
 
@@ -182,10 +182,10 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                   color: Colors.green,
                   onTap: controller.vehicleRC.value.isNotEmpty
                       ? () => _showImageDialog(
-                            context,
-                            controller.vehicleRC.value,
-                            'Registration Certificate',
-                          )
+                          context,
+                          controller.vehicleRC.value,
+                          'Registration Certificate',
+                        )
                       : null,
                 ),
 
@@ -200,10 +200,10 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                   color: Colors.teal,
                   onTap: controller.vehicleInsurance.value.isNotEmpty
                       ? () => _showImageDialog(
-                            context,
-                            controller.vehicleInsurance.value,
-                            'Vehicle Insurance',
-                          )
+                          context,
+                          controller.vehicleInsurance.value,
+                          'Vehicle Insurance',
+                        )
                       : null,
                 ),
 
@@ -364,10 +364,7 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                 children: [
                   Text(
                     'KYC Verification Status',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -383,10 +380,7 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
                         'Submitted: ${controller.submittedAt.value}',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                       ),
                     ),
                 ],
@@ -433,20 +427,14 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            _buildInfoRow(
-              'Vehicle Number',
-              controller.vehicleNumber.value,
-            ),
+            _buildInfoRow('Vehicle Number', controller.vehicleNumber.value),
             const SizedBox(height: 12),
             _buildInfoRow(
               'Vehicle Type',
               controller.vehicleType.value.toUpperCase(),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow(
-              'Vehicle Name',
-              controller.vehicleName.value,
-            ),
+            _buildInfoRow('Vehicle Name', controller.vehicleName.value),
           ],
         ),
       ),
@@ -528,10 +516,7 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       number,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
                     if (hasImage)
                       Padding(
@@ -561,7 +546,11 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                 ),
               ),
               if (hasImage)
-                Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 16),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.grey[400],
+                  size: 16,
+                ),
             ],
           ),
         ),
@@ -617,7 +606,7 @@ class KYCDocumentsViewerScreen extends StatelessWidget {
                         child: CircularProgressIndicator(
                           value: loadingProgress.expectedTotalBytes != null
                               ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
+                                    loadingProgress.expectedTotalBytes!
                               : null,
                         ),
                       ),

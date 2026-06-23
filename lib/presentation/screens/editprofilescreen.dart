@@ -17,7 +17,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final ProfileController controller = Get.find();
   final TextEditingController nameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  
+
   File? selectedImage;
   final ImagePicker _picker = ImagePicker();
   bool isLoading = false;
@@ -27,7 +27,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
     nameController.text = controller.name;
   }
-  
+
   Future<void> _pickImage(ImageSource source) async {
     try {
       final XFile? image = await _picker.pickImage(
@@ -42,7 +42,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         // Validate file extension
         String extension = image.path.toLowerCase().split('.').last;
         List<String> allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'heic'];
-        
+
         if (!allowedExtensions.contains(extension)) {
           showWarningSnackBar(
             'Please select a valid image file (JPG, PNG, WEBP, HEIC)',
@@ -50,7 +50,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           );
           return;
         }
-        
+
         // Check file size (max 5MB)
         final fileSize = await File(image.path).length();
         if (fileSize > 5 * 1024 * 1024) {
@@ -60,11 +60,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           );
           return;
         }
-        
+
         setState(() {
           selectedImage = File(image.path);
         });
-        
+
         print('✅ Image selected: ${image.path}');
         print('📦 File size: ${(fileSize / 1024).toStringAsFixed(2)} KB');
         print('📸 Extension: $extension');
@@ -83,7 +83,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
           title: const Text('Choose Image Source'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -129,24 +131,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (success) {
         // ✅ Wait for backend to update and state to propagate
         await Future.delayed(const Duration(milliseconds: 800));
-        
+
         // ✅ Force reload profile from API to get fresh data
         await controller.refreshProfile();
-        
+
         if (mounted) {
           // Close ALL snackbars before navigating
           ScaffoldMessenger.of(context).clearSnackBars();
-          
+
           // Navigate back
           Navigator.of(context).pop();
-          
+
           // Show success message after navigation with updated image info
           Future.delayed(const Duration(milliseconds: 300), () {
             showSuccessSnackBar(
               'Profile updated successfully!',
               title: 'Success',
             );
-            
+
             print('✅✅ Navigation complete');
             print('   Profile Image URL: ${controller.profilePicUrl.value}');
             print('   Verification Status: ${controller.verificationStatus}');
@@ -209,14 +211,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                
+
                 // Profile Image Section
                 Stack(
                   children: [
                     Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.orange[300]!, width: 4),
+                        border: Border.all(
+                          color: Colors.orange[300]!,
+                          width: 4,
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.orange.withOpacity(0.3),
@@ -228,7 +233,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: Obx(() {
                         final profilePic = controller.profilePicUrl.value;
                         print('📸 EditProfile image: $profilePic');
-                        
+
                         return CircleAvatar(
                           radius: 70,
                           backgroundColor: Colors.white,
@@ -241,17 +246,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     fit: BoxFit.cover,
                                   )
                                 : (profilePic.isNotEmpty
-                                    ? Image.network(
-                                        profilePic,
-                                        width: 140,
-                                        height: 140,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          print('❌ EditProfile image error: $error');
-                                          return Icon(Icons.person, size: 60, color: Colors.orange[300]);
-                                        },
-                                      )
-                                    : Icon(Icons.person, size: 60, color: Colors.orange[300])),
+                                      ? Image.network(
+                                          profilePic,
+                                          width: 140,
+                                          height: 140,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                                print(
+                                                  '❌ EditProfile image error: $error',
+                                                );
+                                                return Icon(
+                                                  Icons.person,
+                                                  size: 60,
+                                                  color: Colors.orange[300],
+                                                );
+                                              },
+                                        )
+                                      : Icon(
+                                          Icons.person,
+                                          size: 60,
+                                          color: Colors.orange[300],
+                                        )),
                           ),
                         );
                       }),
@@ -265,7 +281,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Colors.orange[600]!, Colors.orange[400]!],
+                              colors: [
+                                Colors.orange[600]!,
+                                Colors.orange[400]!,
+                              ],
                             ),
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 3),
@@ -287,18 +306,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 12),
                 Text(
                   'Tap camera icon to change photo',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 13,
-                  ),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 13),
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Name Field Card
                 Card(
                   shape: RoundedRectangleBorder(
@@ -312,7 +328,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.person_outline, color: Colors.orange[600]),
+                            Icon(
+                              Icons.person_outline,
+                              color: Colors.orange[600],
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               'Personal Information',
@@ -325,14 +344,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        
+
                         // Name Input Field
                         TextFormField(
                           controller: nameController,
                           decoration: InputDecoration(
                             labelText: 'Full Name',
                             hintText: 'Enter your full name',
-                            prefixIcon: Icon(Icons.person, color: Colors.orange[600]),
+                            prefixIcon: Icon(
+                              Icons.person,
+                              color: Colors.orange[600],
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -342,7 +364,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.orange[600]!, width: 2),
+                              borderSide: BorderSide(
+                                color: Colors.orange[600]!,
+                                width: 2,
+                              ),
                             ),
                             filled: true,
                             fillColor: Colors.grey[50],
@@ -357,16 +382,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             return null;
                           },
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Phone (Read-only)
                         TextFormField(
                           initialValue: controller.phone,
                           enabled: false,
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
-                            prefixIcon: Icon(Icons.phone, color: Colors.grey[400]),
+                            prefixIcon: Icon(
+                              Icons.phone,
+                              color: Colors.grey[400],
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -378,9 +406,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Save Button
                 Container(
                   width: double.infinity,
@@ -396,7 +424,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: (isLoading ? Colors.grey : Colors.orange).withOpacity(0.4),
+                        color: (isLoading ? Colors.grey : Colors.orange)
+                            .withOpacity(0.4),
                         blurRadius: 15,
                         offset: const Offset(0, 8),
                       ),
@@ -420,7 +449,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 12),
@@ -452,7 +483,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
               ],
             ),

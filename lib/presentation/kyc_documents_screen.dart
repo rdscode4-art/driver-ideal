@@ -13,7 +13,7 @@ class KYCDocumentsScreen extends StatelessWidget {
     final KYCController controller = Get.put(KYCController());
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.white,
       body: RefreshIndicator(
         onRefresh: controller.refreshVerificationStatus,
         child: CustomScrollView(
@@ -24,21 +24,22 @@ class KYCDocumentsScreen extends StatelessWidget {
               title: const Text(
                 'KYC Document Upload',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
               ),
-              backgroundColor: Colors.blue[700],
+              backgroundColor: Colors.white,
               elevation: 0,
               pinned: true,
               floating: false,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () => Get.back(),
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.refresh, color: Colors.white),
+                  icon: const Icon(Icons.refresh, color: Colors.black),
                   onPressed: () => controller.forceRefreshStatus(),
                   tooltip: 'Refresh Status',
                 ),
@@ -61,178 +62,210 @@ class KYCDocumentsScreen extends StatelessWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   // Aadhaar Section
-           _buildSectionCard(
-  title: 'Aadhaar Details',
-  icon: Icons.credit_card,
-  children: [
-    Obx(
-      () => _buildMaskedTextInput(
-        controller: controller.aadhaarController,
-        label: 'Aadhaar Number',
-        hint: 'Enter 12-digit Aadhaar number',
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(12),
-        ],
-        onToggleVisibility: controller.toggleAadhaarVisibility,
-        showFull: controller.showFullAadhaar.value,
-        maskedValue: controller.maskedAadhaar,
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-    const SizedBox(height: 16),
-    
-    // ⭐ NEW: Aadhaar Front Image Upload
-    Obx(
-      () => _buildImageUpload(
-        label: 'Upload Aadhaar Card (Front Side)',
-        subtitle: 'Clear photo of front side - JPG, PNG accepted',
-        image: controller.aadhaarFrontImage.value,
-        onTap: controller.canEditDocuments
-            ? () => controller.showImagePickerOptions('aadhaar_front')
-            : null,
-        onRemove: controller.canEditDocuments
-            ? () => controller.removeImage('aadhaar_front')
-            : null,
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-    const SizedBox(height: 16),
-    
-    // ⭐ NEW: Aadhaar Back Image Upload
-    Obx(
-      () => _buildImageUpload(
-        label: 'Upload Aadhaar Card (Back Side)',
-        subtitle: 'Clear photo of back side - JPG, PNG accepted',
-        image: controller.aadhaarBackImage.value,
-        onTap: controller.canEditDocuments
-            ? () => controller.showImagePickerOptions('aadhaar_back')
-            : null,
-        onRemove: controller.canEditDocuments
-            ? () => controller.removeImage('aadhaar_back')
-            : null,
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-  ],
-),
+                  _buildSectionCard(
+                    title: 'Aadhaar Details',
+                    icon: Icons.credit_card,
+                    children: [
+                      Obx(
+                        () => _buildMaskedTextInput(
+                          controller: controller.aadhaarController,
+                          label: 'Aadhaar Number',
+                          hint: 'Enter 12-digit Aadhaar number',
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(12),
+                          ],
+                          onToggleVisibility:
+                              controller.toggleAadhaarVisibility,
+                          showFull: controller.showFullAadhaar.value,
+                          maskedValue: controller.maskedAadhaar,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // ⭐ NEW: Aadhaar Front Image Upload
+                      Obx(
+                        () => _buildImageUpload(
+                          label: 'Upload Aadhaar Card (Front Side)',
+                          subtitle:
+                              'Clear photo of front side - JPG, PNG accepted',
+                          image: controller.aadhaarFrontImage.value,
+                          onTap: controller.canEditDocuments
+                              ? () => controller.showImagePickerOptions(
+                                  'aadhaar_front',
+                                )
+                              : null,
+                          onRemove: controller.canEditDocuments
+                              ? () => controller.removeImage('aadhaar_front')
+                              : null,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // ⭐ NEW: Aadhaar Back Image Upload
+                      Obx(
+                        () => _buildImageUpload(
+                          label: 'Upload Aadhaar Card (Back Side)',
+                          subtitle:
+                              'Clear photo of back side - JPG, PNG accepted',
+                          image: controller.aadhaarBackImage.value,
+                          onTap: controller.canEditDocuments
+                              ? () => controller.showImagePickerOptions(
+                                  'aadhaar_back',
+                                )
+                              : null,
+                          onRemove: controller.canEditDocuments
+                              ? () => controller.removeImage('aadhaar_back')
+                              : null,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 16),
 
                   // Driving License Section
-                 _buildSectionCard(
-  title: 'Driving License Details',
-  icon: Icons.drive_eta,
-  children: [
-    Obx(
-      () => _buildValidatedDLInput(
-        controller: controller.drivingLicenseController,
-        label: 'Driving License Number',
-        hint: 'e.g., DL01 20220012345',
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-    const SizedBox(height: 16),
-    Obx(
-      () => _buildImageUpload(
-        label: 'Upload Driving License',
-        subtitle: 'JPG, PNG, PDF accepted',
-        image: controller.drivingLicenseImage.value,
-        onTap: controller.canEditDocuments
-            ? () => controller.showImagePickerOptions('license')
-            : null,
-        onRemove: controller.canEditDocuments
-            ? () => controller.removeImage('license')
-            : null,
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-  ],
-),
+                  _buildSectionCard(
+                    title: 'Driving License Details',
+                    icon: Icons.drive_eta,
+                    children: [
+                      Obx(
+                        () => _buildValidatedDLInput(
+                          controller: controller.drivingLicenseController,
+                          label: 'Driving License Number',
+                          hint: 'e.g., DL01 20220012345',
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Obx(
+                        () => _buildImageUpload(
+                          label: 'Upload Driving License (Front)',
+                          subtitle:
+                              'Clear photo of front side - JPG, PNG, PDF accepted',
+                          image: controller.drivingLicenseImage.value,
+                          onTap: controller.canEditDocuments
+                              ? () =>
+                                    controller.showImagePickerOptions('license')
+                              : null,
+                          onRemove: controller.canEditDocuments
+                              ? () => controller.removeImage('license')
+                              : null,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Obx(
+                        () => _buildImageUpload(
+                          label: 'Upload Driving License (Back)',
+                          subtitle:
+                              'Clear photo of back side - JPG, PNG, PDF accepted',
+                          image: controller.drivingLicenseBackImage.value,
+                          onTap: controller.canEditDocuments
+                              ? () => controller.showImagePickerOptions(
+                                  'license_back',
+                                )
+                              : null,
+                          onRemove: controller.canEditDocuments
+                              ? () => controller.removeImage('license_back')
+                              : null,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 16),
 
                   // Vehicle Section
-                 _buildSectionCard(
-  title: 'Vehicle Details',
-  icon: Icons.directions_car,
-  children: [
-    Obx(
-      () => _buildValidatedVehicleInput(
-        controller: controller.vehicleNumberController,
-        label: 'Vehicle Registration Number',
-        hint: 'e.g., KA01AB1234',
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-    const SizedBox(height: 16),
-    Obx(
-      () => _buildDropdown(
-        label: 'Vehicle Type',
-        value: controller.selectedVehicleType,
-        items: controller.vehicleTypes,
-        onChanged: controller.canEditDocuments
-            ? (value) => controller.selectedVehicleType.value = value!
-            : null,
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-    const SizedBox(height: 16),
-    Obx(
-      () => _buildTextInput(
-        controller: controller.vehicleNameController,
-        label: 'Vehicle Name',
-        hint: 'e.g., Honda City, Maruti Swift',
-        textCapitalization: TextCapitalization.words,
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-    const SizedBox(height: 16),
-    Obx(
-      () => _buildImageUpload(
-        label: 'Upload Vehicle Photo',
-        subtitle: 'JPG, PNG accepted',
-        image: controller.vehicleImage.value,
-        onTap: controller.canEditDocuments
-            ? () => controller.showImagePickerOptions('vehicle')
-            : null,
-        onRemove: controller.canEditDocuments
-            ? () => controller.removeImage('vehicle')
-            : null,
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-    const SizedBox(height: 16),
-    Obx(
-      () => _buildImageUpload(
-        label: 'Upload Vehicle RC',
-        subtitle: 'Registration Certificate',
-        image: controller.vehicleRC.value,
-        onTap: controller.canEditDocuments
-            ? () => controller.showImagePickerOptions('rc')
-            : null,
-        onRemove: controller.canEditDocuments
-            ? () => controller.removeImage('rc')
-            : null,
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-    const SizedBox(height: 16),
-    Obx(
-      () => _buildImageUpload(
-        label: 'Upload Vehicle Insurance',
-        subtitle: 'Valid insurance document',
-        image: controller.vehicleInsurance.value,
-        onTap: controller.canEditDocuments
-            ? () => controller.showImagePickerOptions('insurance')
-            : null,
-        onRemove: controller.canEditDocuments
-            ? () => controller.removeImage('insurance')
-            : null,
-        enabled: controller.canEditDocuments,
-      ),
-    ),
-  ],
-),
+                  _buildSectionCard(
+                    title: 'Vehicle Details',
+                    icon: Icons.directions_car,
+                    children: [
+                      Obx(
+                        () => _buildValidatedVehicleInput(
+                          controller: controller.vehicleNumberController,
+                          label: 'Vehicle Registration Number',
+                          hint: 'e.g., KA01AB1234',
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Obx(
+                        () => _buildDropdown(
+                          label: 'Vehicle Type',
+                          value: controller.selectedVehicleType,
+                          items: controller.vehicleTypes,
+                          onChanged: controller.canEditDocuments
+                              ? (value) =>
+                                    controller.selectedVehicleType.value =
+                                        value!
+                              : null,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Obx(
+                        () => _buildTextInput(
+                          controller: controller.vehicleNameController,
+                          label: 'Vehicle Name',
+                          hint: 'e.g., Honda City, Maruti Swift',
+                          textCapitalization: TextCapitalization.words,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Obx(
+                        () => _buildImageUpload(
+                          label: 'Upload Vehicle Photo',
+                          subtitle: 'JPG, PNG accepted',
+                          image: controller.vehicleImage.value,
+                          onTap: controller.canEditDocuments
+                              ? () =>
+                                    controller.showImagePickerOptions('vehicle')
+                              : null,
+                          onRemove: controller.canEditDocuments
+                              ? () => controller.removeImage('vehicle')
+                              : null,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Obx(
+                        () => _buildImageUpload(
+                          label: 'Upload Vehicle RC',
+                          subtitle: 'Registration Certificate',
+                          image: controller.vehicleRC.value,
+                          onTap: controller.canEditDocuments
+                              ? () => controller.showImagePickerOptions('rc')
+                              : null,
+                          onRemove: controller.canEditDocuments
+                              ? () => controller.removeImage('rc')
+                              : null,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Obx(
+                        () => _buildImageUpload(
+                          label: 'Upload Vehicle Insurance',
+                          subtitle: 'Valid insurance document',
+                          image: controller.vehicleInsurance.value,
+                          onTap: controller.canEditDocuments
+                              ? () => controller.showImagePickerOptions(
+                                  'insurance',
+                                )
+                              : null,
+                          onRemove: controller.canEditDocuments
+                              ? () => controller.removeImage('insurance')
+                              : null,
+                          enabled: controller.canEditDocuments,
+                        ),
+                      ),
+                    ],
+                  ),
 
                   const SizedBox(height: 24),
 
@@ -554,10 +587,10 @@ class KYCDocumentsScreen extends StatelessWidget {
       );
     }
 
-   final verification = controller.verificationData.value;
-if (verification == null) {
-  return const SizedBox.shrink(); // safety fallback
-}
+    final verification = controller.verificationData.value;
+    if (verification == null) {
+      return const SizedBox.shrink(); // safety fallback
+    }
 
     final statusColor = controller.getStatusColor();
     final statusIcon = controller.getStatusIcon();
@@ -646,31 +679,31 @@ if (verification == null) {
 
   Widget _buildStatusMessage(KYCController controller) {
     if (controller.isVerificationPending) {
-  return Container(
-    margin: const EdgeInsets.all(16),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.orange[50],
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.orange[300]!, width: 1),
-    ),
-    child: Row(
-      children: [
-        Icon(Icons.schedule, color: Colors.orange[600]),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            'Your KYC is under review. Please wait.',
-            style: TextStyle(
-              color: Colors.orange[700],
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+      return Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.orange[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.orange[300]!, width: 1),
         ),
-      ],
-    ),
-  );
-}
+        child: Row(
+          children: [
+            Icon(Icons.schedule, color: Colors.orange[600]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Your KYC is under review. Please wait.',
+                style: TextStyle(
+                  color: Colors.orange[700],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     if (controller.isVerificationPending) {
       return Container(
@@ -883,13 +916,14 @@ if (verification == null) {
 
   double _getCompletionPercentage(KYCController controller) {
     int completedFields = 0;
-    int totalFields = 10;
+    int totalFields = 11;
 
     if (controller.aadhaarController.text.isNotEmpty) completedFields++;
     if (controller.aadhaarFrontImage.value != null) completedFields++;
     if (controller.aadhaarBackImage.value != null) completedFields++;
     if (controller.drivingLicenseController.text.isNotEmpty) completedFields++;
     if (controller.drivingLicenseImage.value != null) completedFields++;
+    if (controller.drivingLicenseBackImage.value != null) completedFields++;
     if (controller.vehicleNumberController.text.isNotEmpty) completedFields++;
     if (controller.selectedVehicleType.value.isNotEmpty) completedFields++;
     if (controller.vehicleNameController.text.isNotEmpty) completedFields++;
@@ -1243,201 +1277,200 @@ if (verification == null) {
       return 'Submit for Verification';
     }
   }
- Widget _buildValidatedVehicleInput({
-  required TextEditingController controller,
-  required String label,
-  required String hint,
-  bool enabled = true,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: enabled ? Colors.grey[700] : Colors.grey[400],
-        ),
-      ),
-      const SizedBox(height: 8),
-      Container(
-        decoration: BoxDecoration(
-          color: enabled ? Colors.grey[50] : Colors.grey[100],
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: enabled ? Colors.grey[300]! : Colors.grey[200]!,
+
+  Widget _buildValidatedVehicleInput({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    bool enabled = true,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: enabled ? Colors.grey[700] : Colors.grey[400],
           ),
         ),
-        child: TextFormField(
-          controller: controller,
-          enabled: enabled,
-          textCapitalization: TextCapitalization.characters,
-          maxLength: 10,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
-            LengthLimitingTextInputFormatter(10),
-            _VehicleNumberFormatter(),
-          ],
-          decoration: InputDecoration(
-            hintText: hint,
-            helperText: 'Format: AA00AA0000',
-            helperStyle: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 11,
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: enabled ? Colors.grey[50] : Colors.grey[100],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: enabled ? Colors.grey[300]! : Colors.grey[200]!,
             ),
-            hintStyle: TextStyle(
-              color: enabled ? Colors.grey[500] : Colors.grey[400],
-            ),
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
-            counterText: '', // Hide the default counter
           ),
-          validator: (value) => _validateVehicleNumber(value),
-        ),
-      ),
-    ],
-  );
-}
-
-String? _validateVehicleNumber(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Please enter vehicle registration number';
-  }
-
-  // Remove spaces and dashes for validation
-  String cleaned = value.replaceAll(RegExp(r'[\s\-]'), '').toUpperCase();
-
-  // Minimum length check
-  if (cleaned.length < 9) {
-    return 'Vehicle number is too short';
-  }
-
-  // Maximum length check
-  if (cleaned.length > 10) {
-    return 'Vehicle number is too long';
-  }
-
-  // Indian vehicle registration format validation
-  // Format: AA00AA0000 or AA00A0000
-  // State code (2 letters) + District code (2 digits) + Series (1-2 letters) + Number (4 digits)
-
-  // Check if first 2 characters are letters (State code)
-  if (!RegExp(r'^[A-Z]{2}').hasMatch(cleaned)) {
-    return 'Vehicle number must start with 2 letters (State code)';
-  }
-
-  // Check if next 2 characters are digits (District code)
-  if (!RegExp(r'^[A-Z]{2}[0-9]{2}').hasMatch(cleaned)) {
-    return 'District code must be 2 digits after state code';
-  }
-
-  // Check if followed by 1-2 letters (Series)
-  if (!RegExp(r'^[A-Z]{2}[0-9]{2}[A-Z]{1,2}').hasMatch(cleaned)) {
-    return 'Invalid series code (should be 1-2 letters)';
-  }
-
-  // Check if ends with 4 digits (Registration number)
-  if (!RegExp(r'^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$').hasMatch(cleaned)) {
-    return 'Vehicle number must end with 4 digits';
-  }
-
-  return null;
-}
-
-Widget _buildValidatedDLInput({
-  required TextEditingController controller,
-  required String label,
-  required String hint,
-  bool enabled = true,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: enabled ? Colors.grey[700] : Colors.grey[400],
-        ),
-      ),
-      const SizedBox(height: 8),
-      Container(
-        decoration: BoxDecoration(
-          color: enabled ? Colors.grey[50] : Colors.grey[100],
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: enabled ? Colors.grey[300]! : Colors.grey[200]!,
+          child: TextFormField(
+            controller: controller,
+            enabled: enabled,
+            textCapitalization: TextCapitalization.characters,
+            maxLength: 10,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
+              LengthLimitingTextInputFormatter(10),
+              _VehicleNumberFormatter(),
+            ],
+            decoration: InputDecoration(
+              hintText: hint,
+              helperText: 'Format: AA00AA0000',
+              helperStyle: TextStyle(color: Colors.grey[500], fontSize: 11),
+              hintStyle: TextStyle(
+                color: enabled ? Colors.grey[500] : Colors.grey[400],
+              ),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              counterText: '', // Hide the default counter
+            ),
+            validator: (value) => _validateVehicleNumber(value),
           ),
         ),
-        child: TextFormField(
-          controller: controller,
-          enabled: enabled,
-          textCapitalization: TextCapitalization.characters,
-          maxLength: 15,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
-            LengthLimitingTextInputFormatter(15),
-          ],
-          decoration: InputDecoration(
-            hintText: hint,
-            helperText: '15 characters (AA00 00000000000)',
-            helperStyle: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 11,
-            ),
-            hintStyle: TextStyle(
-              color: enabled ? Colors.grey[500] : Colors.grey[400],
-            ),
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
-            counterText: '', // Hide the default counter
+      ],
+    );
+  }
+
+  String? _validateVehicleNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter vehicle registration number';
+    }
+
+    // Remove spaces and dashes for validation
+    String cleaned = value.replaceAll(RegExp(r'[\s\-]'), '').toUpperCase();
+
+    // Minimum length check
+    if (cleaned.length < 9) {
+      return 'Vehicle number is too short';
+    }
+
+    // Maximum length check
+    if (cleaned.length > 10) {
+      return 'Vehicle number is too long';
+    }
+
+    // Indian vehicle registration format validation
+    // Format: AA00AA0000 or AA00A0000
+    // State code (2 letters) + District code (2 digits) + Series (1-2 letters) + Number (4 digits)
+
+    // Check if first 2 characters are letters (State code)
+    if (!RegExp(r'^[A-Z]{2}').hasMatch(cleaned)) {
+      return 'Vehicle number must start with 2 letters (State code)';
+    }
+
+    // Check if next 2 characters are digits (District code)
+    if (!RegExp(r'^[A-Z]{2}[0-9]{2}').hasMatch(cleaned)) {
+      return 'District code must be 2 digits after state code';
+    }
+
+    // Check if followed by 1-2 letters (Series)
+    if (!RegExp(r'^[A-Z]{2}[0-9]{2}[A-Z]{1,2}').hasMatch(cleaned)) {
+      return 'Invalid series code (should be 1-2 letters)';
+    }
+
+    // Check if ends with 4 digits (Registration number)
+    if (!RegExp(r'^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$').hasMatch(cleaned)) {
+      return 'Vehicle number must end with 4 digits';
+    }
+
+    return null;
+  }
+
+  Widget _buildValidatedDLInput({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    bool enabled = true,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: enabled ? Colors.grey[700] : Colors.grey[400],
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter driving license number';
-            }
-            
-            // Remove spaces and dashes for validation
-            String cleaned = value.replaceAll(RegExp(r'[\s\-]'), '');
-            
-            // Check length
-            if (cleaned.length != 15) {
-              return 'Driving license must be exactly 15 characters';
-            }
-            
-            // Validate Indian DL format: AA00 00000000000
-            // First 2 characters should be letters (State code)
-            if (!RegExp(r'^[A-Z]{2}').hasMatch(cleaned.toUpperCase())) {
-              return 'DL must start with 2 letters (State code)';
-            }
-            
-            // Next 2 characters should be digits (RTO code)
-            if (!RegExp(r'^[A-Z]{2}[0-9]{2}').hasMatch(cleaned.toUpperCase())) {
-              return 'Invalid DL format (RTO code must be 2 digits)';
-            }
-            
-            // Remaining 11 characters should be digits
-            if (!RegExp(r'^[A-Z]{2}[0-9]{13}$').hasMatch(cleaned.toUpperCase())) {
-              return 'Invalid DL format (must be AA00 00000000000)';
-            }
-            
-            return null;
-          },
         ),
-      ),
-    ],
-  );
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: enabled ? Colors.grey[50] : Colors.grey[100],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: enabled ? Colors.grey[300]! : Colors.grey[200]!,
+            ),
+          ),
+          child: TextFormField(
+            controller: controller,
+            enabled: enabled,
+            textCapitalization: TextCapitalization.characters,
+            maxLength: 15,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
+              LengthLimitingTextInputFormatter(15),
+            ],
+            decoration: InputDecoration(
+              hintText: hint,
+              helperText: '15 characters (AA00 00000000000)',
+              helperStyle: TextStyle(color: Colors.grey[500], fontSize: 11),
+              hintStyle: TextStyle(
+                color: enabled ? Colors.grey[500] : Colors.grey[400],
+              ),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              counterText: '', // Hide the default counter
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter driving license number';
+              }
+
+              // Remove spaces and dashes for validation
+              String cleaned = value.replaceAll(RegExp(r'[\s\-]'), '');
+
+              // Check length
+              if (cleaned.length != 15) {
+                return 'Driving license must be exactly 15 characters';
+              }
+
+              // Validate Indian DL format: AA00 00000000000
+              // First 2 characters should be letters (State code)
+              if (!RegExp(r'^[A-Z]{2}').hasMatch(cleaned.toUpperCase())) {
+                return 'DL must start with 2 letters (State code)';
+              }
+
+              // Next 2 characters should be digits (RTO code)
+              if (!RegExp(
+                r'^[A-Z]{2}[0-9]{2}',
+              ).hasMatch(cleaned.toUpperCase())) {
+                return 'Invalid DL format (RTO code must be 2 digits)';
+              }
+
+              // Remaining 11 characters should be digits
+              if (!RegExp(
+                r'^[A-Z]{2}[0-9]{13}$',
+              ).hasMatch(cleaned.toUpperCase())) {
+                return 'Invalid DL format (must be AA00 00000000000)';
+              }
+
+              return null;
+            },
+          ),
+        ),
+      ],
+    );
+  }
 }
 
-}
 class _VehicleNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -1446,11 +1479,8 @@ class _VehicleNumberFormatter extends TextInputFormatter {
   ) {
     // Convert to uppercase
     String text = newValue.text.toUpperCase();
-    
+
     // Return formatted value
-    return TextEditingValue(
-      text: text,
-      selection: newValue.selection,
-    );
+    return TextEditingValue(text: text, selection: newValue.selection);
   }
 }

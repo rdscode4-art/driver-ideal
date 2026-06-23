@@ -109,6 +109,7 @@ class KycApiService {
     required File aadhaarFrontImage,
     required File aadhaarBackImage,
     required File drivingLicenseImage,
+    required File drivingLicenseBackPic,
     required File vehicleImage,
     required File vehicleRCImage,
     required File vehicleInsuranceImage,
@@ -130,6 +131,9 @@ class KycApiService {
       );
       print(
         '  - License: ${drivingLicenseImage.path} (${await drivingLicenseImage.length()} bytes)',
+      );
+      print(
+        '  - License Back: ${drivingLicenseBackPic.path} (${await drivingLicenseBackPic.length()} bytes)',
       );
       print(
         '  - Vehicle: ${vehicleImage.path} (${await vehicleImage.length()} bytes)',
@@ -195,6 +199,16 @@ class KycApiService {
           'licenseImage',
           drivingLicenseImage.path,
           filename: 'driving_license_${DateTime.now().millisecondsSinceEpoch}.jpg',
+          contentType: MediaType('image', 'jpeg'),
+        ),
+      );
+
+      // ✅ Add license back image
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'drivingLicenseBackPic',
+          drivingLicenseBackPic.path,
+          filename: 'driving_license_back_${DateTime.now().millisecondsSinceEpoch}.jpg',
           contentType: MediaType('image', 'jpeg'),
         ),
       );

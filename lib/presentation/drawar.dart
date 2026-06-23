@@ -1,5 +1,6 @@
-
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rideal_driver/presentation/about_screen.dart';
 import 'package:rideal_driver/presentation/chat_screen.dart';
 import 'package:rideal_driver/presentation/privacy_policy_screen.dart';
@@ -8,41 +9,34 @@ import 'package:rideal_driver/presentation/terms_of_service_screen.dart';
 import 'package:get/get.dart';
 import '../controllers/profile_controller.dart';
 import '../controllers/auth_controller.dart';
+import '../core/app_theme.dart';
 
 class CustomDrawer extends StatefulWidget {
-  
-  const CustomDrawer({
-    super.key,
-    
-  });
+  const CustomDrawer({super.key});
 
   @override
   State<CustomDrawer> createState() => _CustomDrawerState();
-  
-  
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
   bool isLoading = true;
 
-   @override
-   void initState() {
-     super.initState();
-      
-   }
+  @override
+  void initState() {
+    super.initState();
+  }
 
-  
   @override
   Widget build(BuildContext context) {
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.8,
       backgroundColor: Colors.transparent,
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-            topRight: Radius.circular(32),
-            bottomRight: Radius.circular(32),
+            topRight: Radius.circular(32.r),
+            bottomRight: Radius.circular(32.r),
           ),
         ),
         child: Column(
@@ -54,17 +48,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 return Obx(() {
                   final profile = controller.driverProfile.value;
                   final profilePic = controller.profilePicUrl.value;
-                  
+
                   return Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(24, 60, 24, 30),
+                    padding: EdgeInsets.fromLTRB(24.w, 60.h, 24.w, 30.h),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(
                         bottom: BorderSide(color: Colors.grey[100]!, width: 1),
                       ),
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(32),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(32.r),
                       ),
                     ),
                     child: Column(
@@ -75,66 +69,81 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           children: [
                             // Profile Avatar
                             Container(
-                              padding: const EdgeInsets.all(3),
+                              padding: EdgeInsets.all(3.w),
                               decoration: BoxDecoration(
-                                border: Border.all(color: const Color(0xFF10B981), width: 2),
+                                border: Border.all(
+                                  color: AppTheme.primary,
+                                  width: 2,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: CircleAvatar(
-                                radius: 38,
+                                radius: 38.r,
                                 backgroundColor: Colors.grey[100],
                                 backgroundImage: profilePic.isNotEmpty
                                     ? NetworkImage(profilePic)
                                     : null,
                                 child: profilePic.isEmpty
-                                    ? const Icon(Icons.person, size: 40, color: Color(0xFF10B981))
+                                    ? Icon(
+                                        Icons.person,
+                                        size: 40.w,
+                                        color: AppTheme.primary,
+                                      )
                                     : null,
                               ),
                             ),
                             // Close button
                             IconButton(
                               onPressed: () => Navigator.pop(context),
-                              icon: Icon(Icons.close, color: Colors.grey[400]),
+                              icon: Icon(
+                                Icons.close,
+                                color: Colors.grey[400],
+                                size: 24.w,
+                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         Text(
                           profile?.name ?? 'Driver Name',
-                          style: TextStyle(
+                          style: GoogleFonts.inter(
                             color: Colors.grey[900],
-                            fontSize: 22,
+                            fontSize: 22.sp,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.5,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4.h),
                         Row(
                           children: [
-                            const Icon(Icons.stars, color: Colors.amber, size: 16),
-                            const SizedBox(width: 4),
+                            Icon(Icons.stars, color: Colors.amber, size: 16.w),
+                            SizedBox(width: 4.w),
                             Text(
                               'ID: ${controller.ridealid.isNotEmpty ? controller.ridealid : "---"}',
-                              style: TextStyle(
+                              style: GoogleFonts.inter(
                                 color: Colors.grey[600],
-                                fontSize: 13,
+                                fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12.w),
                             Container(
                               width: 1,
-                              height: 12,
+                              height: 12.h,
                               color: Colors.grey[300],
                             ),
-                            const SizedBox(width: 12),
-                            Icon(Icons.phone_android_rounded, color: Colors.grey[400], size: 14),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 12.w),
+                            Icon(
+                              Icons.phone_android_rounded,
+                              color: Colors.grey[400],
+                              size: 14.w,
+                            ),
+                            SizedBox(width: 4.w),
                             Text(
                               profile?.phone ?? "---",
-                              style: TextStyle(
+                              style: GoogleFonts.inter(
                                 color: Colors.grey[600],
-                                fontSize: 13,
+                                fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -150,7 +159,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             // Menu Items
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 12.w),
                 children: [
                   _buildDrawerItem(
                     icon: Icons.chat_bubble_outline_rounded,
@@ -168,7 +177,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     icon: Icons.gavel_rounded,
                     title: "Terms & Conditions",
                     color: Colors.teal,
-                    onTap: () => _navigateTo(context, const TermsOfServiceScreen()),
+                    onTap: () =>
+                        _navigateTo(context, const TermsOfServiceScreen()),
                   ),
                   _buildDrawerItem(
                     icon: Icons.info_outline_rounded,
@@ -180,7 +190,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     icon: Icons.security_rounded,
                     title: "Privacy Policy",
                     color: Colors.deepPurple,
-                    onTap: () => _navigateTo(context, const PrivacyPolicyScreen()),
+                    onTap: () =>
+                        _navigateTo(context, const PrivacyPolicyScreen()),
                   ),
                 ],
               ),
@@ -188,47 +199,53 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
             // Footer / Logout
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: EdgeInsets.all(24.w),
               child: Column(
                 children: [
                   const Divider(height: 1),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   InkWell(
                     onTap: () {
-                      // Handle Logout
                       _showLogoutDialog(context);
                     },
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16.r),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12.h,
+                        horizontal: 16.w,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.red[50],
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(color: Colors.red[100]!),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.logout_rounded, color: Colors.red, size: 20),
-                          SizedBox(width: 12),
+                          Icon(
+                            Icons.logout_rounded,
+                            color: Colors.red,
+                            size: 20.w,
+                          ),
+                          SizedBox(width: 12.w),
                           Text(
                             "Logout Account",
-                            style: TextStyle(
+                            style: GoogleFonts.inter(
                               color: Colors.red,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: 15.sp,
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   Text(
                     "App Version 1.0.0",
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       color: Colors.grey[400],
-                      fontSize: 12,
+                      fontSize: 12.sp,
                     ),
                   ),
                 ],
@@ -242,10 +259,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   void _navigateTo(BuildContext context, Widget screen) {
     Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => screen),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
   Widget _buildDrawerItem({
@@ -255,27 +269,33 @@ class _CustomDrawerState extends State<CustomDrawer> {
     required VoidCallback onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: EdgeInsets.only(bottom: 8.h),
       child: ListTile(
         onTap: onTap,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
         leading: Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(10),
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12.r),
           ),
-          child: Icon(icon, color: color, size: 22),
+          child: Icon(icon, color: color, size: 22.w),
         ),
         title: Text(
           title,
-          style: TextStyle(
-            fontSize: 15,
+          style: GoogleFonts.inter(
+            fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: Colors.grey[800],
           ),
         ),
-        trailing: Icon(Icons.chevron_right_rounded, color: Colors.grey[400], size: 20),
+        trailing: Icon(
+          Icons.chevron_right_rounded,
+          color: Colors.grey[400],
+          size: 20.w,
+        ),
       ),
     );
   }
@@ -294,7 +314,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           TextButton(
             onPressed: () async {
               Navigator.pop(context); // Close dialog
-              
+
               // Find AuthController and perform logout
               try {
                 if (Get.isRegistered<AuthController>()) {

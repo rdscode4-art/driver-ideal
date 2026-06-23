@@ -7,22 +7,20 @@ import '../controllers/non_vehicle_payout_controller.dart';
 class NonVehicleWithdrawalScreen extends StatefulWidget {
   final double walletBalance;
 
-  const NonVehicleWithdrawalScreen({
-    super.key,
-    required this.walletBalance,
-  });
+  const NonVehicleWithdrawalScreen({super.key, required this.walletBalance});
 
   @override
-  State<NonVehicleWithdrawalScreen> createState() => _NonVehicleWithdrawalScreenState();
+  State<NonVehicleWithdrawalScreen> createState() =>
+      _NonVehicleWithdrawalScreenState();
 }
 
-class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen> {
-  
+class _NonVehicleWithdrawalScreenState
+    extends State<NonVehicleWithdrawalScreen> {
   @override
   void dispose() {
     super.dispose();
   }
-  
+
   // Validation method - shows snackbar only
   bool _validateBeforeSubmit(NonVehiclePayoutController controller) {
     // Validate amount
@@ -30,18 +28,18 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
       _showErrorSnackbar('Please enter withdrawal amount');
       return false;
     }
-    
+
     double? amount = double.tryParse(controller.amountController.text);
     if (amount == null || amount < 270) {
       _showErrorSnackbar('Minimum withdrawal amount is ₹270');
       return false;
     }
-    
+
     if (amount > widget.walletBalance) {
       _showErrorSnackbar('Insufficient balance');
       return false;
     }
-    
+
     // Validate payment method fields
     if (controller.selectedPayoutMethod.value == 'UPI') {
       String upiId = controller.upiIdController.text.trim();
@@ -57,7 +55,7 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
       // Validate Bank Account
       String accountNumber = controller.accountNumberController.text.trim();
       String ifscCode = controller.ifscCodeController.text.trim();
-      
+
       if (accountNumber.isEmpty) {
         _showErrorSnackbar('Please enter account number');
         return false;
@@ -70,7 +68,7 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
         _showErrorSnackbar('Account number must contain only digits');
         return false;
       }
-      
+
       if (ifscCode.isEmpty) {
         _showErrorSnackbar('Please enter IFSC code');
         return false;
@@ -80,10 +78,10 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
         return false;
       }
     }
-    
+
     return true;
   }
-  
+
   void _showErrorSnackbar(String message) {
     print('📢 Showing error snackbar: $message');
     showErrorSnackBar(message, title: 'Validation Error');
@@ -98,14 +96,11 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
       appBar: AppBar(
         title: const Text(
           'Withdraw Money',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Colors.orange[600],
         elevation: 0,
-         automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         // leading: IconButton(
         //   icon: const Icon(Icons.arrow_back, color: Colors.white),
         //   onPressed: () {
@@ -119,14 +114,16 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
         if (controller.otpSent.value) {
           return _buildOTPVerificationScreen(controller);
         }
-        
+
         // Otherwise show withdrawal form
         return _buildWithdrawalForm(controller);
       }),
     );
   }
 
-  Widget _buildValidatedAccountField({required TextEditingController controller}) {
+  Widget _buildValidatedAccountField({
+    required TextEditingController controller,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -168,10 +165,7 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
         const SizedBox(height: 4),
         Text(
           'Account number must be 9-18 digits',
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.grey[600],
-          ),
+          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
         ),
       ],
     );
@@ -220,10 +214,7 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
         const SizedBox(height: 4),
         Text(
           'Format: 4 letters + 0 + 6 characters (e.g., SBIN0001234)',
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.grey[600],
-          ),
+          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
         ),
       ],
     );
@@ -246,7 +237,10 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
           controller: controller,
           decoration: InputDecoration(
             hintText: 'Enter UPI ID (e.g., username@upi)',
-            prefixIcon: Icon(Icons.account_balance_wallet, color: Colors.grey[600]),
+            prefixIcon: Icon(
+              Icons.account_balance_wallet,
+              color: Colors.grey[600],
+            ),
             filled: true,
             fillColor: Colors.grey[50],
             border: OutlineInputBorder(
@@ -267,10 +261,7 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
         const SizedBox(height: 4),
         Text(
           'e.g., yourname@paytm, 9876543210@ybl',
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.grey[600],
-          ),
+          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
         ),
       ],
     );
@@ -323,7 +314,10 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
                   ),
                   const SizedBox(height: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(20),
@@ -331,7 +325,11 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.account_balance_wallet, color: Colors.white, size: 14),
+                        Icon(
+                          Icons.account_balance_wallet,
+                          color: Colors.white,
+                          size: 14,
+                        ),
                         SizedBox(width: 4),
                         Text(
                           'Wallet Balance',
@@ -383,19 +381,20 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
                     label: 'Withdrawal Amount',
                     hint: 'Enter amount to withdraw',
                     prefixIcon: Icons.currency_rupee,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}'),
+                      ),
                     ],
                   ),
 
                   const SizedBox(height: 8),
                   Text(
                     'Minimum withdrawal: ₹270',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
 
                   const SizedBox(height: 24),
@@ -410,28 +409,31 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
                     ),
                   ),
                   const SizedBox(height: 12),
-                  
-                  Obx(() => Row(
-                    children: [
-                      Expanded(
-                        child: _buildPaymentMethodCard(
-                          'UPI',
-                          Icons.account_balance_wallet,
-                          controller.selectedPayoutMethod.value == 'UPI',
-                          () => controller.selectedPayoutMethod.value = 'UPI',
+
+                  Obx(
+                    () => Row(
+                      children: [
+                        Expanded(
+                          child: _buildPaymentMethodCard(
+                            'UPI',
+                            Icons.account_balance_wallet,
+                            controller.selectedPayoutMethod.value == 'UPI',
+                            () => controller.selectedPayoutMethod.value = 'UPI',
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildPaymentMethodCard(
-                          'Bank',
-                          Icons.account_balance,
-                          controller.selectedPayoutMethod.value == 'BANK',
-                          () => controller.selectedPayoutMethod.value = 'BANK',
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildPaymentMethodCard(
+                            'Bank',
+                            Icons.account_balance,
+                            controller.selectedPayoutMethod.value == 'BANK',
+                            () =>
+                                controller.selectedPayoutMethod.value = 'BANK',
+                          ),
                         ),
-                      ),
-                    ],
-                  )),
+                      ],
+                    ),
+                  ),
 
                   const SizedBox(height: 24),
 
@@ -459,58 +461,62 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
                   const SizedBox(height: 32),
 
                   // Submit Button
-                  Obx(() => SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: controller.isSubmitting.value
-                          ? null
-                          : () {
-                              // Validate before submitting
-                              if (_validateBeforeSubmit(controller)) {
-                                controller.requestWithdrawal();
-                              }
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange[600],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                  Obx(
+                    () => SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: controller.isSubmitting.value
+                            ? null
+                            : () {
+                                // Validate before submitting
+                                if (_validateBeforeSubmit(controller)) {
+                                  controller.requestWithdrawal();
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange[600],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          elevation: 0,
                         ),
-                        elevation: 0,
-                      ),
-                      child: controller.isSubmitting.value
-                          ? const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        child: controller.isSubmitting.value
+                            ? const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 12),
-                                Text(
-                                  'Processing...',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                  SizedBox(width: 12),
+                                  Text(
+                                    'Processing...',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
+                                ],
+                              )
+                            : const Text(
+                                'Request Withdrawal',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
-                              ],
-                            )
-                          : const Text(
-                              'Request Withdrawal',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
                               ),
-                            ),
+                      ),
                     ),
-                  )),
+                  ),
                 ],
               ),
             ),
@@ -532,10 +538,7 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
                   Expanded(
                     child: Text(
                       'An OTP will be sent to your registered mobile number for verification.',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.blue[900],
-                      ),
+                      style: TextStyle(fontSize: 13, color: Colors.blue[900]),
                     ),
                   ),
                 ],
@@ -638,53 +641,57 @@ class _NonVehicleWithdrawalScreenState extends State<NonVehicleWithdrawalScreen>
                   const SizedBox(height: 24),
 
                   // Verify Button
-                  Obx(() => SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: controller.isSubmitting.value
-                          ? null
-                          : () => controller.verifyOTPAndCompleteWithdrawal(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[600],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                  Obx(
+                    () => SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: controller.isSubmitting.value
+                            ? null
+                            : () => controller.verifyOTPAndCompleteWithdrawal(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[600],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          elevation: 0,
                         ),
-                        elevation: 0,
-                      ),
-                      child: controller.isSubmitting.value
-                          ? const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        child: controller.isSubmitting.value
+                            ? const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 12),
-                                Text(
-                                  'Verifying...',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                  SizedBox(width: 12),
+                                  Text(
+                                    'Verifying...',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
+                                ],
+                              )
+                            : const Text(
+                                'Verify & Complete',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
-                              ],
-                            )
-                          : const Text(
-                              'Verify & Complete',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
                               ),
-                            ),
+                      ),
                     ),
-                  )),
+                  ),
 
                   const SizedBox(height: 16),
 

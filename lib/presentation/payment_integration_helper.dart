@@ -23,10 +23,7 @@ class PaymentIntegrationHelper {
 
       if (controller.currentRide.value == null) {
         log('❌ No active ride found');
-        showErrorSnackBar(
-          'No active ride found',
-          title: '❌ Error',
-        );
+        showErrorSnackBar('No active ride found', title: '❌ Error');
         isCompleting.value = false;
         return;
       }
@@ -34,27 +31,29 @@ class PaymentIntegrationHelper {
       // Call the API service method
       log('📡 Calling API: completeRideWithPayment');
       final response = await controller.completeRideWithPayment(paymentMethod);
-      
+
       log('📡 API Response: $response');
 
       if (response['success'] == true) {
         log('✅ API call successful');
-        
+
         // Check if online payment requires QR code
         if (paymentMethod == 'online' && response['requiresPayment'] == true) {
           log('💳 Online payment - showing QR code');
-          
+
           // Validate required fields
-          if (response['orderId'] == null || 
-              response['amount'] == null || 
+          if (response['orderId'] == null ||
+              response['amount'] == null ||
               response['qrCode'] == null) {
             log('❌ Missing required payment data');
             log('❌ orderId: ${response['orderId']}');
             log('❌ amount: ${response['amount']}');
-            log('❌ qrCode: ${response['qrCode'] != null ? 'present' : 'missing'}');
-            
+            log(
+              '❌ qrCode: ${response['qrCode'] != null ? 'present' : 'missing'}',
+            );
+
             isCompleting.value = false;
-            
+
             showErrorSnackBar(
               'Payment data incomplete. Please try again.',
               title: '❌ Error',
@@ -64,15 +63,15 @@ class PaymentIntegrationHelper {
 
           // CRITICAL FIX: Close payment method selection with proper delay
           log('🚪 Closing payment method bottom sheet');
-          
+
           // Close the bottom sheet first
           if (Get.isBottomSheetOpen == true) {
             Get.back();
           }
-          
+
           // Wait for animation to complete before showing QR sheet
           await Future.delayed(const Duration(milliseconds: 300));
-          
+
           log('🔄 Opening QR code bottom sheet');
 
           // Show QR code bottom sheet for online payment
@@ -87,7 +86,7 @@ class PaymentIntegrationHelper {
         } else {
           // Cash payment completed successfully
           log('💰 Cash payment - completing ride');
-          
+
           // Close payment method selection
           if (Get.isBottomSheetOpen == true) {
             Get.back();
@@ -106,7 +105,7 @@ class PaymentIntegrationHelper {
         }
       } else {
         log('❌ API call failed: ${response['message']}');
-        
+
         showErrorSnackBar(
           response['message'] ?? 'Failed to complete ride',
           title: '❌ Error',
@@ -115,7 +114,7 @@ class PaymentIntegrationHelper {
     } catch (e, stackTrace) {
       log('❌ Exception in completeRideWithPaymentMethod: $e');
       log('❌ Stack trace: $stackTrace');
-      
+
       showErrorSnackBar(
         'Network error occurred: ${e.toString()}',
         title: '❌ Error',
@@ -149,7 +148,7 @@ class PaymentIntegrationHelper {
     // Convert amount to display format
     int amountInPaise = 0;
     String displayAmount = '0.00';
-    
+
     try {
       if (amount is int) {
         amountInPaise = amount;
@@ -162,7 +161,7 @@ class PaymentIntegrationHelper {
         amountInPaise = (parsedAmount * 100).toInt();
         displayAmount = parsedAmount.toStringAsFixed(2);
       }
-      
+
       log('💰 Amount in paise: $amountInPaise');
       log('💰 Display amount: $displayAmount');
     } catch (e) {
@@ -172,23 +171,22 @@ class PaymentIntegrationHelper {
 
     // Start automatic payment verification polling
     log('⏱️ Starting payment verification timer (3 second intervals)');
-    verificationTimer = Timer.periodic(
-      const Duration(seconds: 3),
-      (timer) async {
-        if (paymentStatus.value == 'pending') {
-          log('🔄 Auto-checking payment status...');
-          await _checkPaymentStatus(
-            controller,
-            orderId,
-            paymentStatus,
-            isVerifying,
-          );
-        } else {
-          log('⏹️ Stopping verification timer - status: ${paymentStatus.value}');
-          timer.cancel();
-        }
-      },
-    );
+    verificationTimer = Timer.periodic(const Duration(seconds: 3), (
+      timer,
+    ) async {
+      if (paymentStatus.value == 'pending') {
+        log('🔄 Auto-checking payment status...');
+        await _checkPaymentStatus(
+          controller,
+          orderId,
+          paymentStatus,
+          isVerifying,
+        );
+      } else {
+        log('⏹️ Stopping verification timer - status: ${paymentStatus.value}');
+        timer.cancel();
+      }
+    });
 
     // CRITICAL FIX: Use Get.bottomSheet with explicit context
     await Get.bottomSheet(
@@ -196,7 +194,7 @@ class PaymentIntegrationHelper {
         onWillPop: () async {
           log('🚪 User attempting to close QR bottom sheet');
           verificationTimer?.cancel();
-          
+
           if (paymentStatus.value == 'pending') {
             // Show confirmation dialog before closing
             final shouldClose = await Get.dialog<bool>(
@@ -217,7 +215,7 @@ class PaymentIntegrationHelper {
                 ],
               ),
             );
-            
+
             if (shouldClose == true) {
               showWarningSnackBar(
                 'Please complete the payment manually or use cash',
@@ -227,7 +225,7 @@ class PaymentIntegrationHelper {
             }
             return false;
           }
-          
+
           return true;
         },
         child: Container(
@@ -277,7 +275,10 @@ class PaymentIntegrationHelper {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[300]!, width: 2),
+                          border: Border.all(
+                            color: Colors.grey[300]!,
+                            width: 2,
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
@@ -307,11 +308,13 @@ class PaymentIntegrationHelper {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Icon(Icons.error_outline, 
-                                            size: 48, 
-                                            color: Colors.red[300]
+                                          Icon(
+                                            Icons.error_outline,
+                                            size: 48,
+                                            color: Colors.red[300],
                                           ),
                                           const SizedBox(height: 8),
                                           Text(
@@ -324,7 +327,9 @@ class PaymentIntegrationHelper {
                                           ),
                                           const SizedBox(height: 4),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                            ),
                                             child: Text(
                                               error.toString(),
                                               textAlign: TextAlign.center,
@@ -351,9 +356,10 @@ class PaymentIntegrationHelper {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.qr_code, 
-                                      size: 64, 
-                                      color: Colors.grey[400]
+                                    Icon(
+                                      Icons.qr_code,
+                                      size: 64,
+                                      color: Colors.grey[400],
                                     ),
                                     const SizedBox(height: 12),
                                     Text(
@@ -414,7 +420,7 @@ class PaymentIntegrationHelper {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: const Icon(
-                                Icons.qr_code_scanner, 
+                                Icons.qr_code_scanner,
                                 color: Colors.white,
                                 size: 24,
                               ),
@@ -480,7 +486,9 @@ class PaymentIntegrationHelper {
                         child: ElevatedButton.icon(
                           onPressed: !isVerifying.value
                               ? () {
-                                  log('👆 User manually checking payment status');
+                                  log(
+                                    '👆 User manually checking payment status',
+                                  );
                                   _checkPaymentStatus(
                                     controller,
                                     orderId,
@@ -530,7 +538,7 @@ class PaymentIntegrationHelper {
                       TextButton.icon(
                         onPressed: () async {
                           log('❌ User clicked cancel payment');
-                          
+
                           final shouldClose = await Get.dialog<bool>(
                             AlertDialog(
                               title: const Text('Cancel Payment?'),
@@ -552,11 +560,11 @@ class PaymentIntegrationHelper {
                               ],
                             ),
                           );
-                          
+
                           if (shouldClose == true) {
                             verificationTimer?.cancel();
                             Get.back();
-                            
+
                             showWarningSnackBar(
                               'Please complete the payment manually or use cash',
                               title: 'Payment Cancelled',
@@ -658,8 +666,9 @@ class PaymentIntegrationHelper {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red[600],
                                   foregroundColor: Colors.white,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -752,7 +761,7 @@ class PaymentIntegrationHelper {
     } catch (e, stackTrace) {
       log('❌ Exception checking payment status: $e');
       log('❌ Stack trace: $stackTrace');
-      
+
       showWarningSnackBar(
         'Could not check payment status. Please try again.',
         title: 'Verification Error',
@@ -764,7 +773,10 @@ class PaymentIntegrationHelper {
   }
 
   /// Build pending payment header
-  static Widget _buildPendingPaymentHeader(String displayAmount, String currency) {
+  static Widget _buildPendingPaymentHeader(
+    String displayAmount,
+    String currency,
+  ) {
     return Column(
       children: [
         Container(
@@ -830,11 +842,7 @@ class PaymentIntegrationHelper {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Icon(
-        Icons.check_circle,
-        size: 56,
-        color: Colors.green[700],
-      ),
+      child: Icon(Icons.check_circle, size: 56, color: Colors.green[700]),
     );
   }
 
@@ -843,16 +851,10 @@ class PaymentIntegrationHelper {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.red[100]!, Colors.red[200]!],
-        ),
+        gradient: LinearGradient(colors: [Colors.red[100]!, Colors.red[200]!]),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Icon(
-        Icons.error,
-        size: 56,
-        color: Colors.red[700],
-      ),
+      child: Icon(Icons.error, size: 56, color: Colors.red[700]),
     );
   }
 
@@ -861,8 +863,10 @@ class PaymentIntegrationHelper {
     try {
       log('🖼️ Converting base64 to image');
       log('🖼️ Base64 length: ${base64String.length}');
-      log('🖼️ First 50 chars: ${base64String.substring(0, base64String.length > 50 ? 50 : base64String.length)}');
-      
+      log(
+        '🖼️ First 50 chars: ${base64String.substring(0, base64String.length > 50 ? 50 : base64String.length)}',
+      );
+
       // Remove data URL prefix if present (e.g., "data:image/png;base64,")
       String cleanBase64 = base64String;
       if (base64String.contains(',')) {
@@ -870,17 +874,17 @@ class PaymentIntegrationHelper {
         cleanBase64 = parts.length > 1 ? parts[1] : parts[0];
         log('🖼️ Removed data URL prefix - new length: ${cleanBase64.length}');
       }
-      
+
       // Remove any whitespace or newlines
       cleanBase64 = cleanBase64.replaceAll(RegExp(r'\s+'), '');
-      
+
       final bytes = base64Decode(cleanBase64);
       log('✅ Successfully decoded base64 - ${bytes.length} bytes');
       return bytes;
     } catch (e, stackTrace) {
       log('❌ Error decoding base64 image: $e');
       log('❌ Stack trace: $stackTrace');
-      
+
       // Return empty bytes instead of throwing
       return Uint8List(0);
     }

@@ -38,6 +38,7 @@ final VehicleTypeController vehicleTypeController = Get.put(VehicleTypeControlle
   var aadhaarFrontImage = Rx<String?>(null);
   var aadhaarBackImage = Rx<String?>(null);
   var drivingLicenseImage = Rx<String?>(null);
+  var drivingLicenseBackImage = Rx<String?>(null); // ⭐ NEW
   var vehicleImage = Rx<String?>(null);
   var vehicleRC = Rx<String?>(null);
   var vehicleInsurance = Rx<String?>(null);
@@ -46,6 +47,7 @@ final VehicleTypeController vehicleTypeController = Get.put(VehicleTypeControlle
   var aadhaarFrontFile = Rx<File?>(null);
   var aadhaarBackFile = Rx<File?>(null);
   var drivingLicenseFile = Rx<File?>(null);
+  var drivingLicenseBackFile = Rx<File?>(null); // ⭐ NEW
   var vehicleImageFile = Rx<File?>(null);
   var vehicleRCFile = Rx<File?>(null);
   var vehicleInsuranceFile = Rx<File?>(null);
@@ -416,6 +418,10 @@ final hasAadhaarFront = _hasValidDocument(aadhaarFrontFile.value, aadhaarFrontIm
       drivingLicenseFile.value,
       drivingLicenseImage.value,
     );
+    final hasLicenseBackDoc = _hasValidDocument(
+      drivingLicenseBackFile.value,
+      drivingLicenseBackImage.value,
+    );
     final hasVehicleDoc = _hasValidDocument(
       vehicleImageFile.value,
       vehicleImage.value,
@@ -435,6 +441,7 @@ final hasAadhaarFront = _hasValidDocument(aadhaarFrontFile.value, aadhaarFrontIm
         hasAadhaarFront &&
         hasAadhaarBack &&
         hasLicenseDoc &&
+        hasLicenseBackDoc &&
         hasVehicleDoc &&
         hasRCDoc &&
         hasInsuranceDoc;
@@ -450,6 +457,7 @@ final hasAadhaarFront = _hasValidDocument(aadhaarFrontFile.value, aadhaarFrontIm
     print('  hasAadhaarFront: $hasAadhaarFront');
     print('  hasAadhaarBack: $hasAadhaarBack');
     print('  hasLicenseDoc: $hasLicenseDoc');
+    print('  hasLicenseBackDoc: $hasLicenseBackDoc');
     print('  hasVehicleDoc: $hasVehicleDoc');
     print('  hasRCDoc: $hasRCDoc');
     print('  hasInsuranceDoc: $hasInsuranceDoc');
@@ -669,6 +677,10 @@ final hasAadhaarFront = _hasValidDocument(aadhaarFrontFile.value, aadhaarFrontIm
               drivingLicenseFile.value = imageFile;
               drivingLicenseImage.value = pickedFile.path;
               break;
+            case 'license_back':
+              drivingLicenseBackFile.value = imageFile;
+              drivingLicenseBackImage.value = pickedFile.path;
+              break;
             case 'vehicle':
               vehicleImageFile.value = imageFile;
               vehicleImage.value = pickedFile.path;
@@ -715,6 +727,10 @@ final hasAadhaarFront = _hasValidDocument(aadhaarFrontFile.value, aadhaarFrontIm
         drivingLicenseFile.value = null;
         drivingLicenseImage.value = null;
         break;
+      case 'license_back':
+        drivingLicenseBackFile.value = null;
+        drivingLicenseBackImage.value = null;
+        break;
       case 'vehicle':
         vehicleImageFile.value = null;
         vehicleImage.value = null;
@@ -749,6 +765,7 @@ Future<void> submitVerification() async {
     final aadhaarFrontFileToSubmit = aadhaarFrontFile.value;
     final aadhaarBackFileToSubmit = aadhaarBackFile.value;
     final licenseFileToSubmit = drivingLicenseFile.value;
+    final licenseBackFileToSubmit = drivingLicenseBackFile.value;
     final vehicleFileToSubmit = vehicleImageFile.value;
     final rcFileToSubmit = vehicleRCFile.value;
     final insuranceFileToSubmit = vehicleInsuranceFile.value;
@@ -756,6 +773,7 @@ Future<void> submitVerification() async {
       if (aadhaarFrontFileToSubmit == null ||
           aadhaarBackFileToSubmit == null ||
           licenseFileToSubmit == null ||
+          licenseBackFileToSubmit == null ||
           vehicleFileToSubmit == null ||
           rcFileToSubmit == null ||
           insuranceFileToSubmit == null) {
@@ -775,6 +793,7 @@ Future<void> submitVerification() async {
       aadhaarBackImage: aadhaarBackFileToSubmit,
       aadhaarFrontImage: aadhaarFrontFileToSubmit,
       drivingLicenseImage: licenseFileToSubmit,
+      drivingLicenseBackPic: licenseBackFileToSubmit!,
       vehicleImage: vehicleFileToSubmit,
       vehicleRCImage: rcFileToSubmit,
       vehicleInsuranceImage: insuranceFileToSubmit,

@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 
 class KYCDocumentsViewerController extends GetxController {
   final storage = GetStorage();
-  
+
   // API endpoint
   final String baseUrl = 'https://backend.ridealmobility.com';
-  
+
   // Observable variables
   var aadhaarNumber = ''.obs;
   var aadhaarImages = <String>[].obs;
@@ -24,7 +24,7 @@ class KYCDocumentsViewerController extends GetxController {
   var vehicleInsurance = ''.obs;
   var status = ''.obs;
   var submittedAt = ''.obs;
-  
+
   var isLoading = false.obs;
   var hasError = false.obs;
   var errorMessage = ''.obs;
@@ -81,10 +81,10 @@ class KYCDocumentsViewerController extends GetxController {
 
           /* ---------------- STATUS ---------------- */
           // Priority: verification.status > verificationStatus > kyc.status
-          status.value = 
-              verification?['status'] ?? 
-              jsonResponse['verificationStatus'] ?? 
-              kyc?['status'] ?? 
+          status.value =
+              verification?['status'] ??
+              jsonResponse['verificationStatus'] ??
+              kyc?['status'] ??
               'unknown';
 
           print('✅ Status set to: ${status.value}');
@@ -93,7 +93,9 @@ class KYCDocumentsViewerController extends GetxController {
           if (verification?['submittedAt'] != null) {
             try {
               final date = DateTime.parse(verification['submittedAt']);
-              submittedAt.value = DateFormat('dd MMM yyyy, hh:mm a').format(date);
+              submittedAt.value = DateFormat(
+                'dd MMM yyyy, hh:mm a',
+              ).format(date);
             } catch (e) {
               print('⚠️ Date parse error: $e');
               submittedAt.value = '';
@@ -129,7 +131,9 @@ class KYCDocumentsViewerController extends GetxController {
           dlImage.value = _formatImageUrl(kyc?['licenseImage'] ?? '');
           vehicleImage.value = _formatImageUrl(kyc?['vehicleImage'] ?? '');
           vehicleRC.value = _formatImageUrl(kyc?['rcImage'] ?? '');
-          vehicleInsurance.value = _formatImageUrl(kyc?['insuranceImage'] ?? '');
+          vehicleInsurance.value = _formatImageUrl(
+            kyc?['insuranceImage'] ?? '',
+          );
 
           print('🖼️ DL Image: ${dlImage.value}');
           print('🖼️ Vehicle Image: ${vehicleImage.value}');
@@ -138,20 +142,14 @@ class KYCDocumentsViewerController extends GetxController {
 
           /* ---------------- VEHICLE INFO ---------------- */
           // Check both verification and kyc objects for vehicle info
-          vehicleNumber.value = 
-              verification?['vehicleNumber'] ?? 
-              kyc?['vehicleNumber'] ?? 
-              '';
-          
-          vehicleType.value = 
-              verification?['vehicleType'] ?? 
-              kyc?['vehicleType'] ?? 
-              '';
-          
-          vehicleName.value = 
-              verification?['vehicleName'] ?? 
-              kyc?['vehicleName'] ?? 
-              '';
+          vehicleNumber.value =
+              verification?['vehicleNumber'] ?? kyc?['vehicleNumber'] ?? '';
+
+          vehicleType.value =
+              verification?['vehicleType'] ?? kyc?['vehicleType'] ?? '';
+
+          vehicleName.value =
+              verification?['vehicleName'] ?? kyc?['vehicleName'] ?? '';
 
           print('🚗 Vehicle Number: ${vehicleNumber.value}');
           print('🚗 Vehicle Type: ${vehicleType.value}');
@@ -170,7 +168,8 @@ class KYCDocumentsViewerController extends GetxController {
         print('❌ 401 Unauthorized');
       } else if (response.statusCode == 404) {
         hasError.value = true;
-        errorMessage.value = 'No KYC documents found. Please submit your documents first.';
+        errorMessage.value =
+            'No KYC documents found. Please submit your documents first.';
         print('❌ 404 Not Found');
       } else {
         hasError.value = true;
@@ -192,21 +191,21 @@ class KYCDocumentsViewerController extends GetxController {
       print('⚠️ Empty image URL');
       return '';
     }
-    
+
     print('🔄 Formatting URL: $imageUrl');
-    
+
     // If already a full URL, return as is
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       print('✅ Already full URL: $imageUrl');
       return imageUrl;
     }
-    
+
     // Remove leading slash if present
     String cleanUrl = imageUrl;
     if (cleanUrl.startsWith('/')) {
       cleanUrl = cleanUrl.substring(1);
     }
-    
+
     // Prepend base URL
     final formattedUrl = '$baseUrl/$cleanUrl';
     print('✅ Formatted URL: $formattedUrl');
@@ -217,7 +216,7 @@ class KYCDocumentsViewerController extends GetxController {
   String get maskedAadhaar {
     if (aadhaarNumber.value.isEmpty) return 'Not Available';
     if (aadhaarNumber.value.length <= 8) return aadhaarNumber.value;
-    
+
     final length = aadhaarNumber.value.length;
     final lastFour = aadhaarNumber.value.substring(length - 4);
     return 'XXXX-XXXX-$lastFour';
@@ -229,7 +228,7 @@ class KYCDocumentsViewerController extends GetxController {
     if (drivingLicenseNumber.value.length <= 4) {
       return drivingLicenseNumber.value;
     }
-    
+
     final firstFour = drivingLicenseNumber.value.substring(0, 4);
     final maskedPart = '*' * (drivingLicenseNumber.value.length - 4);
     return '$firstFour$maskedPart';

@@ -7,6 +7,7 @@ import 'dart:developer';
 import '../core/utils/app_snackbar.dart';
 import '../controllers/ongoing_ride_controller.dart';
 import 'payment_integration_helper.dart';
+
 class OngoingRideScreen extends StatelessWidget {
   const OngoingRideScreen({super.key});
 
@@ -14,7 +15,10 @@ class OngoingRideScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Inject the controller if not already present
     // We use Get.put here but the GetBuilder will handle reactivity
-    final OngoingRideController controller = Get.put(OngoingRideController(), permanent: false);
+    final OngoingRideController controller = Get.put(
+      OngoingRideController(),
+      permanent: false,
+    );
     final screenHeight = MediaQuery.of(context).size.height;
     final safeAreaTop = MediaQuery.of(context).padding.top;
     final safeAreaBottom = MediaQuery.of(context).padding.bottom;
@@ -152,7 +156,8 @@ class OngoingRideScreen extends StatelessWidget {
               ),
               infoWindow: InfoWindow(
                 title: '📍 Pickup Location',
-                snippet: controller.currentRide.value?.pickupaddress ??
+                snippet:
+                    controller.currentRide.value?.pickupaddress ??
                     controller.currentRide.value?.pickupLocation ??
                     'Pickup point',
               ),
@@ -176,7 +181,8 @@ class OngoingRideScreen extends StatelessWidget {
               ),
               infoWindow: InfoWindow(
                 title: '🏁 Drop-off Location',
-                snippet: controller.currentRide.value?.dropaddress ??
+                snippet:
+                    controller.currentRide.value?.dropaddress ??
                     controller.currentRide.value?.dropoffLocation ??
                     'Destination',
               ),
@@ -188,9 +194,15 @@ class OngoingRideScreen extends StatelessWidget {
         // Smart initial position
         LatLng initialPosition = const LatLng(28.6139, 77.2090);
         if (controller.driverLatitude.value != 0) {
-          initialPosition = LatLng(controller.driverLatitude.value, controller.driverLongitude.value);
+          initialPosition = LatLng(
+            controller.driverLatitude.value,
+            controller.driverLongitude.value,
+          );
         } else if (controller.pickupLatitude.value != 0) {
-          initialPosition = LatLng(controller.pickupLatitude.value, controller.pickupLongitude.value);
+          initialPosition = LatLng(
+            controller.pickupLatitude.value,
+            controller.pickupLongitude.value,
+          );
         }
 
         return GoogleMap(
@@ -358,9 +370,9 @@ class OngoingRideScreen extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       controller.hasNavigationError.value
-                          ? (controller.navigationError.value.isNotEmpty 
-                              ? controller.navigationError.value 
-                              : 'Error loading navigation')
+                          ? (controller.navigationError.value.isNotEmpty
+                                ? controller.navigationError.value
+                                : 'Error loading navigation')
                           : 'Calculating route...',
                       style: const TextStyle(
                         color: Colors.white70,
@@ -459,96 +471,94 @@ class OngoingRideScreen extends StatelessWidget {
   }
 
   Widget _buildPassengerInfo(OngoingRideController controller) {
-  return Obx(
-    () => Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.blue[100],
-            child: Icon(Icons.person, color: Colors.blue[700], size: 28),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  controller.passengerName.value.isNotEmpty 
-                      ? controller.passengerName.value 
-                      : 'Passenger',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                // Show phone number if available
-                if (controller.passengerPhone.value.isNotEmpty)
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.blue[100],
+              child: Icon(Icons.person, color: Colors.blue[700], size: 28),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    controller.passengerPhone.value,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                    ),
-                  )
-                else
-                  Text(
-                    'Phone number not available',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[500],
-                      fontStyle: FontStyle.italic,
+                    controller.passengerName.value.isNotEmpty
+                        ? controller.passengerName.value
+                        : 'Passenger',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.amber[600], size: 16),
-                    const SizedBox(width: 4),
+                  const SizedBox(height: 2),
+                  // Show phone number if available
+                  if (controller.passengerPhone.value.isNotEmpty)
                     Text(
-                      controller.currentRide.value?.rideType.toUpperCase() ?? 'RIDE',
+                      controller.passengerPhone.value,
+                      style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                    )
+                  else
+                    Text(
+                      'Phone number not available',
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.blue[700],
-                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        color: Colors.grey[500],
+                        fontStyle: FontStyle.italic,
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber[600], size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        controller.currentRide.value?.rideType.toUpperCase() ??
+                            'RIDE',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.blue[700],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          // Call button - only show if phone available
-          if (controller.passengerPhone.value.isNotEmpty)
-            IconButton(
-              onPressed: () => controller.callPassenger(),
-              icon: Icon(Icons.phone, color: Colors.green[600]),
-              tooltip: 'Call Passenger',
-            )
-          else
-            IconButton(
-              onPressed: () {
-                showWarningSnackBar(
-                  'Passenger phone number is not available',
-                  title: 'Phone Not Available',
-                );
-              },
-              icon: Icon(Icons.phone_disabled, color: Colors.grey[400]),
-              tooltip: 'Phone not available',
-            ),
-        ],
+            // Call button - only show if phone available
+            if (controller.passengerPhone.value.isNotEmpty)
+              IconButton(
+                onPressed: () => controller.callPassenger(),
+                icon: Icon(Icons.phone, color: Colors.green[600]),
+                tooltip: 'Call Passenger',
+              )
+            else
+              IconButton(
+                onPressed: () {
+                  showWarningSnackBar(
+                    'Passenger phone number is not available',
+                    title: 'Phone Not Available',
+                  );
+                },
+                icon: Icon(Icons.phone_disabled, color: Colors.grey[400]),
+                tooltip: 'Phone not available',
+              ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildNavigationInfo(OngoingRideController controller) {
     return Obx(
@@ -863,7 +873,8 @@ class OngoingRideScreen extends StatelessWidget {
       ),
     );
   }
-Future<void> _completeRideWithPayment(
+
+  Future<void> _completeRideWithPayment(
     OngoingRideController controller,
     String paymentMethod,
     RxBool isCompleting,
@@ -877,10 +888,7 @@ Future<void> _completeRideWithPayment(
 
       if (controller.currentRide.value == null) {
         log('❌ No active ride found');
-        showErrorSnackBar(
-          'No active ride found',
-          title: '❌ Error',
-        );
+        showErrorSnackBar('No active ride found', title: '❌ Error');
         isCompleting.value = false;
         return;
       }
@@ -888,22 +896,22 @@ Future<void> _completeRideWithPayment(
       // Call the API service method
       log('📡 Calling API: completeRideWithPayment');
       final response = await controller.completeRideWithPayment(paymentMethod);
-      
+
       log('📡 API Response: $response');
 
       if (response['success'] == true) {
         log('✅ API call successful');
-        
+
         // Check if online payment requires QR code
         if (paymentMethod == 'online' && response['requiresPayment'] == true) {
           log('💳 Online payment - would show QR code here');
-          
+
           // For now, just show a message
           showInfoSnackBar(
             'QR code feature will be shown here',
             title: 'Online Payment',
           );
-          
+
           // Close payment method selection
           if (Get.isBottomSheetOpen == true) {
             Get.back();
@@ -911,7 +919,7 @@ Future<void> _completeRideWithPayment(
         } else {
           // Cash payment completed successfully
           log('💰 Cash payment - completing ride');
-          
+
           // Close payment method selection
           if (Get.isBottomSheetOpen == true) {
             Get.back();
@@ -930,7 +938,7 @@ Future<void> _completeRideWithPayment(
         }
       } else {
         log('❌ API call failed: ${response['message']}');
-        
+
         showErrorSnackBar(
           response['message'] ?? 'Failed to complete ride',
           title: '❌ Error',
@@ -939,7 +947,7 @@ Future<void> _completeRideWithPayment(
     } catch (e, stackTrace) {
       log('❌ Exception in _completeRideWithPayment: $e');
       log('❌ Stack trace: $stackTrace');
-      
+
       showErrorSnackBar(
         'Network error occurred: ${e.toString()}',
         title: '❌ Error',
@@ -949,8 +957,7 @@ Future<void> _completeRideWithPayment(
       log('💳 ===== PAYMENT FLOW ENDED =====');
     }
   }
-  
-  
+
   Widget _buildLocationDetails(OngoingRideController controller) {
     return Obx(
       () => Container(
@@ -1244,7 +1251,7 @@ Future<void> _completeRideWithPayment(
                                 RidePhase.WAITING_FOR_PASSENGER) &&
                         controller.ridePhase.value != RidePhase.COMPLETED)
                       const SizedBox(width: 12),
-//UNCOMMENT WHEN PAYMENT INTEGRATION COME
+                    //UNCOMMENT WHEN PAYMENT INTEGRATION COME
                     // "COMPLETE RIDE" or "VIEW QR" Button
                     if (controller.ridePhase.value != RidePhase.COMPLETED)
                       Expanded(
@@ -1254,7 +1261,8 @@ Future<void> _completeRideWithPayment(
                             onPressed: controller.isLoading.value
                                 ? null
                                 : () {
-                                    if (controller.ridePhase.value == RidePhase.PAYMENT_PENDING) {
+                                    if (controller.ridePhase.value ==
+                                        RidePhase.PAYMENT_PENDING) {
                                       // If already pending payment, show QR again if we can
                                       _showPaymentMethodSelection(controller);
                                     } else {
@@ -1267,11 +1275,14 @@ Future<void> _completeRideWithPayment(
                                     height: 16,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
                                     ),
                                   )
                                 : Icon(
-                                    controller.ridePhase.value == RidePhase.PAYMENT_PENDING
+                                    controller.ridePhase.value ==
+                                            RidePhase.PAYMENT_PENDING
                                         ? Icons.qr_code_2
                                         : Icons.check_circle,
                                     size: 20,
@@ -1279,9 +1290,10 @@ Future<void> _completeRideWithPayment(
                             label: Text(
                               controller.isLoading.value
                                   ? 'PROCESSING...'
-                                  : (controller.ridePhase.value == RidePhase.PAYMENT_PENDING
-                                      ? 'VIEW QR CODE'
-                                      : 'COMPLETE RIDE'),
+                                  : (controller.ridePhase.value ==
+                                            RidePhase.PAYMENT_PENDING
+                                        ? 'VIEW QR CODE'
+                                        : 'COMPLETE RIDE'),
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -1291,9 +1303,10 @@ Future<void> _completeRideWithPayment(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: controller.isLoading.value
                                   ? Colors.grey[500]
-                                  : (controller.ridePhase.value == RidePhase.PAYMENT_PENDING
-                                      ? Colors.purple[600]
-                                      : Colors.orange[600]),
+                                  : (controller.ridePhase.value ==
+                                            RidePhase.PAYMENT_PENDING
+                                        ? Colors.purple[600]
+                                        : Colors.orange[600]),
                               foregroundColor: Colors.white,
                               elevation: 3,
                               shadowColor: Colors.black26,
@@ -1421,7 +1434,6 @@ Future<void> _completeRideWithPayment(
                 ),
 
                 const SizedBox(height: 12),
-              
               ],
             ),
           ],
@@ -1476,38 +1488,38 @@ Future<void> _completeRideWithPayment(
     }
   }
 
-// Helper methods for the new UI
-Color _getPhaseStatusColor(RidePhase phase) {
-  switch (phase) {
-    case RidePhase.GOING_TO_PICKUP:
-      return Colors.blue[600]!;
-    case RidePhase.WAITING_FOR_PASSENGER:
-      return Colors.orange[600]!;
-    case RidePhase.GOING_TO_DROPOFF:
-      return Colors.green[600]!;
-    case RidePhase.PAYMENT_PENDING:  // ✅ Add this
-      return Colors.purple[600]!;
-    case RidePhase.COMPLETED:
-      return Colors.grey[600]!;
+  // Helper methods for the new UI
+  Color _getPhaseStatusColor(RidePhase phase) {
+    switch (phase) {
+      case RidePhase.GOING_TO_PICKUP:
+        return Colors.blue[600]!;
+      case RidePhase.WAITING_FOR_PASSENGER:
+        return Colors.orange[600]!;
+      case RidePhase.GOING_TO_DROPOFF:
+        return Colors.green[600]!;
+      case RidePhase.PAYMENT_PENDING: // ✅ Add this
+        return Colors.purple[600]!;
+      case RidePhase.COMPLETED:
+        return Colors.grey[600]!;
+    }
   }
-}
 
-IconData _getPhaseIcon(RidePhase phase) {
-  switch (phase) {
-    case RidePhase.GOING_TO_PICKUP:
-      return Icons.directions_car;
-    case RidePhase.WAITING_FOR_PASSENGER:
-      return Icons.schedule;
-    case RidePhase.GOING_TO_DROPOFF:
-      return Icons.navigation;
-    case RidePhase.PAYMENT_PENDING:  // ✅ Add this
-      return Icons.payment;
-    case RidePhase.COMPLETED:
-      return Icons.check_circle;
+  IconData _getPhaseIcon(RidePhase phase) {
+    switch (phase) {
+      case RidePhase.GOING_TO_PICKUP:
+        return Icons.directions_car;
+      case RidePhase.WAITING_FOR_PASSENGER:
+        return Icons.schedule;
+      case RidePhase.GOING_TO_DROPOFF:
+        return Icons.navigation;
+      case RidePhase.PAYMENT_PENDING: // ✅ Add this
+        return Icons.payment;
+      case RidePhase.COMPLETED:
+        return Icons.check_circle;
+    }
   }
-}
 
-String _getPhaseSubtitle(RidePhase phase) {
+  String _getPhaseSubtitle(RidePhase phase) {
     switch (phase) {
       case RidePhase.GOING_TO_PICKUP:
         return 'Drive to the passenger\'s pickup point';
@@ -1522,20 +1534,21 @@ String _getPhaseSubtitle(RidePhase phase) {
     }
   }
 
-double _getProgressValue(RidePhase phase) {
-  switch (phase) {
-    case RidePhase.GOING_TO_PICKUP:
-      return 0.25;
-    case RidePhase.WAITING_FOR_PASSENGER:
-      return 0.5;
-    case RidePhase.GOING_TO_DROPOFF:
-      return 0.75;
-    case RidePhase.PAYMENT_PENDING:  // ✅ Add this
-      return 0.9;
-    case RidePhase.COMPLETED:
-      return 1.0;
+  double _getProgressValue(RidePhase phase) {
+    switch (phase) {
+      case RidePhase.GOING_TO_PICKUP:
+        return 0.25;
+      case RidePhase.WAITING_FOR_PASSENGER:
+        return 0.5;
+      case RidePhase.GOING_TO_DROPOFF:
+        return 0.75;
+      case RidePhase.PAYMENT_PENDING: // ✅ Add this
+        return 0.9;
+      case RidePhase.COMPLETED:
+        return 1.0;
+    }
   }
-}
+
   /// Handle "Arrived at Pickup" action with confirmation
   void _handleArrivedAtPickup(
     OngoingRideController controller,
@@ -1647,7 +1660,10 @@ double _getProgressValue(RidePhase phase) {
   }
 
   /// NEW: Show OTP Entry Dialog for Ride Verification
-  void _showOtpEntryDialog(OngoingRideController controller, BuildContext context) {
+  void _showOtpEntryDialog(
+    OngoingRideController controller,
+    BuildContext context,
+  ) {
     final TextEditingController otpController = TextEditingController();
     final RxString errorText = ''.obs;
 
@@ -1690,15 +1706,17 @@ double _getProgressValue(RidePhase phase) {
                 ),
               ),
             ),
-            Obx(() => errorText.value.isNotEmpty
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      errorText.value,
-                      style: const TextStyle(color: Colors.red, fontSize: 12),
-                    ),
-                  )
-                : const SizedBox.shrink()),
+            Obx(
+              () => errorText.value.isNotEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        errorText.value,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
             const SizedBox(height: 24),
             Row(
               children: [
@@ -1707,7 +1725,10 @@ double _getProgressValue(RidePhase phase) {
                     onPressed: () => Navigator.pop(context),
                     child: Text(
                       'CANCEL',
-                      style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -1751,7 +1772,6 @@ double _getProgressValue(RidePhase phase) {
     );
   }
 
-
   /// Format update time for display
   String _formatUpdateTime(DateTime? dateTime) {
     if (dateTime == null) return 'never';
@@ -1773,256 +1793,259 @@ double _getProgressValue(RidePhase phase) {
   /// Show complete ride confirmation dialog
   /// REPLACE _showCompleteRideConfirmation and _showPaymentMethodSelection in ongoing_ride_screen.dart
 
-/// Show complete ride confirmation dialog
-void _showCompleteRideConfirmation(OngoingRideController controller) {
-  log('🏁 Opening complete ride confirmation dialog');
-  
-  Get.defaultDialog(
-    title: '🏁 Complete Ride',
-    titleStyle: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      color: Colors.orange[700],
-    ),
-    content: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          Icon(
-            Icons.check_circle_outline,
-            size: 64,
-            color: Colors.orange[600],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Are you sure you want to complete this ride?',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey[800]),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'This action will end the current trip and finalize the fare.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    log('❌ User cancelled ride completion');
-                    // Safely close dialog
-                    if (Navigator.canPop(Get.overlayContext!)) {
-                      Navigator.of(Get.overlayContext!).pop();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[300],
-                    foregroundColor: Colors.black87,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    log('✅ User confirmed ride completion');
-                    // Safely close dialog
-                    if (Navigator.canPop(Get.overlayContext!)) {
-                      Navigator.of(Get.overlayContext!).pop();
-                    }
-                    
-                    // Show payment method selection
-                    _showPaymentMethodSelection(controller);
-                  },
-                  icon: const Icon(Icons.check, size: 20),
-                  label: const Text(
-                    'Complete',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[600],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+  /// Show complete ride confirmation dialog
+  void _showCompleteRideConfirmation(OngoingRideController controller) {
+    log('🏁 Opening complete ride confirmation dialog');
+
+    Get.defaultDialog(
+      title: '🏁 Complete Ride',
+      titleStyle: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.orange[700],
       ),
-    ),
-    barrierDismissible: false,
-    radius: 16,
-  );
-}
+      content: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            Icon(
+              Icons.check_circle_outline,
+              size: 64,
+              color: Colors.orange[600],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Are you sure you want to complete this ride?',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'This action will end the current trip and finalize the fare.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      log('❌ User cancelled ride completion');
+                      // Safely close dialog
+                      if (Navigator.canPop(Get.overlayContext!)) {
+                        Navigator.of(Get.overlayContext!).pop();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300],
+                      foregroundColor: Colors.black87,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      log('✅ User confirmed ride completion');
+                      // Safely close dialog
+                      if (Navigator.canPop(Get.overlayContext!)) {
+                        Navigator.of(Get.overlayContext!).pop();
+                      }
 
-/// Show payment method selection bottom sheet
-// Find this section in your ongoing_ride_screen.dart file and replace it:
-
-/// Show payment method selection bottom sheet
-// Replace your _showPaymentMethodSelection method with this complete version:
-
-// Replace your _showPaymentMethodSelection method with this version
-
-void _showPaymentMethodSelection(OngoingRideController controller) {
-  final RxString selectedPaymentMethod = 'cash'.obs;
-  final RxBool isCompleting = false.obs;
-
-  print('💳 Opening payment method selection bottom sheet');
-  print('💰 Current fare: ${controller.currentRide.value?.formattedFare}');
-
-  Get.bottomSheet(
-    Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+                      // Show payment method selection
+                      _showPaymentMethodSelection(controller);
+                    },
+                    icon: const Icon(Icons.check, size: 20),
+                    label: const Text(
+                      'Complete',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange[600],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(Get.context!).size.height * 0.8,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Drag handle
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 20),
+      barrierDismissible: false,
+      radius: 16,
+    );
+  }
 
-              // Header
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.green[100],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.payment,
-                      color: Colors.green[700],
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Payment Method',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[800],
-                          ),
-                        ),
-                        Text(
-                          'How did the passenger pay?',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
+  /// Show payment method selection bottom sheet
+  // Find this section in your ongoing_ride_screen.dart file and replace it:
 
-              // Trip summary
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey[200]!),
+  /// Show payment method selection bottom sheet
+  // Replace your _showPaymentMethodSelection method with this complete version:
+
+  // Replace your _showPaymentMethodSelection method with this version
+
+  void _showPaymentMethodSelection(OngoingRideController controller) {
+    final RxString selectedPaymentMethod = 'cash'.obs;
+    final RxBool isCompleting = false.obs;
+
+    print('💳 Opening payment method selection bottom sheet');
+    print('💰 Current fare: ${controller.currentRide.value?.formattedFare}');
+
+    Get.bottomSheet(
+      Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(Get.context!).size.height * 0.8,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Drag handle
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                const SizedBox(height: 20),
+
+                // Header
+                Row(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Trip Fare',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          controller.currentRide.value?.formattedFare ?? '₹0.00',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green[700],
-                          ),
-                        ),
-                      ],
-                    ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.blue[100],
-                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.green[100],
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
-                        controller.currentRide.value?.rideType.toUpperCase() ??
-                            'RIDE',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue[700],
-                        ),
+                      child: Icon(
+                        Icons.payment,
+                        color: Colors.green[700],
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Payment Method',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          Text(
+                            'How did the passenger pay?',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-              // Payment options
-              Obx(() => Column(
+                // Trip summary
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey[200]!),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Trip Fare',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            controller.currentRide.value?.formattedFare ??
+                                '₹0.00',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green[700],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[100],
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          controller.currentRide.value?.rideType
+                                  .toUpperCase() ??
+                              'RIDE',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[700],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Payment options
+                Obx(
+                  () => Column(
                     children: [
                       // Cash option
                       _buildPaymentOption(
@@ -2053,48 +2076,50 @@ void _showPaymentMethodSelection(OngoingRideController controller) {
                         iconColor: Colors.blue,
                       ),
                     ],
-                  )),
+                  ),
+                ),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              // Action buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        log('❌ Payment selection cancelled');
-                        // Use Navigator directly instead of Get.back()
-                        Navigator.of(Get.overlayContext!).pop();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.grey[600],
-                        side: BorderSide(color: Colors.grey[300]!),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                // Action buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          log('❌ Payment selection cancelled');
+                          // Use Navigator directly instead of Get.back()
+                          Navigator.of(Get.overlayContext!).pop();
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.grey[600],
+                          side: BorderSide(color: Colors.grey[300]!),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
-                      ),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
+                    const SizedBox(width: 16),
 
-                  Expanded(
-                    flex: 2,
-                    child: Obx(() => ElevatedButton.icon(
+                    Expanded(
+                      flex: 2,
+                      child: Obx(
+                        () => ElevatedButton.icon(
                           onPressed: !isCompleting.value
                               ? () => _handleCompleteRideWithPayment(
-                                    controller,
-                                    selectedPaymentMethod.value,
-                                    isCompleting,
-                                  )
+                                  controller,
+                                  selectedPaymentMethod.value,
+                                  isCompleting,
+                                )
                               : null,
                           icon: isCompleting.value
                               ? const SizedBox(
@@ -2103,12 +2128,15 @@ void _showPaymentMethodSelection(OngoingRideController controller) {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                                      Colors.white,
+                                    ),
                                   ),
                                 )
                               : const Icon(Icons.check_circle, size: 20),
                           label: Text(
-                            isCompleting.value ? 'Processing...' : 'Complete Ride',
+                            isCompleting.value
+                                ? 'Processing...'
+                                : 'Complete Ride',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -2125,331 +2153,337 @@ void _showPaymentMethodSelection(OngoingRideController controller) {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                        )),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.orange[50],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: Colors.orange[700], size: 16),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Select how the passenger paid for this trip',
-                        style: TextStyle(fontSize: 12, color: Colors.orange[700]),
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-    isScrollControlled: true,
-    isDismissible: true,
-    enableDrag: true,
-  );
-}
 
-/// Build individual payment option tile
-Widget _buildPaymentOption({
-  required IconData icon,
-  required String title,
-  required String subtitle,
-  required String value,
-  required String selectedValue,
-  required VoidCallback onTap,
-  required Color iconColor,
-}) {
-  final bool isSelected = value == selectedValue;
-
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(12),
-    child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isSelected ? iconColor.withOpacity(0.05) : Colors.white,
-        border: Border.all(
-          color: isSelected ? iconColor : Colors.grey[300]!,
-          width: isSelected ? 2 : 1,
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? iconColor.withOpacity(0.2)
-                  : Colors.grey[100],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              icon,
-              color: isSelected ? iconColor : Colors.grey[600],
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: isSelected ? iconColor : Colors.grey[800],
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange[50],
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: isSelected
-                        ? iconColor.withOpacity(0.8)
-                        : Colors.grey[600],
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: Colors.orange[700],
+                        size: 16,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Select how the passenger paid for this trip',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.orange[700],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-          // Selection indicator
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: isSelected ? iconColor : Colors.grey[400]!,
-                width: 2,
-              ),
-              color: isSelected ? iconColor : Colors.transparent,
-            ),
-            child: isSelected
-                ? const Icon(Icons.check, color: Colors.white, size: 14)
-                : null,
-          ),
-        ],
+        ),
       ),
-    ),
-  );
-}
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+    );
+  }
 
-/// Handle complete ride with payment - SEPARATED from UI
-/// Handle complete ride with payment - Fixed version
-Future<void> _handleCompleteRideWithPayment(
-  OngoingRideController controller,
-  String paymentMethod,
-  RxBool isCompleting,
-) async {
-  try {
-    isCompleting.value = true;
+  /// Build individual payment option tile
+  Widget _buildPaymentOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String value,
+    required String selectedValue,
+    required VoidCallback onTap,
+    required Color iconColor,
+  }) {
+    final bool isSelected = value == selectedValue;
 
-    print('💳 [SCREEN] ===== STARTING PAYMENT FLOW =====');
-    print('💳 [SCREEN] Payment method: $paymentMethod');
-    print('💳 [SCREEN] Ride ID: ${controller.currentRide.value?.id}');
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? iconColor.withOpacity(0.05) : Colors.white,
+          border: Border.all(
+            color: isSelected ? iconColor : Colors.grey[300]!,
+            width: isSelected ? 2 : 1,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? iconColor.withOpacity(0.2)
+                    : Colors.grey[100],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: isSelected ? iconColor : Colors.grey[600],
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? iconColor : Colors.grey[800],
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: isSelected
+                          ? iconColor.withOpacity(0.8)
+                          : Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Selection indicator
+            Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? iconColor : Colors.grey[400]!,
+                  width: 2,
+                ),
+                color: isSelected ? iconColor : Colors.transparent,
+              ),
+              child: isSelected
+                  ? const Icon(Icons.check, color: Colors.white, size: 14)
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-    // Call controller method - gets API response
-    if (paymentMethod == 'online') {
-       print('🚀 [SCREEN] Calling generatePaymentQR for online payment');
-       
-       // Close payment selection bottom sheet first
-       if (Get.isBottomSheetOpen == true) {
-         Navigator.of(Get.overlayContext!).pop();
-       }
-       
-       // Call the new generation method
-       await controller.generatePaymentQR();
-       return;
-    }
+  /// Handle complete ride with payment - SEPARATED from UI
+  /// Handle complete ride with payment - Fixed version
+  Future<void> _handleCompleteRideWithPayment(
+    OngoingRideController controller,
+    String paymentMethod,
+    RxBool isCompleting,
+  ) async {
+    try {
+      isCompleting.value = true;
 
-    final response = await controller.completeRideWithPayment(paymentMethod);
+      print('💳 [SCREEN] ===== STARTING PAYMENT FLOW =====');
+      print('💳 [SCREEN] Payment method: $paymentMethod');
+      print('💳 [SCREEN] Ride ID: ${controller.currentRide.value?.id}');
 
-    print('📡 [SCREEN] Response received');
-    print('📡 [SCREEN] Success: ${response['success']}');
-    print('📡 [SCREEN] Full response: $response');
-
-    if (response['success'] == true) {
-      
-      // ✅ Handle ONLINE payment
+      // Call controller method - gets API response
       if (paymentMethod == 'online') {
-        print('💳 [SCREEN] Processing online payment...');
-        
-        if (response['qrCode'] != null && response['qrCode'].toString().isNotEmpty) {
-          print('✅ [SCREEN] QR Code found!');
+        print('🚀 [SCREEN] Calling generatePaymentQR for online payment');
+
+        // Close payment selection bottom sheet first
+        if (Get.isBottomSheetOpen == true) {
+          Navigator.of(Get.overlayContext!).pop();
+        }
+
+        // Call the new generation method
+        await controller.generatePaymentQR();
+        return;
+      }
+
+      final response = await controller.completeRideWithPayment(paymentMethod);
+
+      print('📡 [SCREEN] Response received');
+      print('📡 [SCREEN] Success: ${response['success']}');
+      print('📡 [SCREEN] Full response: $response');
+
+      if (response['success'] == true) {
+        // ✅ Handle ONLINE payment
+        if (paymentMethod == 'online') {
+          print('💳 [SCREEN] Processing online payment...');
+
+          if (response['qrCode'] != null &&
+              response['qrCode'].toString().isNotEmpty) {
+            print('✅ [SCREEN] QR Code found!');
+
+            // Close payment selection bottom sheet
+            if (Get.isBottomSheetOpen == true) {
+              Navigator.of(Get.overlayContext!).pop();
+            }
+
+            // ✅ IMPORTANT: Update ride phase to PAYMENT_PENDING
+            controller.ridePhase.value = RidePhase.PAYMENT_PENDING;
+            print('✅ [SCREEN] Ride phase updated to PAYMENT_PENDING');
+
+            // Wait for animation
+            await Future.delayed(const Duration(milliseconds: 500));
+
+            // Navigate to QR screen
+            print('🚀 [SCREEN] Navigating to PaymentQRScreen...');
+
+            final paymentResult = await Get.to(
+              () => PaymentQRScreen(
+                qrCode: response['qrCode'].toString(),
+                orderId:
+                    (response['paymentLinkId'] ??
+                            response['orderId'] ??
+                            'unknown')
+                        .toString(),
+                rideId: controller.currentRide.value!.id,
+                amount: response['amount'] ?? 0.0,
+                currency: (response['currency'] ?? 'INR').toString(),
+              ),
+              transition: Transition.rightToLeft,
+              duration: const Duration(milliseconds: 300),
+            );
+
+            print('✅ [SCREEN] Returned from PaymentQRScreen');
+            print('💰 [SCREEN] Payment result: $paymentResult');
+
+            // ✅ Check payment result
+            if (paymentResult == true) {
+              // Payment successful
+              print('✅ Payment completed successfully');
+
+              // Update ride phase to COMPLETED
+              controller.ridePhase.value = RidePhase.COMPLETED;
+
+              showSuccessSnackBar(
+                'Ride completed successfully',
+                title: '✅ Payment Received',
+              );
+
+              await Future.delayed(const Duration(seconds: 2));
+              Get.offAllNamed('/');
+            } else {
+              // Payment cancelled or failed
+              print('⚠️ Payment was cancelled or failed');
+
+              // Revert to GOING_TO_DROPOFF phase
+              controller.ridePhase.value = RidePhase.GOING_TO_DROPOFF;
+
+              showWarningSnackBar(
+                'Payment was not completed. Please try again.',
+                title: '⚠️ Payment Cancelled',
+              );
+            }
+          } else {
+            // QR code not found
+            print('❌ [SCREEN] QR Code NOT found in response');
+
+            if (Get.isBottomSheetOpen == true) {
+              Navigator.of(Get.overlayContext!).pop();
+            }
+
+            showErrorSnackBar(
+              'Payment QR code was not generated. Please try again or use cash payment.',
+              title: '❌ QR Code Error',
+            );
+          }
+        }
+        // ✅ Handle CASH payment
+        else if (paymentMethod == 'cash') {
+          print('💵 [SCREEN] Processing cash payment...');
 
           // Close payment selection bottom sheet
           if (Get.isBottomSheetOpen == true) {
             Navigator.of(Get.overlayContext!).pop();
           }
 
-          // ✅ IMPORTANT: Update ride phase to PAYMENT_PENDING
-          controller.ridePhase.value = RidePhase.PAYMENT_PENDING;
-          print('✅ [SCREEN] Ride phase updated to PAYMENT_PENDING');
+          // ✅ CRITICAL FIX: Check if backend actually marked ride as completed
+          print('🔍 Checking backend ride status...');
 
-          // Wait for animation
-          await Future.delayed(const Duration(milliseconds: 500));
+          // ✅ IMPORTANT: Update ride phase to COMPLETED
+          controller.ridePhase.value = RidePhase.COMPLETED;
+          print('✅ Ride phase updated to COMPLETED');
 
-          // Navigate to QR screen
-          print('🚀 [SCREEN] Navigating to PaymentQRScreen...');
-          
-          final paymentResult = await Get.to(
-            () => PaymentQRScreen(
-              qrCode: response['qrCode'].toString(),
-              orderId: (response['paymentLinkId'] ?? response['orderId'] ?? 'unknown').toString(),
-              rideId: controller.currentRide.value!.id,
-              amount: response['amount'] ?? 0.0,
-              currency: (response['currency'] ?? 'INR').toString(),
-            ),
-            transition: Transition.rightToLeft,
-            duration: const Duration(milliseconds: 300),
-          );
+          // ✅ Verify ride status on backend
+          try {
+            // Give backend a moment to update
+            await Future.delayed(const Duration(milliseconds: 500));
 
-          print('✅ [SCREEN] Returned from PaymentQRScreen');
-          print('💰 [SCREEN] Payment result: $paymentResult');
+            // You should have a method in controller to verify ride status
+            // final rideStatus = await controller.verifyRideStatus();
 
-          // ✅ Check payment result
-          if (paymentResult == true) {
-            // Payment successful
-            print('✅ Payment completed successfully');
-            
-            // Update ride phase to COMPLETED
-            controller.ridePhase.value = RidePhase.COMPLETED;
-            
+            // For now, we'll trust the API response
+            print('✅ Cash payment recorded on backend');
+
             showSuccessSnackBar(
-              'Ride completed successfully',
-              title: '✅ Payment Received',
+              'Cash payment recorded successfully',
+              title: '✅ Ride Completed',
+            );
+
+            await Future.delayed(const Duration(seconds: 2));
+
+            // ✅ Navigate to home
+            print('🏠 Navigating to home screen');
+            Get.offAllNamed('/');
+          } catch (e) {
+            print('❌ Error verifying ride status: $e');
+
+            showWarningSnackBar(
+              'Payment recorded but status verification failed',
+              title: '⚠️ Warning',
             );
 
             await Future.delayed(const Duration(seconds: 2));
             Get.offAllNamed('/');
-            
-          } else {
-            // Payment cancelled or failed
-            print('⚠️ Payment was cancelled or failed');
-            
-            // Revert to GOING_TO_DROPOFF phase
-            controller.ridePhase.value = RidePhase.GOING_TO_DROPOFF;
-            
-            showWarningSnackBar(
-              'Payment was not completed. Please try again.',
-              title: '⚠️ Payment Cancelled',
-            );
           }
-
-        } else {
-          // QR code not found
-          print('❌ [SCREEN] QR Code NOT found in response');
-          
-          if (Get.isBottomSheetOpen == true) {
-            Navigator.of(Get.overlayContext!).pop();
-          }
-
-          showErrorSnackBar(
-            'Payment QR code was not generated. Please try again or use cash payment.',
-            title: '❌ QR Code Error',
-          );
         }
+      } else {
+        // API returned error
+        print('❌ [SCREEN] API error: ${response['message']}');
 
-      } 
-      // ✅ Handle CASH payment
-      else if (paymentMethod == 'cash') {
-        print('💵 [SCREEN] Processing cash payment...');
-        
-        // Close payment selection bottom sheet
         if (Get.isBottomSheetOpen == true) {
           Navigator.of(Get.overlayContext!).pop();
         }
 
-        // ✅ CRITICAL FIX: Check if backend actually marked ride as completed
-        print('🔍 Checking backend ride status...');
-        
-        // ✅ IMPORTANT: Update ride phase to COMPLETED
-        controller.ridePhase.value = RidePhase.COMPLETED;
-        print('✅ Ride phase updated to COMPLETED');
-
-        // ✅ Verify ride status on backend
-        try {
-          // Give backend a moment to update
-          await Future.delayed(const Duration(milliseconds: 500));
-          
-          // You should have a method in controller to verify ride status
-          // final rideStatus = await controller.verifyRideStatus();
-          
-          // For now, we'll trust the API response
-          print('✅ Cash payment recorded on backend');
-          
-          showSuccessSnackBar(
-            'Cash payment recorded successfully',
-            title: '✅ Ride Completed',
-          );
-
-          await Future.delayed(const Duration(seconds: 2));
-          
-          // ✅ Navigate to home
-          print('🏠 Navigating to home screen');
-          Get.offAllNamed('/');
-          
-        } catch (e) {
-          print('❌ Error verifying ride status: $e');
-          
-          showWarningSnackBar(
-            'Payment recorded but status verification failed',
-            title: '⚠️ Warning',
-          );
-          
-          await Future.delayed(const Duration(seconds: 2));
-          Get.offAllNamed('/');
-        }
+        showErrorSnackBar(
+          response['message'] ?? 'Failed to complete ride. Please try again.',
+          title: '❌ Error',
+        );
       }
+    } catch (e, stackTrace) {
+      print('❌ [SCREEN] EXCEPTION: $e');
+      print('❌ [SCREEN] Stack trace: $stackTrace');
 
-    } else {
-      // API returned error
-      print('❌ [SCREEN] API error: ${response['message']}');
-      
       if (Get.isBottomSheetOpen == true) {
         Navigator.of(Get.overlayContext!).pop();
       }
 
       showErrorSnackBar(
-        response['message'] ?? 'Failed to complete ride. Please try again.',
-        title: '❌ Error',
+        'Payment processing failed: ${e.toString()}',
+        title: '❌ Critical Error',
       );
+    } finally {
+      isCompleting.value = false;
+      print('💳 [SCREEN] ===== PAYMENT FLOW ENDED =====');
     }
-
-  } catch (e, stackTrace) {
-    print('❌ [SCREEN] EXCEPTION: $e');
-    print('❌ [SCREEN] Stack trace: $stackTrace');
-
-    if (Get.isBottomSheetOpen == true) {
-      Navigator.of(Get.overlayContext!).pop();
-    }
-
-    showErrorSnackBar(
-      'Payment processing failed: ${e.toString()}',
-      title: '❌ Critical Error',
-    );
-
-  } finally {
-    isCompleting.value = false;
-    print('💳 [SCREEN] ===== PAYMENT FLOW ENDED =====');
   }
-}
+
   Widget _buildPaymentMethodTile({
     required IconData icon,
     required String title,

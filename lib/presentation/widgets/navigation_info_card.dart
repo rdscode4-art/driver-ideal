@@ -5,136 +5,135 @@ import '../../controllers/ongoing_ride_controller.dart';
 class NavigationInfoCard extends StatelessWidget {
   final OngoingRideController controller;
 
-  const NavigationInfoCard({
-    super.key,
-    required this.controller,
-  });
+  const NavigationInfoCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with route status
-          Row(
-            children: [
-              Icon(
-                controller.isLoadingNavigation.value
-                  ? Icons.refresh
-                  : controller.hasNavigationError.value
-                    ? Icons.warning
-                    : Icons.navigation,
-                color: controller.isLoadingNavigation.value
-                  ? Colors.blue
-                  : controller.hasNavigationError.value
-                    ? Colors.orange
-                    : Colors.green,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  _getRouteStatusText(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: controller.hasNavigationError.value
-                      ? Colors.orange[700]
-                      : Colors.grey[700],
-                  ),
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with route status
+            Row(
+              children: [
+                Icon(
+                  controller.isLoadingNavigation.value
+                      ? Icons.refresh
+                      : controller.hasNavigationError.value
+                      ? Icons.warning
+                      : Icons.navigation,
+                  color: controller.isLoadingNavigation.value
+                      ? Colors.blue
+                      : controller.hasNavigationError.value
+                      ? Colors.orange
+                      : Colors.green,
+                  size: 20,
                 ),
-              ),
-              if (controller.isLoadingNavigation.value)
-                const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                  ),
-                ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Navigation data display
-          if (controller.hasNavigationData.value &&
-              controller.navigationDistance.value.isNotEmpty &&
-              controller.navigationDuration.value.isNotEmpty)
-            _buildNavigationData()
-          else if (controller.hasNavigationError.value)
-            _buildErrorState()
-          else if (controller.isLoadingNavigation.value)
-            _buildLoadingState()
-          else
-            _buildDefaultState(),
-
-          const SizedBox(height: 16),
-
-          // Action buttons
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: controller.isLoadingNavigation.value
-                    ? null
-                    : () => controller.navigateWithAPI(),
-                  icon: Icon(
-                    controller.isLoadingNavigation.value
-                      ? Icons.hourglass_empty
-                      : Icons.directions,
-                    size: 18,
-                  ),
-                  label: Text(
-                    controller.navigationButtonText,
-                    style: const TextStyle(
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _getRouteStatusText(),
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[600],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      color: controller.hasNavigationError.value
+                          ? Colors.orange[700]
+                          : Colors.grey[700],
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              IconButton(
-                onPressed: controller.isLoadingNavigation.value
-                  ? null
-                  : () => controller.refreshNavigationData(),
-                icon: Icon(
-                  Icons.refresh,
-                  color: controller.isLoadingNavigation.value
-                    ? Colors.grey
-                    : Colors.blue[600],
+                if (controller.isLoadingNavigation.value)
+                  const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    ),
+                  ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Navigation data display
+            if (controller.hasNavigationData.value &&
+                controller.navigationDistance.value.isNotEmpty &&
+                controller.navigationDuration.value.isNotEmpty)
+              _buildNavigationData()
+            else if (controller.hasNavigationError.value)
+              _buildErrorState()
+            else if (controller.isLoadingNavigation.value)
+              _buildLoadingState()
+            else
+              _buildDefaultState(),
+
+            const SizedBox(height: 16),
+
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: controller.isLoadingNavigation.value
+                        ? null
+                        : () => controller.navigateWithAPI(),
+                    icon: Icon(
+                      controller.isLoadingNavigation.value
+                          ? Icons.hourglass_empty
+                          : Icons.directions,
+                      size: 18,
+                    ),
+                    label: Text(
+                      controller.navigationButtonText,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[600],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
                 ),
-                tooltip: 'Refresh route',
-              ),
-            ],
-          ),
-        ],
+                const SizedBox(width: 12),
+                IconButton(
+                  onPressed: controller.isLoadingNavigation.value
+                      ? null
+                      : () => controller.refreshNavigationData(),
+                  icon: Icon(
+                    Icons.refresh,
+                    color: controller.isLoadingNavigation.value
+                        ? Colors.grey
+                        : Colors.blue[600],
+                  ),
+                  tooltip: 'Refresh route',
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   String _getRouteStatusText() {
@@ -276,12 +275,9 @@ class NavigationInfoCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   controller.navigationError.value.isNotEmpty
-                    ? controller.navigationError.value
-                    : 'Unable to calculate route',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.orange[700],
-                  ),
+                      ? controller.navigationError.value
+                      : 'Unable to calculate route',
+                  style: TextStyle(fontSize: 12, color: Colors.orange[700]),
                 ),
               ],
             ),
@@ -340,10 +336,7 @@ class NavigationInfoCard extends StatelessWidget {
           Expanded(
             child: Text(
               'Tap "Navigate" to get route information',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
           ),
         ],

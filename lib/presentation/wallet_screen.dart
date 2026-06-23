@@ -11,7 +11,8 @@ class WalletScreen extends StatefulWidget {
   State<WalletScreen> createState() => _WalletScreenState();
 }
 
-class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderStateMixin {
+class _WalletScreenState extends State<WalletScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _payoutFormKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
@@ -59,7 +60,11 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                 background: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.orange[600]!, Colors.orange[400]!],
+                      colors: [
+                        Color(0xFF065F46), // Emerald 800
+                        Color(0xFF10B981), // Emerald 500
+                        Color(0xFF34D399), // Emerald 400
+                      ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -89,7 +94,9 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                ),
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -102,14 +109,16 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                                     ),
                                   ),
                                   const SizedBox(height: 6),
-                                  Obx(() => Text(
-                                    '₹${controller.walletBalance.value.toStringAsFixed(2)}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
+                                  Obx(
+                                    () => Text(
+                                      '₹${controller.walletBalance.value.toStringAsFixed(2)}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  )),
+                                  ),
                                   const SizedBox(height: 12),
                                   Row(
                                     children: [
@@ -125,21 +134,25 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                                               ),
                                             ),
                                             const SizedBox(height: 3),
-                                            Obx(() => Text(
-                                              '₹${controller.availableForPayout.value.toStringAsFixed(2)}',
-                                              style: TextStyle(
-                                                color: Colors.green[200],
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
+                                            Obx(
+                                              () => Text(
+                                                '₹${controller.availableForPayout.value.toStringAsFixed(2)}',
+                                                style: TextStyle(
+                                                  color: Colors.green[200],
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            )),
+                                            ),
                                           ],
                                         ),
                                       ),
                                       Container(
                                         width: 1,
                                         height: 25,
-                                        color: Colors.white.withValues(alpha: 0.3),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.3,
+                                        ),
                                       ),
                                       Expanded(
                                         child: Column(
@@ -153,14 +166,16 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                                               ),
                                             ),
                                             const SizedBox(height: 3),
-                                            Obx(() => Text(
-                                              '₹${controller.pendingPayouts.value.toStringAsFixed(2)}',
-                                              style: TextStyle(
-                                                color: Colors.orange[200],
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
+                                            Obx(
+                                              () => Text(
+                                                '₹${controller.pendingPayouts.value.toStringAsFixed(2)}',
+                                                style: TextStyle(
+                                                  color: Colors.green[200],
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            )),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -183,14 +198,8 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.white70,
                 tabs: const [
-                  Tab(
-                    icon: Icon(Icons.payment, size: 20),
-                    text: 'Payout',
-                  ),
-                  Tab(
-                    icon: Icon(Icons.history, size: 20),
-                    text: 'History',
-                  ),
+                  Tab(icon: Icon(Icons.payment, size: 20), text: 'Payout'),
+                  Tab(icon: Icon(Icons.history, size: 20), text: 'History'),
                 ],
               ),
             ),
@@ -251,7 +260,6 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
             //     ),
             //   ),
             // ),
-
             const SizedBox(height: 24),
 
             // Payout Form
@@ -275,7 +283,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
               decoration: InputDecoration(
                 labelText: 'Payout Amount',
                 hintText: 'Enter amount to withdraw',
-                prefixIcon: Icon(Icons.currency_rupee, color: Colors.blue[600]),
+                prefixIcon: const Icon(Icons.currency_rupee, color: Color(0xFF10B981)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -311,7 +319,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
               decoration: InputDecoration(
                 labelText: 'Account Holder Name',
                 hintText: 'Enter account holder name',
-                prefixIcon: Icon(Icons.person, color: Colors.blue[600]),
+                prefixIcon: const Icon(Icons.person, color: Color(0xFF10B981)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -341,13 +349,16 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
               decoration: InputDecoration(
                 labelText: 'Account Number',
                 hintText: 'Enter bank account number',
-                prefixIcon: Icon(Icons.account_balance, color: Colors.blue[600]),
+                prefixIcon: const Icon(
+                  Icons.account_balance,
+                  color: Color(0xFF10B981),
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.blue[600]!, width: 2),
+                  borderSide: const BorderSide(color: Color(0xFF10B981), width: 2),
                 ),
               ),
               validator: (value) {
@@ -374,13 +385,13 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
               decoration: InputDecoration(
                 labelText: 'IFSC Code',
                 hintText: 'Enter IFSC code',
-                prefixIcon: Icon(Icons.code, color: Colors.blue[600]),
+                prefixIcon: const Icon(Icons.code, color: Color(0xFF10B981)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.blue[600]!, width: 2),
+                  borderSide: const BorderSide(color: Color(0xFF10B981), width: 2),
                 ),
               ),
               validator: (value) {
@@ -400,39 +411,46 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
             SizedBox(
               width: double.infinity,
               height: 56,
-              child: Obx(() => ElevatedButton(
-                onPressed: controller.isProcessingPayout.value
-                    ? null
-                    : () => _submitPayoutRequest(controller),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[600],
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              child: Obx(
+                () => ElevatedButton(
+                  onPressed: controller.isProcessingPayout.value
+                      ? null
+                      : () => _submitPayoutRequest(controller),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF10B981),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 3,
                   ),
-                  elevation: 3,
-                ),
-                child: controller.isProcessingPayout.value
-                    ? const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  child: controller.isProcessingPayout.value
+                      ? const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
                             ),
+                            SizedBox(width: 12),
+                            Text('Processing...'),
+                          ],
+                        )
+                      : const Text(
+                          'Request Payout',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(width: 12),
-                          Text('Processing...'),
-                        ],
-                      )
-                    : const Text(
-                        'Request Payout',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-              )),
+                        ),
+                ),
+              ),
             ),
 
             const SizedBox(height: 16),
@@ -452,10 +470,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                   Expanded(
                     child: Text(
                       'Your banking details are encrypted and secure. We never store your account information.',
-                      style: TextStyle(
-                        color: Colors.green[700],
-                        fontSize: 13,
-                      ),
+                      style: TextStyle(color: Colors.green[700], fontSize: 13),
                     ),
                   ),
                 ],
@@ -474,11 +489,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.history,
-                size: 80,
-                color: Colors.grey[400],
-              ),
+              Icon(Icons.history, size: 80, color: Colors.grey[400]),
               const SizedBox(height: 16),
               Text(
                 'No Payout History',
@@ -491,9 +502,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
               const SizedBox(height: 8),
               Text(
                 'Your payout requests will appear here',
-                style: TextStyle(
-                  color: Colors.grey[500],
-                ),
+                style: TextStyle(color: Colors.grey[500]),
               ),
             ],
           ),
@@ -525,7 +534,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
         statusIcon = Icons.error;
         break;
       default:
-        statusColor = Colors.orange;
+        statusColor = Colors.green[400]!;
         statusIcon = Icons.schedule;
     }
 
@@ -550,7 +559,10 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -627,10 +639,7 @@ class _WalletScreenState extends State<WalletScreen> with SingleTickerProviderSt
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(color: Colors.grey[600]),
-          ),
+          Text(label, style: TextStyle(color: Colors.grey[600])),
           Text(
             value,
             style: TextStyle(

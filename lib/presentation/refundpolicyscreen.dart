@@ -15,7 +15,10 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Refund Policy',style: TextStyle(color: Colors.white),),
+        title: const Text(
+          'Refund Policy',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.green[700],
         elevation: 0,
       ),
@@ -35,7 +38,7 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
               ),
               child: Column(
                 children: [
-                  Image.asset("assets/images/logo.png",height: 120,),
+                  Image.asset("assets/images/logo.png", height: 120),
                   const SizedBox(height: 16),
                   const Text(
                     'RiDeal Mobility Drive Private Limited',
@@ -49,24 +52,21 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                   const SizedBox(height: 8),
                   const Text(
                     'Refund & Cancellation Policy',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.white70),
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
                       'Effective Date: November 2025',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
                 ],
@@ -88,7 +88,11 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                       padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(Icons.info_outline, color: Colors.blue[700], size: 28),
+                          Icon(
+                            Icons.info_outline,
+                            color: Colors.blue[700],
+                            size: 28,
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Text(
@@ -116,22 +120,16 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                     content: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSubsection(
-                          'Passenger-Initiated Cancellations:',
-                          [
-                            'Free cancellation: Within 2 minutes of booking with 100% refund',
-                            'After 2 minutes: ₹20 cancellation fee will be deducted',
-                            'No-show: No refund if driver arrives at pickup location and passenger is unavailable',
-                          ],
-                        ),
+                        _buildSubsection('Passenger-Initiated Cancellations:', [
+                          'Free cancellation: Within 2 minutes of booking with 100% refund',
+                          'After 2 minutes: ₹20 cancellation fee will be deducted',
+                          'No-show: No refund if driver arrives at pickup location and passenger is unavailable',
+                        ]),
                         const SizedBox(height: 12),
-                        _buildSubsection(
-                          'Driver-Initiated Cancellations:',
-                          [
-                            'Full refund (100%) if driver cancels the ride',
-                            'Refund processed automatically to original payment method',
-                          ],
-                        ),
+                        _buildSubsection('Driver-Initiated Cancellations:', [
+                          'Full refund (100%) if driver cancels the ride',
+                          'Refund processed automatically to original payment method',
+                        ]),
                       ],
                     ),
                   ),
@@ -144,23 +142,17 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                     content: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSubsection(
-                          'Wallet Refunds:',
-                          [
-                            'Credited instantly to RiDeal wallet',
-                            'Can be used for future rides immediately',
-                            'No expiry on wallet balance',
-                          ],
-                        ),
+                        _buildSubsection('Wallet Refunds:', [
+                          'Credited instantly to RiDeal wallet',
+                          'Can be used for future rides immediately',
+                          'No expiry on wallet balance',
+                        ]),
                         const SizedBox(height: 12),
-                        _buildSubsection(
-                          'Card/UPI Refunds:',
-                          [
-                            'Processing time: 5-7 business days',
-                            'Refund to original payment method',
-                            'Bank processing times may vary',
-                          ],
-                        ),
+                        _buildSubsection('Card/UPI Refunds:', [
+                          'Processing time: 5-7 business days',
+                          'Refund to original payment method',
+                          'Bank processing times may vary',
+                        ]),
                       ],
                     ),
                   ),
@@ -173,24 +165,18 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                     content: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSubsection(
-                          'Overcharge Claims:',
-                          [
-                            'Report within 24 hours of ride completion',
-                            'Submit through app support or email',
-                            'Investigation period: 48-72 hours',
-                            'Valid claims receive full refund of excess amount',
-                          ],
-                        ),
+                        _buildSubsection('Overcharge Claims:', [
+                          'Report within 24 hours of ride completion',
+                          'Submit through app support or email',
+                          'Investigation period: 48-72 hours',
+                          'Valid claims receive full refund of excess amount',
+                        ]),
                         const SizedBox(height: 12),
-                        _buildSubsection(
-                          'Technical Failures:',
-                          [
-                            'Multiple debits: Extra charges refunded within 7 days',
-                            'App crashes during payment: Auto-refund if ride not confirmed',
-                            'GPS/route issues: Case-by-case evaluation',
-                          ],
-                        ),
+                        _buildSubsection('Technical Failures:', [
+                          'Multiple debits: Extra charges refunded within 7 days',
+                          'App crashes during payment: Auto-refund if ride not confirmed',
+                          'GPS/route issues: Case-by-case evaluation',
+                        ]),
                       ],
                     ),
                   ),
@@ -209,9 +195,7 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                         _buildBulletPoint(
                           'Valid only for specified period mentioned in offer terms',
                         ),
-                        _buildBulletPoint(
-                          'Cannot be exchanged for cash',
-                        ),
+                        _buildBulletPoint('Cannot be exchanged for cash'),
                         _buildBulletPoint(
                           'Expired credits cannot be reactivated or refunded',
                         ),
@@ -227,23 +211,17 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                     content: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSubsection(
-                          'Monthly/Weekly Passes:',
-                          [
-                            'Full refund if cancelled within 24 hours of purchase (unused)',
-                            'Pro-rated refund not available after usage begins',
-                            'Auto-renewal can be cancelled anytime before next billing cycle',
-                          ],
-                        ),
+                        _buildSubsection('Monthly/Weekly Passes:', [
+                          'Full refund if cancelled within 24 hours of purchase (unused)',
+                          'Pro-rated refund not available after usage begins',
+                          'Auto-renewal can be cancelled anytime before next billing cycle',
+                        ]),
                         const SizedBox(height: 12),
-                        _buildSubsection(
-                          'Premium Subscriptions:',
-                          [
-                            'Cancellation allowed anytime',
-                            'Benefits continue until end of paid period',
-                            'No partial refunds for unused subscription days',
-                          ],
-                        ),
+                        _buildSubsection('Premium Subscriptions:', [
+                          'Cancellation allowed anytime',
+                          'Benefits continue until end of paid period',
+                          'No partial refunds for unused subscription days',
+                        ]),
                       ],
                     ),
                   ),
@@ -317,11 +295,23 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                     content: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildStepItem(1, 'Open the RiDeal app and go to "My Rides"'),
-                        _buildStepItem(2, 'Select the ride you want to dispute'),
-                        _buildStepItem(3, 'Tap on "Report an Issue" or "Request Refund"'),
+                        _buildStepItem(
+                          1,
+                          'Open the RiDeal app and go to "My Rides"',
+                        ),
+                        _buildStepItem(
+                          2,
+                          'Select the ride you want to dispute',
+                        ),
+                        _buildStepItem(
+                          3,
+                          'Tap on "Report an Issue" or "Request Refund"',
+                        ),
                         _buildStepItem(4, 'Choose the appropriate reason'),
-                        _buildStepItem(5, 'Submit with details and supporting evidence if any'),
+                        _buildStepItem(
+                          5,
+                          'Submit with details and supporting evidence if any',
+                        ),
                         const SizedBox(height: 16),
                         Container(
                           padding: const EdgeInsets.all(12),
@@ -332,7 +322,11 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.email, color: Colors.blue[700], size: 20),
+                              Icon(
+                                Icons.email,
+                                color: Colors.blue[700],
+                                size: 20,
+                              ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
@@ -379,7 +373,11 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.warning_amber, color: Colors.amber[800], size: 28),
+                              Icon(
+                                Icons.warning_amber,
+                                color: Colors.amber[800],
+                                size: 28,
+                              ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
@@ -449,7 +447,6 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                   //     ),
                   //   ),
                   // ),
-
                   const SizedBox(height: 32),
                 ],
               ),
@@ -472,9 +469,7 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
     return Card(
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
           InkWell(
@@ -507,7 +502,9 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                     ),
                   ),
                   Icon(
-                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
                     color: Colors.grey[600],
                   ),
                 ],
@@ -602,10 +599,7 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
                 const SizedBox(height: 4),
                 Text(
                   time,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -669,10 +663,7 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
             children: [
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               ),
               const SizedBox(height: 4),
               Text(

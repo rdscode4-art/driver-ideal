@@ -76,10 +76,7 @@ Rideal reserves the right to modify or update these Terms at any time. Continued
                         SizedBox(height: 8),
                         Text(
                           'Last Updated: September 2025',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ],
                     ),
@@ -201,7 +198,11 @@ Rideal reserves the right to modify or update these Terms at any time. Continued
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(Icons.description, color: Colors.grey[700], size: 20),
+                  child: Icon(
+                    Icons.description,
+                    color: Colors.grey[700],
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -434,10 +435,7 @@ Rideal reserves the right to modify or update these Terms at any time. Continued
         Expanded(
           child: Text(
             value,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
         ),
       ],

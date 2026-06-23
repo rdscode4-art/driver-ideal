@@ -79,10 +79,7 @@ class RiderRatingBottomSheet extends StatelessWidget {
                   Expanded(
                     child: Text(
                       controller.errorMessage.value,
-                      style: TextStyle(
-                        color: Colors.red[700],
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.red[700], fontSize: 14),
                     ),
                   ),
                 ],
@@ -113,11 +110,7 @@ class RiderRatingBottomSheet extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        const Icon(
-          Icons.star_rounded,
-          size: 48,
-          color: Colors.amber,
-        ),
+        const Icon(Icons.star_rounded, size: 48, color: Colors.amber),
         const SizedBox(height: 12),
         const Text(
           'Rate Your Rider',
@@ -128,42 +121,43 @@ class RiderRatingBottomSheet extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Obx(() => Text(
-          'How was your experience with ${controller.riderName.value}?',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
+        Obx(
+          () => Text(
+            'How was your experience with ${controller.riderName.value}?',
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        )),
+        ),
       ],
     );
   }
 
   Widget _buildStarRating(RiderRatingController controller) {
-    return Obx(() => Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(5, (index) {
-        final starValue = index + 1;
-        final isSelected = starValue <= controller.selectedRating.value;
-        final isHovered = starValue <= controller.selectedRating.value;
+    return Obx(
+      () => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(5, (index) {
+          final starValue = index + 1;
+          final isSelected = starValue <= controller.selectedRating.value;
+          final isHovered = starValue <= controller.selectedRating.value;
 
-        return GestureDetector(
-          onTap: () => controller.setRating(starValue),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.all(8),
-            child: Icon(
-              isSelected ? Icons.star_rounded : Icons.star_outline_rounded,
-              size: 40,
-              color: isSelected
-                ? controller.getRatingColor(starValue)
-                : Colors.grey[300],
+          return GestureDetector(
+            onTap: () => controller.setRating(starValue),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.all(8),
+              child: Icon(
+                isSelected ? Icons.star_rounded : Icons.star_outline_rounded,
+                size: 40,
+                color: isSelected
+                    ? controller.getRatingColor(starValue)
+                    : Colors.grey[300],
+              ),
             ),
-          ),
-        );
-      }),
-    ));
+          );
+        }),
+      ),
+    );
   }
 
   Widget _buildRatingDescription(RiderRatingController controller) {
@@ -229,104 +223,108 @@ class RiderRatingBottomSheet extends StatelessWidget {
   }
 
   Widget _buildActionButtons(RiderRatingController controller) {
-    return Obx(() => Row(
-      children: [
-        // Skip Button
-        Expanded(
-          flex: 1,
-          child: OutlinedButton(
-            onPressed: controller.isSubmitting.value ? null : () {
-              controller.skipRating();
-            },
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+    return Obx(
+      () => Row(
+        children: [
+          // Skip Button
+          Expanded(
+            flex: 1,
+            child: OutlinedButton(
+              onPressed: controller.isSubmitting.value
+                  ? null
+                  : () {
+                      controller.skipRating();
+                    },
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                side: BorderSide(color: Colors.grey[400]!),
               ),
-              side: BorderSide(color: Colors.grey[400]!),
-            ),
-            child: Text(
-              'Skip',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+              child: Text(
+                'Skip',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[600],
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 16),
+          const SizedBox(width: 16),
 
-        // Submit Button
-        Expanded(
-          flex: 2,
-          child: ElevatedButton(
-            onPressed: controller.canSubmitRating ? () async {
-              final success = await controller.submitRating();
-              if (success) {
-                // Keep the bottom sheet open to show completion state
-                await Future.delayed(const Duration(seconds: 2));
-                onComplete?.call();
-              }
-            } : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: controller.canSubmitRating
-                ? Colors.blue[600]
-                : Colors.grey[300],
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          // Submit Button
+          Expanded(
+            flex: 2,
+            child: ElevatedButton(
+              onPressed: controller.canSubmitRating
+                  ? () async {
+                      final success = await controller.submitRating();
+                      if (success) {
+                        // Keep the bottom sheet open to show completion state
+                        await Future.delayed(const Duration(seconds: 2));
+                        onComplete?.call();
+                      }
+                    }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: controller.canSubmitRating
+                    ? Colors.blue[600]
+                    : Colors.grey[300],
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: controller.canSubmitRating ? 2 : 0,
               ),
-              elevation: controller.canSubmitRating ? 2 : 0,
-            ),
-            child: controller.isSubmitting.value
-              ? const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Submitting...',
+              child: controller.isSubmitting.value
+                  ? const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Submitting...',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      'Submit Rating',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: controller.canSubmitRating
+                            ? Colors.white
+                            : Colors.grey[500],
                       ),
                     ),
-                  ],
-                )
-              : Text(
-                  'Submit Rating',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: controller.canSubmitRating
-                      ? Colors.white
-                      : Colors.grey[500],
-                  ),
-                ),
+            ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   Widget _buildCompletionWidget(RiderRatingController controller) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(
-          Icons.check_circle_rounded,
-          size: 80,
-          color: Colors.green,
-        ),
+        const Icon(Icons.check_circle_rounded, size: 80, color: Colors.green),
         const SizedBox(height: 16),
         const Text(
           'Thank You!',
@@ -339,10 +337,7 @@ class RiderRatingBottomSheet extends StatelessWidget {
         const SizedBox(height: 8),
         const Text(
           'Your rating has been submitted successfully',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey,
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.grey),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 24),

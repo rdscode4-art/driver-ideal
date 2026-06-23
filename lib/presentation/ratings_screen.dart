@@ -4,9 +4,11 @@ import '../controllers/rating_feedback_controller.dart';
 import 'widgets/app_logo.dart';
 
 class RatingsScreen extends StatelessWidget {
-  final RatingFeedbackController controller = Get.put(RatingFeedbackController());
+  final RatingFeedbackController controller = Get.put(
+    RatingFeedbackController(),
+  );
 
-   RatingsScreen({super.key});
+  RatingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -112,14 +114,19 @@ class RatingsScreen extends StatelessWidget {
       if (controller.isLoading.value) {
         return Card(
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               children: [
                 CircularProgressIndicator(color: Colors.orange[700]),
                 const SizedBox(height: 16),
-                Text('Loading your rating...', style: TextStyle(color: Colors.grey[600])),
+                Text(
+                  'Loading your rating...',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
               ],
             ),
           ),
@@ -129,7 +136,9 @@ class RatingsScreen extends StatelessWidget {
       if (controller.hasError.value) {
         return Card(
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -211,7 +220,11 @@ class RatingsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.star_rounded, color: Colors.amber[400], size: 40),
+                    Icon(
+                      Icons.star_rounded,
+                      color: Colors.amber[400],
+                      size: 40,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       controller.displayRating,
@@ -226,10 +239,7 @@ class RatingsScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   'Based on ${controller.totalRatings} trip${controller.totalRatings != 1 ? 's' : ''}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
                 const SizedBox(height: 16),
 
@@ -242,7 +252,11 @@ class RatingsScreen extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
+                      Icon(
+                        Icons.info_outline,
+                        color: Colors.blue[700],
+                        size: 20,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -258,7 +272,9 @@ class RatingsScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ))  );
+          ),
+        ),
+      );
     });
   }
 
@@ -279,7 +295,11 @@ class RatingsScreen extends StatelessWidget {
                     color: Colors.blue[100],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(Icons.analytics_outlined, color: Colors.blue[700], size: 20),
+                  child: Icon(
+                    Icons.analytics_outlined,
+                    color: Colors.blue[700],
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -373,7 +393,11 @@ class RatingsScreen extends StatelessWidget {
                     color: Colors.blue[100],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(Icons.feedback_outlined, color: Colors.blue[700], size: 20),
+                  child: Icon(
+                    Icons.feedback_outlined,
+                    color: Colors.blue[700],
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -394,29 +418,33 @@ class RatingsScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
-            Obx(() => Row(
-              children: List.generate(5, (index) {
-                return GestureDetector(
-                  onTap: () => controller.setRating(index + 1),
-                  child: Icon(
-                    Icons.star,
-                    size: 32,
-                    color: index < controller.rating.value
-                        ? Colors.orange
-                        : Colors.grey[300],
-                  ),
-                );
-              }),
-            )),
-            const SizedBox(height: 8),
-            Obx(() => Text(
-              controller.getRatingText(),
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-                fontStyle: FontStyle.italic,
+            Obx(
+              () => Row(
+                children: List.generate(5, (index) {
+                  return GestureDetector(
+                    onTap: () => controller.setRating(index + 1),
+                    child: Icon(
+                      Icons.star,
+                      size: 32,
+                      color: index < controller.rating.value
+                          ? Colors.orange
+                          : Colors.grey[300],
+                    ),
+                  );
+                }),
               ),
-            )),
+            ),
+            const SizedBox(height: 8),
+            Obx(
+              () => Text(
+                controller.getRatingText(),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
 
             // Feedback categories
@@ -425,20 +453,25 @@ class RatingsScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
-            Obx(() => Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: controller.feedbackCategories.map((category) {
-                final isSelected = controller.selectedCategories.contains(category);
-                return FilterChip(
-                  label: Text(category),
-                  selected: isSelected,
-                  onSelected: (selected) => controller.toggleCategory(category),
-                  selectedColor: Colors.blue[100],
-                  checkmarkColor: Colors.blue[700],
-                );
-              }).toList(),
-            )),
+            Obx(
+              () => Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: controller.feedbackCategories.map((category) {
+                  final isSelected = controller.selectedCategories.contains(
+                    category,
+                  );
+                  return FilterChip(
+                    label: Text(category),
+                    selected: isSelected,
+                    onSelected: (selected) =>
+                        controller.toggleCategory(category),
+                    selectedColor: Colors.blue[100],
+                    checkmarkColor: Colors.blue[700],
+                  );
+                }).toList(),
+              ),
+            ),
             const SizedBox(height: 16),
 
             // Feedback text
@@ -485,42 +518,49 @@ class RatingsScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Submit button
-            Obx(() => SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: controller.isSubmitting.value
-                    ? null
-                    : controller.submitFeedback,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[700],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            Obx(
+              () => SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: controller.isSubmitting.value
+                      ? null
+                      : controller.submitFeedback,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[700],
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                ),
-                child: controller.isSubmitting.value
-                    ? const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  child: controller.isSubmitting.value
+                      ? const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
                             ),
+                            SizedBox(width: 8),
+                            Text('Submitting...'),
+                          ],
+                        )
+                      : const Text(
+                          'Submit Feedback',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
-                          SizedBox(width: 8),
-                          Text('Submitting...'),
-                        ],
-                      )
-                    : const Text(
-                        'Submit Feedback',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
+                        ),
+                ),
               ),
-            )),
+            ),
           ],
         ),
       ),
@@ -544,7 +584,11 @@ class RatingsScreen extends StatelessWidget {
                     color: Colors.blue[100],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(Icons.feedback_outlined, color: Colors.blue[700], size: 20),
+                  child: Icon(
+                    Icons.feedback_outlined,
+                    color: Colors.blue[700],
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -612,10 +656,7 @@ class RatingsScreen extends StatelessWidget {
               ),
               Text(
                 date,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: Colors.grey[600], fontSize: 12),
               ),
             ],
           ),
@@ -655,7 +696,11 @@ class RatingsScreen extends StatelessWidget {
                       color: Colors.blue[100],
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Icon(Icons.history, color: Colors.blue[700], size: 20),
+                    child: Icon(
+                      Icons.history,
+                      color: Colors.blue[700],
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Text(
@@ -696,7 +741,10 @@ class RatingsScreen extends StatelessWidget {
                           ),
                           const Spacer(),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: feedback['status'] == 'Resolved'
                                   ? Colors.green[100]
@@ -724,10 +772,7 @@ class RatingsScreen extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         feedback['date'],
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -740,6 +785,3 @@ class RatingsScreen extends StatelessWidget {
     });
   }
 }
-
-
-

@@ -12,17 +12,21 @@ class WithdrawalRequestScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(
-              controller.otpSent.value ? 'Verify OTP' : 'Request Withdrawal',
-            )),
+        title: Obx(
+          () => Text(
+            controller.otpSent.value ? 'Verify OTP' : 'Request Withdrawal',
+          ),
+        ),
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Obx(() {
         // Debug print
-        print('🔍 UI BUILD - otpSent: ${controller.otpSent.value}, isSubmitting: ${controller.isSubmitting.value}');
-        
+        print(
+          '🔍 UI BUILD - otpSent: ${controller.otpSent.value}, isSubmitting: ${controller.isSubmitting.value}',
+        );
+
         if (controller.isSubmitting.value) {
           return Center(
             child: Column(
@@ -76,10 +80,7 @@ class WithdrawalRequestScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   const Text(
                     'Withdraw Your Earnings',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -104,10 +105,7 @@ class WithdrawalRequestScreen extends StatelessWidget {
             decoration: InputDecoration(
               hintText: 'Enter amount',
               prefixText: '₹ ',
-              prefixIcon: Icon(
-                Icons.currency_rupee,
-                color: Colors.green[700],
-              ),
+              prefixIcon: Icon(Icons.currency_rupee, color: Colors.green[700]),
               suffixIcon: Icon(Icons.money, color: Colors.green[700]),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -115,10 +113,7 @@ class WithdrawalRequestScreen extends StatelessWidget {
               filled: true,
               fillColor: Colors.grey[100],
             ),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
@@ -186,10 +181,7 @@ class WithdrawalRequestScreen extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       hintText: 'e.g., 9876543210@paytm',
-                      prefixIcon: Icon(
-                        Icons.payment,
-                        color: Colors.green[700],
-                      ),
+                      prefixIcon: Icon(Icons.payment, color: Colors.green[700]),
                       suffixIcon: Icon(
                         Icons.verified_user,
                         color: Colors.green[700],
@@ -295,10 +287,7 @@ class WithdrawalRequestScreen extends StatelessWidget {
                 SizedBox(width: 10),
                 Text(
                   'Send OTP',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -308,53 +297,53 @@ class WithdrawalRequestScreen extends StatelessWidget {
 
           // Info Card
           Card(
-                color: Colors.blue[50],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(Icons.info_outline, color: Colors.blue[700]),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Important Information',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue[900],
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              controller.selectedPayoutMethod.value == 'UPI'
-                                  ? '• An OTP will be sent to your registered mobile number\n'
-                                      '• Withdrawal requests are processed within 24-48 hours\n'
-                                      '• Minimum withdrawal amount is ₹${controller.minWithdrawalAmount.value.toInt()}\n'
-                                      '• Ensure your UPI ID is correct\n'
-                                      '• Admin approval is required'
-                                  : '• An OTP will be sent to your registered mobile number\n'
-                                      '• Withdrawal requests are processed within 24-48 hours\n'
-                                      '• Minimum withdrawal amount is ₹${controller.minWithdrawalAmount.value.toInt()}\n'
-                                      '• Ensure bank details are correct\n'
-                                      '• Admin approval is required',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.blue[800],
-                              ),
-                            ),
-                          ],
+            color: Colors.blue[50],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline, color: Colors.blue[700]),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Important Information',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[900],
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 5),
+                        Text(
+                          controller.selectedPayoutMethod.value == 'UPI'
+                              ? '• An OTP will be sent to your registered mobile number\n'
+                                    '• Withdrawal requests are processed within 24-48 hours\n'
+                                    '• Minimum withdrawal amount is ₹${controller.minWithdrawalAmount.value.toInt()}\n'
+                                    '• Ensure your UPI ID is correct\n'
+                                    '• Admin approval is required'
+                              : '• An OTP will be sent to your registered mobile number\n'
+                                    '• Withdrawal requests are processed within 24-48 hours\n'
+                                    '• Minimum withdrawal amount is ₹${controller.minWithdrawalAmount.value.toInt()}\n'
+                                    '• Ensure bank details are correct\n'
+                                    '• Admin approval is required',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.blue[800],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
+            ),
+          ),
         ],
       ),
     );
@@ -376,18 +365,11 @@ class WithdrawalRequestScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  Icon(
-                    Icons.security,
-                    size: 60,
-                    color: Colors.green[700],
-                  ),
+                  Icon(Icons.security, size: 60, color: Colors.green[700]),
                   const SizedBox(height: 12),
                   const Text(
                     'Verify OTP',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -413,10 +395,7 @@ class WithdrawalRequestScreen extends StatelessWidget {
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
               hintText: '000000',
-              prefixIcon: Icon(
-                Icons.lock_outline,
-                color: Colors.green[700],
-              ),
+              prefixIcon: Icon(Icons.lock_outline, color: Colors.green[700]),
               counterText: '',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -454,10 +433,7 @@ class WithdrawalRequestScreen extends StatelessWidget {
                 SizedBox(width: 10),
                 Text(
                   'Verify & Submit',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ],
             ),

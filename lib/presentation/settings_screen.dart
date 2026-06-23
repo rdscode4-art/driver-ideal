@@ -53,10 +53,7 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         Text(
                           'Manage your preferences',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ],
                     ),
@@ -77,90 +74,78 @@ class SettingsScreen extends StatelessWidget {
                   // SizedBox(height: 16),
 
                   // Account Settings
-                  _buildSettingsSection(
-                    'Account',
-                    Icons.account_circle,
-                    [
-                      _buildSettingItem(
-                        'Personal Information',
-                        'Edit your profile details',
-                        Icons.person_outline,
-                        () => Get.toNamed(Routes.PROFILE),
-                      ),
-                      _buildSettingItem(
-                        'Documents',
-                        'Manage your verification documents',
-                        Icons.description_outlined,
-                        () => Get.toNamed(Routes.KYC_DOCUMENTS),
-                      ),
-                      // _buildSettingItem(
-                      //   'Vehicle Information',
-                      //   'Update vehicle details',
-                      //   Icons.directions_car_outlined,
-                      //   () => Get.toNamed(Routes.VEHICLE_INFO),
-                      // ),
-                    ],
-                  ),
+                  _buildSettingsSection('Account', Icons.account_circle, [
+                    _buildSettingItem(
+                      'Personal Information',
+                      'Edit your profile details',
+                      Icons.person_outline,
+                      () => Get.toNamed(Routes.PROFILE),
+                    ),
+                    _buildSettingItem(
+                      'Documents',
+                      'Manage your verification documents',
+                      Icons.description_outlined,
+                      () => Get.toNamed(Routes.KYC_DOCUMENTS),
+                    ),
+                    // _buildSettingItem(
+                    //   'Vehicle Information',
+                    //   'Update vehicle details',
+                    //   Icons.directions_car_outlined,
+                    //   () => Get.toNamed(Routes.VEHICLE_INFO),
+                    // ),
+                  ]),
                   const SizedBox(height: 16),
 
                   // App Settings
-                  _buildSettingsSection(
-                    'App Settings',
-                    Icons.settings,
-                    [
-                      _buildSettingItem(
-                        'Notifications',
-                        'Manage notification preferences',
-                        Icons.notifications_outlined,
-                        () => Get.toNamed(Routes.NOTIFICATION_SETTINGS),
-                      ),
-                      // _buildSettingItem(
-                      //   'Privacy & Security',
-                      //   'Control your privacy settings',
-                      //   Icons.security_outlined,
-                      //   () => Get.toNamed(Routes.PRIVACY_SETTINGS),
-                      // ),
-                      // _buildSettingItem(
-                      //   'Language',
-                      //   'Change app language',
-                      //   Icons.language_outlined,
-                      //   () => _showLanguageDialog(),
-                      // ),
-                      _buildSettingItem(
-                        'Theme',
-                        'Switch between light and dark mode',
-                        Icons.palette_outlined,
-                        () => _showThemeDialog(),
-                      ),
-                    ],
-                  ),
+                  _buildSettingsSection('App Settings', Icons.settings, [
+                    _buildSettingItem(
+                      'Notifications',
+                      'Manage notification preferences',
+                      Icons.notifications_outlined,
+                      () => Get.toNamed(Routes.NOTIFICATION_SETTINGS),
+                    ),
+                    // _buildSettingItem(
+                    //   'Privacy & Security',
+                    //   'Control your privacy settings',
+                    //   Icons.security_outlined,
+                    //   () => Get.toNamed(Routes.PRIVACY_SETTINGS),
+                    // ),
+                    // _buildSettingItem(
+                    //   'Language',
+                    //   'Change app language',
+                    //   Icons.language_outlined,
+                    //   () => _showLanguageDialog(),
+                    // ),
+                    _buildSettingItem(
+                      'Theme',
+                      'Switch between light and dark mode',
+                      Icons.palette_outlined,
+                      () => _showThemeDialog(),
+                    ),
+                  ]),
                   const SizedBox(height: 16),
 
                   // About & Legal
-                  _buildSettingsSection(
-                    'About & Legal',
-                    Icons.info_outline,
-                    [
-                      _buildSettingItem(
-                        'About RiDeal',
-                        'Learn more about our app',
-                        Icons.info_outlined,
-                        () => Get.toNamed(Routes.ABOUT),
-                      ),
-                      _buildSettingItem(
-                        'Terms of Service',
-                        'Read our terms and conditions',
-                        Icons.description_outlined,
-                        () => Get.toNamed(Routes.TERMS),
-                      ),
-                      _buildSettingItem(
-                        'Privacy Policy',
-                        'View our privacy policy',
-                        Icons.privacy_tip_outlined,
-                        () => Get.toNamed(Routes.PRIVACY_POLICY),
-                      ),
-                    ],
-                  ),
+                  _buildSettingsSection('About & Legal', Icons.info_outline, [
+                    _buildSettingItem(
+                      'About RiDeal',
+                      'Learn more about our app',
+                      Icons.info_outlined,
+                      () => Get.toNamed(Routes.ABOUT),
+                    ),
+                    _buildSettingItem(
+                      'Terms of Service',
+                      'Read our terms and conditions',
+                      Icons.description_outlined,
+                      () => Get.toNamed(Routes.TERMS),
+                    ),
+                    _buildSettingItem(
+                      'Privacy Policy',
+                      'View our privacy policy',
+                      Icons.privacy_tip_outlined,
+                      () => Get.toNamed(Routes.PRIVACY_POLICY),
+                    ),
+                  ]),
                   const SizedBox(height: 16),
 
                   // Logout Button
@@ -208,36 +193,36 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: 35,
-                ),
+                child: const Icon(Icons.person, color: Colors.white, size: 35),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Obx(() => Text(
-                      controller.driverName.value,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[800],
+                    Obx(
+                      () => Text(
+                        controller.driverName.value,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[800],
+                        ),
                       ),
-                    )),
+                    ),
                     const SizedBox(height: 4),
-                    Obx(() => Text(
-                      controller.driverEmail.value,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
+                    Obx(
+                      () => Text(
+                        controller.driverEmail.value,
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                    )),
+                    ),
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green[100],
                         borderRadius: BorderRadius.circular(12),
@@ -246,7 +231,11 @@ class SettingsScreen extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.verified, color: Colors.green[700], size: 16),
+                          Icon(
+                            Icons.verified,
+                            color: Colors.green[700],
+                            size: 16,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Verified',
@@ -274,7 +263,11 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsSection(String title, IconData icon, List<Widget> items) {
+  Widget _buildSettingsSection(
+    String title,
+    IconData icon,
+    List<Widget> items,
+  ) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
@@ -312,7 +305,12 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingItem(String title, String subtitle, IconData icon, VoidCallback onTap) {
+  Widget _buildSettingItem(
+    String title,
+    String subtitle,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -344,19 +342,12 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                   ),
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey[400],
-              size: 16,
-            ),
+            Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 16),
           ],
         ),
       ),
@@ -465,18 +456,13 @@ class SettingsScreen extends StatelessWidget {
         title: const Text('Logout'),
         content: const Text('Are you sure you want to logout?'),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               controller.logout();
               Get.back();
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red[600],
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red[600]),
             child: const Text('Logout', style: TextStyle(color: Colors.white)),
           ),
         ],

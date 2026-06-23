@@ -20,11 +20,9 @@ import 'package:rideal_driver/presentation/screens/withdrawal_request_screen.dar
 import 'package:rideal_driver/presentation/screens/payout_history_screen.dart';
 import 'package:rideal_driver/views/documentsuploadscreen.dart';
 import 'package:rideal_driver/views/non_vehichle_subscriptionplans_screen.dart';
-import 'package:rideal_driver/views/non_vehicle_login_screen.dart';
-import 'package:rideal_driver/views/non_vehicle_option_screen.dart';
-import 'package:rideal_driver/views/non_vehicle_otp_screen.dart';
 import 'package:rideal_driver/views/personalinfoscreen.dart';
 import '../controllers/ride_history_controller.dart';
+import '../presentation/role_selection_screen.dart';
 import '../presentation/login_screen.dart';
 import '../presentation/signup_screen.dart';
 import '../presentation/profile_screen.dart';
@@ -48,16 +46,17 @@ class AppPages {
     ),
     // Individual screens (accessible via bottom navigation)
     GetPage(name: Routes.EARNINGS, page: () => const EarningsScreen()),
-    GetPage(
-      name: Routes.SUBSCRIPTION,
-      page: () => const SubscriptionScreen(),
-    ),
+    GetPage(name: Routes.SUBSCRIPTION, page: () => const SubscriptionScreen()),
     GetPage(
       name: Routes.NONVEHICHLEDASHBOARD,
       middlewares: [AuthMiddleware()],
       page: () => const MainScreen(),
     ),
     GetPage(name: Routes.PROFILE, page: () => const ProfileScreen()),
+    GetPage(
+      name: Routes.ROLE_SELECTION,
+      page: () => const RoleSelectionScreen(),
+    ),
     GetPage(name: Routes.LOGIN, page: () => const LoginScreen()),
     GetPage(name: Routes.SIGNUP, page: () => const SignupScreen()),
     GetPage(
@@ -72,9 +71,9 @@ class AppPages {
       page: () => const NotificationsScreen(),
     ),
     GetPage(
-  name: '/verification-pending',
-  page: () => const VerificationPendingScreen(),
-),
+      name: '/verification-pending',
+      page: () => const VerificationPendingScreen(),
+    ),
     GetPage(name: Routes.SETTINGS, page: () => SettingsScreen()),
     GetPage(name: Routes.RATINGS, page: () => RatingsScreen()),
     GetPage(name: Routes.CHAT, page: () => ChatScreen()),
@@ -105,24 +104,12 @@ class AppPages {
 
     // ✨ Non-Vehicle Driver Routes
     GetPage(
-      name: Routes.NON_VEHICLE_OPTION,
-      page: () => const NonVehicleOptionScreen(),
-    ),
-    GetPage(
       name: Routes.NON_VEHICLE_REGISTER,
       page: () => const NonVehiclePersonalInfoScreen(),
     ),
     GetPage(
       name: Routes.NON_VEHICLE_DOCUMENTS,
       page: () => const NonVehicleDocumentsScreen(),
-    ),
-    GetPage(
-      name: Routes.NON_VEHICLE_LOGIN,
-      page: () => const NonVehicleLoginScreen(),
-    ),
-    GetPage(
-      name: Routes.NON_VEHICLE_OTP,
-      page: () => const NonVehicleOtpScreen(),
     ),
     GetPage(
       name: Routes.NON_VEHICLE_SUBSCRIPTION,

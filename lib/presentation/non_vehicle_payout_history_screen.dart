@@ -15,14 +15,11 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Withdrawal History',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Colors.orange[600],
         elevation: 0,
-         automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         // leading: IconButton(
         //   icon: const Icon(Icons.arrow_back, color: Colors.white),
         //   onPressed: () => Get.back(),
@@ -47,10 +44,7 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   'Loading history...',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
                 ),
               ],
             ),
@@ -88,11 +82,7 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
               color: Colors.grey[100],
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              Icons.history,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            child: Icon(Icons.history, size: 80, color: Colors.grey[400]),
           ),
           const SizedBox(height: 24),
           Text(
@@ -106,10 +96,7 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'You haven\'t made any withdrawals yet',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
         ],
       ),
@@ -123,7 +110,7 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
     final amount = payout['amount']?.toDouble() ?? 0.0;
     final status = (payout['status'] ?? 'pending').toString().toLowerCase();
     final requestedAt = payout['requestedAt'] ?? payout['createdAt'];
-    
+
     final statusColor = controller.getStatusColor(status);
     final statusIcon = controller.getStatusIcon(status);
 
@@ -202,18 +189,12 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: statusColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: statusColor.withOpacity(0.3),
-                        ),
+                        border: Border.all(color: statusColor.withOpacity(0.3)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            statusIcon,
-                            size: 14,
-                            color: statusColor,
-                          ),
+                          Icon(statusIcon, size: 14, color: statusColor),
                           const SizedBox(width: 4),
                           Text(
                             status.toUpperCase(),
@@ -313,7 +294,7 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
   String _formatDate(dynamic date) {
     try {
       if (date == null) return 'N/A';
-      
+
       DateTime dateTime;
       if (date is String) {
         dateTime = DateTime.parse(date);
@@ -322,7 +303,7 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
       } else {
         return 'N/A';
       }
-      
+
       return DateFormat('dd MMM yyyy, hh:mm a').format(dateTime);
     } catch (e) {
       return 'N/A';
@@ -336,14 +317,12 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
     final amount = payout['amount']?.toDouble() ?? 0.0;
     final status = (payout['status'] ?? 'pending').toString().toLowerCase();
     final requestedAt = payout['requestedAt'] ?? payout['createdAt'];
-    
+
     final statusColor = controller.getStatusColor(status);
 
     Get.dialog(
       Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Container(
           padding: const EdgeInsets.all(24),
           child: Column(
@@ -395,10 +374,10 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
               // Details
               _buildDetailRow('Amount', '₹${amount.toStringAsFixed(2)}'),
               _buildDetailRow('Status', status.toUpperCase()),
-              
+
               if (payout['_id'] != null)
                 _buildDetailRow('Transaction ID', payout['_id']),
-              
+
               if (payout['bankDetails'] != null) ...[
                 if (payout['bankDetails']['upiId'] != null)
                   _buildDetailRow('UPI ID', payout['bankDetails']['upiId']),
@@ -408,7 +387,10 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
                     payout['bankDetails']['accountNumber'],
                   ),
                 if (payout['bankDetails']['ifscCode'] != null)
-                  _buildDetailRow('IFSC Code', payout['bankDetails']['ifscCode']),
+                  _buildDetailRow(
+                    'IFSC Code',
+                    payout['bankDetails']['ifscCode'],
+                  ),
               ],
 
               const SizedBox(height: 24),
@@ -451,19 +433,13 @@ class NonVehiclePayoutHistoryScreen extends StatelessWidget {
             width: 120,
             child: Text(
               label,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
           ),
         ],

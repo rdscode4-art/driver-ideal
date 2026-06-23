@@ -27,7 +27,8 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
     NonVehicleAuthController(),
   );
 
-  File? dlImage;
+  File? dlImage; // Used for Front DL Image
+  File? dlBackImage; // ⭐ NEW: Back DL Image
   File? aadhaarFrontImage; // ⭐ CHANGED: Front image
   File? aadhaarBackImage; // ⭐ NEW: Back image
   File? videoKyc;
@@ -41,7 +42,7 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
     'HMV',
     'TRANS',
     'COMMERCIAL',
-    'INTERNATIONAL'
+    'INTERNATIONAL',
   ];
 
   // Data from previous screen
@@ -146,7 +147,9 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
         File originalFile = File(pickedFile.path);
 
         String prefix = imageType == 'dl'
-            ? 'dl_image'
+            ? 'dl_front'
+            : imageType == 'dl_back'
+            ? 'dl_back'
             : imageType == 'aadhaar_front'
             ? 'aadhaar_front'
             : 'aadhaar_back';
@@ -156,6 +159,8 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
         setState(() {
           if (imageType == 'dl') {
             dlImage = convertedFile;
+          } else if (imageType == 'dl_back') {
+            dlBackImage = convertedFile;
           } else if (imageType == 'aadhaar_front') {
             aadhaarFrontImage = convertedFile;
           } else if (imageType == 'aadhaar_back') {
@@ -274,7 +279,9 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Video size must be less than 50MB. Current size: ${fileSizeInMB.toStringAsFixed(2)}MB'),
+                content: Text(
+                  'Video size must be less than 50MB. Current size: ${fileSizeInMB.toStringAsFixed(2)}MB',
+                ),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
                 duration: const Duration(seconds: 4),
@@ -300,7 +307,9 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Video uploaded successfully (${fileSizeInMB.toStringAsFixed(2)}MB)'),
+              content: Text(
+                'Video uploaded successfully (${fileSizeInMB.toStringAsFixed(2)}MB)',
+              ),
               backgroundColor: Colors.green,
               behavior: SnackBarBehavior.floating,
             ),
@@ -325,85 +334,51 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.orange[50]!, Colors.white, Colors.green[50]!],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+        title: const Text(
+          'Upload Documents',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // App Bar
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.grey[800]),
-                      onPressed: () => Get.back(),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Upload Documents',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                          Text(
-                            'Step 2 of 2',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
+        centerTitle: false,
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      elevation: 8,
-                      shadowColor: Colors.orange.withOpacity(0.2),
-                      child: Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Form(
-                          key: formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 20),
                               // Info Card
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: Colors.orange[50],
+                                  color: Colors.green[50],
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                    color: Colors.orange[200]!,
+                                    color: Colors.green[200]!,
                                   ),
                                 ),
                                 child: Row(
                                   children: [
                                     Icon(
                                       Icons.info_outline,
-                                      color: Colors.orange[700],
+                                      color: Colors.green[700],
                                       size: 24,
                                     ),
                                     const SizedBox(width: 12),
@@ -412,7 +387,7 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                                         'Please upload clear images of your documents (front & back) and a video for verification',
                                         style: TextStyle(
                                           fontSize: 13,
-                                          color: Colors.orange[900],
+                                          color: Colors.green[900],
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -437,19 +412,23 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                               TextFormField(
                                 controller: dlController,
                                 decoration: InputDecoration(
-                                  labelText: 'Driving License Number',
                                   hintText: 'e.g., DL01 20220012345',
-                                  helperText:
-                                      '15 characters (AA00 00000000000)',
                                   prefixIcon: Icon(
-                                    Icons.credit_card,
-                                    color: Colors.orange[600],
+                                    Icons.badge,
+                                    color: Colors.green[600],
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
                                   ),
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.green[600]!),
+                                  ),
                                 ),
                                 validator: _validateDL,
                                 textCapitalization:
@@ -468,16 +447,23 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                               DropdownButtonFormField<String>(
                                 value: selectedDlType,
                                 decoration: InputDecoration(
-                                  labelText: 'DL Type',
+                                  hintText: 'DL Type',
                                   prefixIcon: Icon(
                                     Icons.drive_eta,
-                                    color: Colors.orange[600],
+                                    color: Colors.green[600],
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
                                   ),
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.green[600]!),
+                                  ),
                                 ),
                                 items: dlTypes.map((type) {
                                   return DropdownMenuItem(
@@ -499,10 +485,36 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                               ),
                               const SizedBox(height: 16),
 
+                              Text(
+                                'Driving License Front Side',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
                               _buildImageUploadCard(
-                                'Upload DL Image',
+                                'Upload DL Front',
                                 dlImage,
                                 () => _pickImage('dl'),
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              Text(
+                                'Driving License Back Side',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              _buildImageUploadCard(
+                                'Upload DL Back',
+                                dlBackImage,
+                                () => _pickImage('dl_back'),
                               ),
 
                               const SizedBox(height: 32),
@@ -522,17 +534,23 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                                 controller: aadhaarController,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
-                                  labelText: 'Aadhaar Number',
                                   hintText: 'Enter 12 digit Aadhaar number',
                                   prefixIcon: Icon(
                                     Icons.badge,
-                                    color: Colors.orange[600],
+                                    color: Colors.green[600],
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
                                   ),
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.green[600]!),
+                                  ),
                                 ),
                                 validator: _validateAadhaar,
                                 maxLength: 12,
@@ -647,11 +665,14 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                                                     .reuploadKyc(
                                                       dl: dlController.text
                                                           .trim(),
-                                                      dlType: selectedDlType!, // ⭐ NEW
+                                                      dlType:
+                                                          selectedDlType!, // ⭐ NEW
                                                       aadhaar: aadhaarController
                                                           .text
                                                           .trim(),
                                                       dlImage: dlImage!,
+                                                      dlBackImage:
+                                                          dlBackImage!, // ⭐ NEW
                                                       aadhaarFrontImage:
                                                           aadhaarFrontImage!,
                                                       aadhaarBackImage:
@@ -674,11 +695,14 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                                                       gender: gender!,
                                                       dl: dlController.text
                                                           .trim(),
-                                                      dlType: selectedDlType!, // ⭐ NEW
+                                                      dlType:
+                                                          selectedDlType!, // ⭐ NEW
                                                       aadhaar: aadhaarController
                                                           .text
                                                           .trim(),
                                                       dlImage: dlImage!,
+                                                      dlBackImage:
+                                                          dlBackImage!, // ⭐ NEW
                                                       aadhaarFrontImage:
                                                           aadhaarFrontImage!,
                                                       aadhaarBackImage:
@@ -728,16 +752,14 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                               ),
                             ],
                           ),
-                        ),
-                      ),
                     ),
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
-      ),
     );
   }
 
@@ -1009,7 +1031,12 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
     }
 
     if (dlImage == null) {
-      showErrorSnackBar('Please upload driving license image');
+      showErrorSnackBar('Please upload driving license front image');
+      return false;
+    }
+
+    if (dlBackImage == null) {
+      showErrorSnackBar('Please upload driving license back image');
       return false;
     }
 

@@ -21,7 +21,8 @@ class VerificationPendingScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: Obx(() {
-                if (controller.isLoading.value && controller.status.value == 'pending') {
+                if (controller.isLoading.value &&
+                    controller.status.value == 'pending') {
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.only(top: 100),
@@ -30,40 +31,49 @@ class VerificationPendingScreen extends StatelessWidget {
                   );
                 }
 
-                final isRejected = controller.status.value == 'rejected' || controller.status.value == 'declined';
+                final isRejected =
+                    controller.status.value == 'rejected' ||
+                    controller.status.value == 'declined';
 
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 40),
-                    
+
                     // Animated Icon
                     Container(
                       width: 180,
                       height: 180,
                       decoration: BoxDecoration(
-                        color: isRejected ? Colors.red[50] : Colors.orange[50],
+                        color: isRejected ? Colors.red[50] : Colors.green[50],
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: (isRejected ? Colors.red : Colors.orange).withOpacity(0.1),
+                            color: (isRejected ? Colors.red : Colors.green)
+                                .withOpacity(0.1),
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
                         ],
                       ),
                       child: Icon(
-                        isRejected ? Icons.error_outline_rounded : Icons.hourglass_top_rounded,
+                        isRejected
+                            ? Icons.error_outline_rounded
+                            : Icons.hourglass_top_rounded,
                         size: 80,
-                        color: isRejected ? Colors.red[600] : Colors.orange[600],
+                        color: isRejected
+                            ? Colors.red[600]
+                            : Colors.green[600],
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Title
                     Text(
-                      isRejected ? 'Verification Rejected' : 'Verification Pending',
+                      isRejected
+                          ? 'Verification Rejected'
+                          : 'Verification Pending',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -71,12 +81,12 @@ class VerificationPendingScreen extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Description / Reason
                     Text(
-                      isRejected 
+                      isRejected
                           ? 'We could not verify your documents. Please review the reason below and try again.'
                           : 'Your documents are currently under review by our team.',
                       style: TextStyle(
@@ -86,8 +96,9 @@ class VerificationPendingScreen extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    
-                    if (isRejected && controller.rejectionReason.value.isNotEmpty) ...[
+
+                    if (isRejected &&
+                        controller.rejectionReason.value.isNotEmpty) ...[
                       const SizedBox(height: 24),
                       Container(
                         width: double.infinity,
@@ -102,7 +113,11 @@ class VerificationPendingScreen extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.warning_amber_rounded, color: Colors.red[700], size: 20),
+                                Icon(
+                                  Icons.warning_amber_rounded,
+                                  color: Colors.red[700],
+                                  size: 20,
+                                ),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Reason for Rejection',
@@ -138,23 +153,29 @@ class VerificationPendingScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ],
-                    
+
                     const SizedBox(height: 40),
-                    
+
                     // Status Card (Only if pending)
                     if (!isRejected)
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.orange[50],
+                          color: Colors.green[50],
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.orange[200]!, width: 2),
+                          border: Border.all(
+                            color: Colors.green[200]!,
+                            width: 2,
+                          ),
                         ),
                         child: Column(
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.info_outline, color: Colors.orange[700]),
+                                Icon(
+                                  Icons.info_outline,
+                                  color: Colors.green[700],
+                                ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
@@ -162,7 +183,7 @@ class VerificationPendingScreen extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.orange[900],
+                                      color: Colors.green[900],
                                     ),
                                   ),
                                 ),
@@ -187,9 +208,9 @@ class VerificationPendingScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                    
+
                     const SizedBox(height: 40),
-                    
+
                     // Action Button (Refresh or Re-upload)
                     SizedBox(
                       width: double.infinity,
@@ -202,13 +223,22 @@ class VerificationPendingScreen extends StatelessWidget {
                             controller.checkStatus();
                           }
                         },
-                        icon: Icon(isRejected ? Icons.upload_file : Icons.refresh),
+                        icon: Icon(
+                          isRejected ? Icons.upload_file : Icons.refresh,
+                        ),
                         label: Text(
-                          isRejected ? 'Re-upload Documents' : 'Check Status Again',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          isRejected
+                              ? 'Re-upload Documents'
+                              : 'Check Status Again',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isRejected ? Colors.red[600] : Colors.orange[600],
+                          backgroundColor: isRejected
+                              ? Colors.red[600]
+                              : Colors.green[600],
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -217,9 +247,9 @@ class VerificationPendingScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Logout Button
                     SizedBox(
                       width: double.infinity,
@@ -232,7 +262,10 @@ class VerificationPendingScreen extends StatelessWidget {
                         icon: const Icon(Icons.logout),
                         label: const Text(
                           'Logout & Exit',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.grey[700],
@@ -243,9 +276,9 @@ class VerificationPendingScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Contact Support
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -259,7 +292,9 @@ class VerificationPendingScreen extends StatelessWidget {
                           child: Text(
                             'Contact Support',
                             style: TextStyle(
-                              color: isRejected ? Colors.red[700] : Colors.orange[700],
+                              color: isRejected
+                                  ? Colors.red[700]
+                                  : Colors.green[700],
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                             ),
@@ -267,7 +302,7 @@ class VerificationPendingScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 40),
                   ],
                 );
@@ -315,17 +350,27 @@ class VerificationPendingScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Our support team is available to help you with the verification process.'),
+            const Text(
+              'Our support team is available to help you with the verification process.',
+            ),
             const SizedBox(height: 20),
-            _buildContactItem(Icons.email_outlined, 'Email Support', 'support@ridealmobility.com'),
+            _buildContactItem(
+              Icons.email_outlined,
+              'Email Support',
+              'support@ridealmobility.com',
+            ),
             const SizedBox(height: 12),
-            _buildContactItem(Icons.phone_outlined, 'Call Support', '+911204357047'),
+            _buildContactItem(
+              Icons.phone_outlined,
+              'Call Support',
+              '+911204357047',
+            ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close', style: TextStyle(color: Colors.orange[700])),
+            child: Text('Close', style: TextStyle(color: Colors.green[700])),
           ),
         ],
       ),
@@ -338,10 +383,10 @@ class VerificationPendingScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.orange[50],
+            color: Colors.green[50],
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, size: 20, color: Colors.orange[600]),
+          child: Icon(icon, size: 20, color: Colors.green[600]),
         ),
         const SizedBox(width: 12),
         Expanded(

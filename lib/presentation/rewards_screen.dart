@@ -11,9 +11,10 @@ class RewardsScreen extends StatefulWidget {
 }
 
 class _RewardsScreenState extends State<RewardsScreen> {
-  final String myReferralCode = "RD${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}";
+  final String myReferralCode =
+      "RD${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}";
   final TextEditingController _referralCodeController = TextEditingController();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,17 +37,30 @@ class _RewardsScreenState extends State<RewardsScreen> {
                   children: [
                     const Icon(Icons.people, color: Colors.orange, size: 50),
                     const SizedBox(height: 10),
-                    const Text('Refer Friends & Earn', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.orange)),
+                    const Text(
+                      'Refer Friends & Earn',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange,
+                      ),
+                    ),
                     const SizedBox(height: 8),
-                    Text('Earn ₹500 for each successful referral!', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                    Text(
+                      'Earn ₹500 for each successful referral!',
+                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                    ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            
+
             // My Referral Code Section
-            const Text('Your Referral Code', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Your Referral Code',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 10),
             Card(
               child: Padding(
@@ -68,12 +82,21 @@ class _RewardsScreenState extends State<RewardsScreen> {
                               children: [
                                 Text(
                                   myReferralCode,
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 2),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 2,
+                                  ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.copy, color: Colors.orange),
+                                  icon: const Icon(
+                                    Icons.copy,
+                                    color: Colors.orange,
+                                  ),
                                   onPressed: () {
-                                    Clipboard.setData(ClipboardData(text: myReferralCode));
+                                    Clipboard.setData(
+                                      ClipboardData(text: myReferralCode),
+                                    );
                                     showSuccessSnackBar(
                                       'Referral code copied to clipboard',
                                       title: 'Copied!',
@@ -110,9 +133,12 @@ class _RewardsScreenState extends State<RewardsScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            
+
             // Enter Referral Code Section
-            const Text('Enter Referral Code', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Enter Referral Code',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 10),
             Card(
               child: Padding(
@@ -126,7 +152,10 @@ class _RewardsScreenState extends State<RewardsScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        prefixIcon: const Icon(Icons.code, color: Colors.orange),
+                        prefixIcon: const Icon(
+                          Icons.code,
+                          color: Colors.orange,
+                        ),
                       ),
                       textCapitalization: TextCapitalization.characters,
                     ),
@@ -149,7 +178,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
             ),
             const SizedBox(height: 20),
             const SizedBox(height: 20),
-            
+
             // Referral Stats Section
             // Text('Referral Statistics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             // SizedBox(height: 15),
@@ -164,7 +193,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
             //   ],
             // ),
             // SizedBox(height: 20),
-            
+
             // How it Works Section
             // Text('How Referral Works', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             // SizedBox(height: 15),
@@ -175,7 +204,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
             // _buildHowItWorksCard('4', 'Both earn rewards', 'You get ₹500, your friend gets ₹300 bonus', Icons.attach_money),
             //
             const SizedBox(height: 20),
-            
+
             // Recent Referrals
             // Text('Recent Referrals', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             // SizedBox(height: 15),
@@ -190,7 +219,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
   }
 
   void _shareReferralCode() {
-    final String message = '''
+    final String message =
+        '''
 🚗 Join RiDeal Driver and start earning!
 
 Use my referral code: $myReferralCode
@@ -204,21 +234,18 @@ Download the app and start your journey as a driver today!
 
     // In a real app, you would use share_plus package
     // Share.share(message);
-    
+
     showInfoSnackBar(
       'Sharing referral code: $myReferralCode',
       title: 'Share Referral',
     );
-    
+
     print('Sharing message: $message'); // Use the message variable
   }
 
   void _applyReferralCode() {
     if (_referralCodeController.text.trim().isEmpty) {
-      showErrorSnackBar(
-        'Please enter a referral code',
-        title: 'Error',
-      );
+      showErrorSnackBar('Please enter a referral code', title: 'Error');
       return;
     }
 
@@ -244,16 +271,32 @@ Download the app and start your journey as a driver today!
         padding: const EdgeInsets.all(15),
         child: Column(
           children: [
-            Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color)),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
             const SizedBox(height: 5),
-            Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600]), textAlign: TextAlign.center),
+            Text(
+              label,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHowItWorksCard(String step, String title, String description, IconData icon) {
+  Widget _buildHowItWorksCard(
+    String step,
+    String title,
+    String description,
+    IconData icon,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
@@ -268,7 +311,13 @@ Download the app and start your journey as a driver today!
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
-                child: Text(step, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                child: Text(
+                  step,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 15),
@@ -278,9 +327,18 @@ Download the app and start your journey as a driver today!
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
                   const SizedBox(height: 5),
-                  Text(description, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                  Text(
+                    description,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  ),
                 ],
               ),
             ),
@@ -290,20 +348,35 @@ Download the app and start your journey as a driver today!
     );
   }
 
-  Widget _buildReferralItem(String name, String status, String amount, Color statusColor, bool isCompleted) {
+  Widget _buildReferralItem(
+    String name,
+    String status,
+    String amount,
+    Color statusColor,
+    bool isCompleted,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: statusColor.withOpacity(0.2),
-          child: Text(name[0], style: TextStyle(color: statusColor, fontWeight: FontWeight.bold)),
+          child: Text(
+            name[0],
+            style: TextStyle(color: statusColor, fontWeight: FontWeight.bold),
+          ),
         ),
         title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(status),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(amount, style: TextStyle(fontWeight: FontWeight.bold, color: isCompleted ? Colors.green : Colors.grey)),
+            Text(
+              amount,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isCompleted ? Colors.green : Colors.grey,
+              ),
+            ),
             if (isCompleted)
               const Icon(Icons.check_circle, color: Colors.green, size: 16),
           ],

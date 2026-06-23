@@ -55,7 +55,11 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGetHelpTab(SupportController controller, double screenWidth, double screenHeight) {
+  Widget _buildGetHelpTab(
+    SupportController controller,
+    double screenWidth,
+    double screenHeight,
+  ) {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
         horizontal: screenWidth * 0.04,
@@ -99,7 +103,9 @@ class SupportScreen extends StatelessWidget {
   Widget _buildHelpCategoriesGrid(double screenWidth, double screenHeight) {
     final isTablet = screenWidth > 600;
     final crossAxisCount = isTablet ? 3 : 2;
-    final childAspectRatio = isTablet ? 1.3 : 1.2; // Increased aspect ratio to prevent overflow
+    final childAspectRatio = isTablet
+        ? 1.3
+        : 1.2; // Increased aspect ratio to prevent overflow
 
     return GridView.count(
       shrinkWrap: true,
@@ -171,47 +177,53 @@ class SupportScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Obx(() => DropdownButtonFormField<String>(
-                initialValue: controller.selectedPriority.value,
-                decoration: const InputDecoration(
-                  labelText: 'Priority',
-                  border: OutlineInputBorder(),
+              Obx(
+                () => DropdownButtonFormField<String>(
+                  initialValue: controller.selectedPriority.value,
+                  decoration: const InputDecoration(
+                    labelText: 'Priority',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: const [
+                    DropdownMenuItem(value: 'low', child: Text('Low')),
+                    DropdownMenuItem(value: 'medium', child: Text('Medium')),
+                    DropdownMenuItem(value: 'high', child: Text('High')),
+                  ],
+                  onChanged: (value) {
+                    if (value != null)
+                      controller.selectedPriority.value = value;
+                  },
                 ),
-                items: const [
-                  DropdownMenuItem(value: 'low', child: Text('Low')),
-                  DropdownMenuItem(value: 'medium', child: Text('Medium')),
-                  DropdownMenuItem(value: 'high', child: Text('High')),
-                ],
-                onChanged: (value) {
-                  if (value != null) controller.selectedPriority.value = value;
-                },
-              )),
+              ),
             ],
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          Obx(
+            () => ElevatedButton(
+              onPressed: controller.isLoading.value
+                  ? null
+                  : () => controller.submitSupportTicket(),
+              child: controller.isLoading.value
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('Submit'),
+            ),
           ),
-          Obx(() => ElevatedButton(
-                onPressed: controller.isLoading.value
-                    ? null
-                    : () => controller.submitSupportTicket(),
-                child: controller.isLoading.value
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Submit'),
-              )),
         ],
       ),
     );
   }
 
-  Widget _buildMyTicketsTab(SupportController controller, double screenWidth, double screenHeight) {
+  Widget _buildMyTicketsTab(
+    SupportController controller,
+    double screenWidth,
+    double screenHeight,
+  ) {
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
@@ -242,7 +254,9 @@ class SupportScreen extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 8),
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: controller.getStatusColor(ticket.status).withAlpha(51),
+                backgroundColor: controller
+                    .getStatusColor(ticket.status)
+                    .withAlpha(51),
                 child: Icon(
                   Icons.support_agent,
                   color: controller.getStatusColor(ticket.status),
@@ -332,28 +346,33 @@ class SupportScreen extends StatelessWidget {
     final faqItems = [
       {
         'question': 'How do I update my bank details?',
-        'answer': 'Go to Profile > Settings > Payment Settings to update your bank account information.',
+        'answer':
+            'Go to Profile > Settings > Payment Settings to update your bank account information.',
       },
       {
         'question': 'Why am I not receiving ride requests?',
-        'answer': 'Ensure you are online, have a good internet connection, and your location services are enabled.',
+        'answer':
+            'Ensure you are online, have a good internet connection, and your location services are enabled.',
       },
       {
         'question': 'How do I cancel a ride?',
-        'answer': 'Contact the passenger first, then use the Cancel Ride button. Valid reasons include emergency or passenger no-show.',
+        'answer':
+            'Contact the passenger first, then use the Cancel Ride button. Valid reasons include emergency or passenger no-show.',
       },
       {
         'question': 'When will I receive my payment?',
-        'answer': 'Payments are processed daily and transferred to your account within 1-2 business days.',
+        'answer':
+            'Payments are processed daily and transferred to your account within 1-2 business days.',
       },
     ];
 
     return Column(
-      children: faqItems.map((item) => _buildFAQItem(
-        item['question']!,
-        item['answer']!,
-        screenWidth,
-      )).toList(),
+      children: faqItems
+          .map(
+            (item) =>
+                _buildFAQItem(item['question']!, item['answer']!, screenWidth),
+          )
+          .toList(),
     );
   }
 
@@ -397,7 +416,11 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTicketCard(Map<String, dynamic> ticket, SupportController controller, double screenWidth) {
+  Widget _buildTicketCard(
+    Map<String, dynamic> ticket,
+    SupportController controller,
+    double screenWidth,
+  ) {
     return Card(
       margin: EdgeInsets.only(bottom: screenWidth * 0.03),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -426,7 +449,9 @@ class SupportScreen extends StatelessWidget {
                     vertical: screenWidth * 0.01,
                   ),
                   decoration: BoxDecoration(
-                    color: controller.getStatusColor(ticket['status']).withOpacity(0.1),
+                    color: controller
+                        .getStatusColor(ticket['status'])
+                        .withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -473,7 +498,11 @@ class SupportScreen extends StatelessWidget {
             SizedBox(height: screenWidth * 0.03),
             Row(
               children: [
-                Icon(Icons.calendar_today, size: screenWidth * 0.035, color: Colors.grey[500]),
+                Icon(
+                  Icons.calendar_today,
+                  size: screenWidth * 0.035,
+                  color: Colors.grey[500],
+                ),
                 SizedBox(width: screenWidth * 0.01),
                 Text(
                   ticket['createdAt'],
@@ -535,14 +564,14 @@ class SupportScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Close'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('Close')),
           ElevatedButton(
             onPressed: () {
               Get.back();
-              _showNewTicketDialog(Get.find<SupportController>(), category: category);
+              _showNewTicketDialog(
+                Get.find<SupportController>(),
+                category: category,
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange[600],

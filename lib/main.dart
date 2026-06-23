@@ -4,7 +4,9 @@ import 'package:rideal_driver/controllers/non_vehicle_auth_controller.dart';
 import 'package:rideal_driver/core/token_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rideal_driver/presentation/kyc_documents_screen.dart';
 import 'package:rideal_driver/subscriptioncontroller.dart';
+import 'package:rideal_driver/views/documentsuploadscreen.dart';
 import 'package:rideal_driver/views/nonvehicle_subscription_controller.dart';
 import 'controllers/auth_controller.dart';
 import 'routes/app_pages.dart';
@@ -13,6 +15,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'fcm_service.dart';
 import 'core/services/android_gpu_fixer.dart';
 import 'package:upgrader/upgrader.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
@@ -70,16 +73,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Rideal Partner',
-      navigatorKey: navigatorKey,
-      scaffoldMessengerKey: scaffoldMessengerKey,
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.themeData,
-      initialRoute: Routes.SPLASH,
-      getPages: AppPages.routes,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // Standard iPhone X / 11 Pro size
+      minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, child) {
-        return child ?? const SizedBox.shrink();
+        return GetMaterialApp(
+          title: 'Rideal Partner',
+          navigatorKey: navigatorKey,
+          scaffoldMessengerKey: scaffoldMessengerKey,
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.themeData,
+          initialRoute: Routes.SPLASH,
+          defaultTransition: Transition.rightToLeft,
+          transitionDuration: const Duration(milliseconds: 300),
+          getPages: AppPages.routes,
+          builder: (context, child) {
+            return child ?? const SizedBox.shrink();
+          },
+        );
       },
     );
   }

@@ -25,9 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // Initialize controller lazily to prevent early creation
-    homeController = Get.put(
-      HomeController(),
-    );
+    homeController = Get.put(HomeController());
 
     // Load initial data when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -64,121 +62,123 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.grey[50],
         drawer: const CustomDrawer(),
         body: CustomScrollView(
-        slivers: [
-          _buildEnhancedAppBar(context),
-          // Custom App Bar with gradient
-          // SliverAppBar(
+          slivers: [
+            _buildEnhancedAppBar(context),
+            // Custom App Bar with gradient
+            // SliverAppBar(
 
-          //   expandedHeight: 255,
-          //   backgroundColor: Colors.transparent,
-          //   elevation: 0,
-          //   pinned: true,
-          //   flexibleSpace: FlexibleSpaceBar(
-          //     background: Container(
-          //       decoration: BoxDecoration(
-          //         gradient: LinearGradient(
-          //           colors: [Colors.orange[600]!, Colors.orange[300]!],
-          //           begin: Alignment.topLeft,
-          //           end: Alignment.bottomRight,
-          //         ),
-          //         borderRadius: const BorderRadius.only(
-          //           bottomLeft: Radius.circular(25),
-          //           bottomRight: Radius.circular(25),
-          //         ),
-          //       ),
-          //       child: const Padding(
-          //         padding: EdgeInsets.fromLTRB(20, 0, 20, 60),
-          //         child: Column(
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           mainAxisAlignment: MainAxisAlignment.start,
-          //           children: [
-          //             SizedBox(height: 50),
-          //             // App Logo at the top
-          //             Center(
-          //               child: Image(
-          //                 height: 150,
-          //                 image: AssetImage("assets/images/logo.png"),
-          //               ),
-          //             ),
-          //             Spacer(),
-          //             Row(
-          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //               children: [
-          //                 Expanded(
-          //                   child: Column(
-          //                     crossAxisAlignment: CrossAxisAlignment.start,
-          //                     children: [
-          //                       SizedBox(height: 4),
-          //                       Text(
-          //                         'RiDeal Driver',
-          //                         style: TextStyle(
-          //                           color: Colors.white,
-          //                           fontSize: 24,
-          //                           fontWeight: FontWeight.bold,
-          //                         ),
-          //                       ),
-          //                     ],
-          //                   ),
-          //                 ),
-          //               ],
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+            //   expandedHeight: 255,
+            //   backgroundColor: Colors.transparent,
+            //   elevation: 0,
+            //   pinned: true,
+            //   flexibleSpace: FlexibleSpaceBar(
+            //     background: Container(
+            //       decoration: BoxDecoration(
+            //         gradient: LinearGradient(
+            //           colors: [Colors.orange[600]!, Colors.orange[300]!],
+            //           begin: Alignment.topLeft,
+            //           end: Alignment.bottomRight,
+            //         ),
+            //         borderRadius: const BorderRadius.only(
+            //           bottomLeft: Radius.circular(25),
+            //           bottomRight: Radius.circular(25),
+            //         ),
+            //       ),
+            //       child: const Padding(
+            //         padding: EdgeInsets.fromLTRB(20, 0, 20, 60),
+            //         child: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           mainAxisAlignment: MainAxisAlignment.start,
+            //           children: [
+            //             SizedBox(height: 50),
+            //             // App Logo at the top
+            //             Center(
+            //               child: Image(
+            //                 height: 150,
+            //                 image: AssetImage("assets/images/logo.png"),
+            //               ),
+            //             ),
+            //             Spacer(),
+            //             Row(
+            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //               children: [
+            //                 Expanded(
+            //                   child: Column(
+            //                     crossAxisAlignment: CrossAxisAlignment.start,
+            //                     children: [
+            //                       SizedBox(height: 4),
+            //                       Text(
+            //                         'RiDeal Driver',
+            //                         style: TextStyle(
+            //                           color: Colors.white,
+            //                           fontSize: 24,
+            //                           fontWeight: FontWeight.bold,
+            //                         ),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 ),
+            //               ],
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
-          // Body content
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                // Driver Status Card
-                _buildDriverStatusCard(context),
+            // Body content
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  // Driver Status Card
+                  _buildDriverStatusCard(context),
 
-                // Ongoing Ride Status Card (shows when there's an active ride)
-                _buildOngoingRideStatusCard(context),
+                  // Ongoing Ride Status Card (shows when there's an active ride)
+                  _buildOngoingRideStatusCard(context),
 
-                // Ride Request Notifications List
-                _buildRideRequestsListCard(context),
+                  // Ride Request Notifications List
+                  _buildRideRequestsListCard(context),
 
-                // Quick Actions Section (Enhanced with 4 cards)
-                _buildEnhancedQuickActionsSection(context),
+                  // Quick Actions Section (Enhanced with 4 cards)
+                  _buildEnhancedQuickActionsSection(context),
 
-                // Tip Section
-                _buildTipSection(),
+                  // Tip Section
+                  _buildTipSection(),
 
-                const SizedBox(height: 10),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => SubscriptionPlansScreen(),
-                //       ),
-                //     );
-                //   },
-                //   child: Text("Subscription"),
-                // ),
-                // const SizedBox(height: 10),
+                  const SizedBox(height: 10),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => SubscriptionPlansScreen(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   child: Text("Subscription"),
+                  // ),
+                  // const SizedBox(height: 10),
 
-                // Social Media Links
-                const SocialMediaLinksEnhanced(),
+                  // Social Media Links
+                  const SocialMediaLinksEnhanced(),
 
-                const ContactInfoSection(),
-              ],
+                  const ContactInfoSection(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
   }
 
   Widget _buildEnhancedAppBar(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double scaleFactor = screenWidth / 393; // Increased base width to 411 for more subtle scaling
-    
+    double scaleFactor =
+        screenWidth /
+        393; // Increased base width to 411 for more subtle scaling
+
     return SliverAppBar(
       expandedHeight: 230 * scaleFactor, // Increased to fit larger logo
       floating: false,
@@ -248,7 +248,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Content
               Padding(
-                padding: EdgeInsets.fromLTRB(20 * scaleFactor, 0, 20 * scaleFactor, 20 * scaleFactor),
+                padding: EdgeInsets.fromLTRB(
+                  20 * scaleFactor,
+                  0,
+                  20 * scaleFactor,
+                  20 * scaleFactor,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -308,11 +313,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildDriverStatusCard(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double scaleFactor = screenWidth / 393;
-    
+
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 18 * scaleFactor, vertical: 3 * scaleFactor),
+      margin: EdgeInsets.symmetric(
+        horizontal: 18 * scaleFactor,
+        vertical: 3 * scaleFactor,
+      ),
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12 * scaleFactor)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12 * scaleFactor),
+        ),
         elevation: 2,
         child: Padding(
           padding: EdgeInsets.all(14 * scaleFactor),
@@ -363,43 +373,45 @@ class _HomeScreenState extends State<HomeScreen> {
                         // Display driver name if available
                         Obx(
                           () => homeController.driverInfo.value != null
-                                  ? Padding(
-                                      padding: EdgeInsets.only(top: 2 * scaleFactor),
-                                      child: Text(
-                                        '(${homeController.driverInfo.value!.name})',
-                                        style: TextStyle(
-                                          fontSize: 12 * scaleFactor,
-                                          color: Colors.grey[600],
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
-                            ),
-                          ],
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 2 * scaleFactor,
+                                  ),
+                                  child: Text(
+                                    '(${homeController.driverInfo.value!.name})',
+                                    style: TextStyle(
+                                      fontSize: 12 * scaleFactor,
+                                      color: Colors.grey[600],
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
                         ),
-                      ),
-                      // Refresh button
-                      IconButton(
-                        onPressed: homeController.isStatusLoading.value
-                            ? null
-                            : () => homeController.refreshStatus(),
-                        icon: Icon(
-                          Icons.refresh,
-                          size: 18 * scaleFactor,
-                          color: Colors.grey[600],
-                        ),
-                        padding: EdgeInsets.all(4 * scaleFactor),
-                        constraints: BoxConstraints(
-                          minWidth: 28 * scaleFactor,
-                          minHeight: 28 * scaleFactor,
-                        ),
-                      ),
-                      // Toggle switch for driver availability
-                      Obx(
-                        () => Transform.scale(
-                          scale: 0.8 * scaleFactor,
+                      ],
+                    ),
+                  ),
+                  // Refresh button
+                  IconButton(
+                    onPressed: homeController.isStatusLoading.value
+                        ? null
+                        : () => homeController.refreshStatus(),
+                    icon: Icon(
+                      Icons.refresh,
+                      size: 18 * scaleFactor,
+                      color: Colors.grey[600],
+                    ),
+                    padding: EdgeInsets.all(4 * scaleFactor),
+                    constraints: BoxConstraints(
+                      minWidth: 28 * scaleFactor,
+                      minHeight: 28 * scaleFactor,
+                    ),
+                  ),
+                  // Toggle switch for driver availability
+                  Obx(
+                    () => Transform.scale(
+                      scale: 0.8 * scaleFactor,
                       child: Switch(
                         value: homeController.isOnline,
                         onChanged:
@@ -479,24 +491,29 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildOngoingRideStatusCard(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double scaleFactor = screenWidth / 393;
-    
+
     return Obx(() {
       // Debug logging
       // ... (rest of logging remains same)
-      
+
       // If no ongoing ride, show nothing
-      if (!homeController.hasOngoingRide.value && homeController.ongoingRide.value == null) {
+      if (!homeController.hasOngoingRide.value &&
+          homeController.ongoingRide.value == null) {
         return const SizedBox.shrink();
       }
 
       // If flag is true but no ride object, try to fetch it
-      if (homeController.hasOngoingRide.value && homeController.ongoingRide.value == null) {
+      if (homeController.hasOngoingRide.value &&
+          homeController.ongoingRide.value == null) {
         // Trigger fetch in next frame
         WidgetsBinding.instance.addPostFrameCallback((_) {
           homeController.checkAndFetchOngoingRide();
         });
         return Container(
-          margin: EdgeInsets.symmetric(horizontal: 18 * scaleFactor, vertical: 4 * scaleFactor),
+          margin: EdgeInsets.symmetric(
+            horizontal: 18 * scaleFactor,
+            vertical: 4 * scaleFactor,
+          ),
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12 * scaleFactor),
@@ -514,7 +531,10 @@ class _HomeScreenState extends State<HomeScreen> {
       final ride = homeController.ongoingRide.value!;
 
       return Container(
-        margin: EdgeInsets.symmetric(horizontal: 18 * scaleFactor, vertical: 4 * scaleFactor),
+        margin: EdgeInsets.symmetric(
+          horizontal: 18 * scaleFactor,
+          vertical: 4 * scaleFactor,
+        ),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12 * scaleFactor),
@@ -570,7 +590,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: Colors.blue[200],
-                                    borderRadius: BorderRadius.circular(4 * scaleFactor),
+                                    borderRadius: BorderRadius.circular(
+                                      4 * scaleFactor,
+                                    ),
                                   ),
                                   child: Text(
                                     ride.rideType.toUpperCase(),
@@ -589,7 +611,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: _getStatusColor(ride.status),
-                                    borderRadius: BorderRadius.circular(4 * scaleFactor),
+                                    borderRadius: BorderRadius.circular(
+                                      4 * scaleFactor,
+                                    ),
                                   ),
                                   child: Text(
                                     ride.status.toUpperCase(),
@@ -806,14 +830,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildRideRequestsListCard(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double scaleFactor = screenWidth / 393;
-    
+
     return Obx(() {
       if (!homeController.isOnline || homeController.nearbyRides.isEmpty) {
         return const SizedBox.shrink();
       }
 
       return Container(
-        margin: EdgeInsets.symmetric(horizontal: 18 * scaleFactor, vertical: 4 * scaleFactor),
+        margin: EdgeInsets.symmetric(
+          horizontal: 18 * scaleFactor,
+          vertical: 4 * scaleFactor,
+        ),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12 * scaleFactor),
@@ -1006,7 +1033,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // 🎵 Stop sounds immediately when user takes action
                                     SoundManager().stopRequestSound();
                                     FCMService.stopRequestSound();
-                                    
+
                                     // Remove ride from list
                                     homeController.nearbyRides.removeAt(index);
                                   },
@@ -1032,7 +1059,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // 🎵 Stop sounds immediately
                                     SoundManager().stopRequestSound();
                                     FCMService.stopRequestSound();
-                                    homeController.quickAcceptRide(ride.id, context);
+                                    homeController.quickAcceptRide(
+                                      ride.id,
+                                      context,
+                                    );
                                   },
                                   icon: const Icon(
                                     Icons.check_circle,
@@ -1124,11 +1154,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildEnhancedQuickActionsSection(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double scaleFactor = screenWidth / 393;
-    
+
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 14 * scaleFactor, vertical: 8 * scaleFactor),
+      margin: EdgeInsets.symmetric(
+        horizontal: 14 * scaleFactor,
+        vertical: 8 * scaleFactor,
+      ),
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20 * scaleFactor)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20 * scaleFactor),
+        ),
         elevation: 4,
         shadowColor: Colors.blue.withValues(alpha: 0.1),
         child: Container(
@@ -1141,7 +1176,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16 * scaleFactor, vertical: 20 * scaleFactor),
+            padding: EdgeInsets.symmetric(
+              horizontal: 16 * scaleFactor,
+              vertical: 20 * scaleFactor,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1205,17 +1243,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 10),
                     Row(
                       children: [
-                      Expanded(
-  child: _buildEnhancedQuickActionButton(
-    context,
-    'Documents',
-    Icons.description_outlined,
-    Colors.teal,
-    'View Documents',  // ✅ Updated subtitle
-    Icons.folder_open,  // ✅ Updated icon
-    () => Get.to(() => const KYCDocumentsViewerScreen()),  // ✅ Navigate to KYC Documents Viewer
-  ),
-),
+                        Expanded(
+                          child: _buildEnhancedQuickActionButton(
+                            context,
+                            'Documents',
+                            Icons.description_outlined,
+                            Colors.teal,
+                            'View Documents', // ✅ Updated subtitle
+                            Icons.folder_open, // ✅ Updated icon
+                            () => Get.to(
+                              () => const KYCDocumentsViewerScreen(),
+                            ), // ✅ Navigate to KYC Documents Viewer
+                          ),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: _buildEnhancedQuickActionButton(
@@ -1251,7 +1291,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     double screenWidth = MediaQuery.of(context).size.width;
     double scaleFactor = screenWidth / 393;
-    
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16 * scaleFactor),
@@ -1268,7 +1308,10 @@ class _HomeScreenState extends State<HomeScreen> {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16 * scaleFactor),
-          border: Border.all(color: color.withValues(alpha: 0.2), width: 1.5 * scaleFactor),
+          border: Border.all(
+            color: color.withValues(alpha: 0.2),
+            width: 1.5 * scaleFactor,
+          ),
           boxShadow: [
             BoxShadow(
               color: color.withValues(alpha: 0.1),
@@ -1339,7 +1382,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildLocationTrackingCard(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double scaleFactor = screenWidth / 393;
-    
+
     return Obx(() {
       // Only show if there's an ongoing ride or location tracking is active
       if (!homeController.hasOngoingRide.value &&
@@ -1348,7 +1391,10 @@ class _HomeScreenState extends State<HomeScreen> {
       }
 
       return Container(
-        margin: EdgeInsets.symmetric(horizontal: 18 * scaleFactor, vertical: 4 * scaleFactor),
+        margin: EdgeInsets.symmetric(
+          horizontal: 18 * scaleFactor,
+          vertical: 4 * scaleFactor,
+        ),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12 * scaleFactor),

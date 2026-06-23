@@ -32,10 +32,7 @@ void showAppSnackBar(
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            message,
-            style: const TextStyle(color: Colors.white),
-          ),
+          Text(message, style: const TextStyle(color: Colors.white)),
         ],
       ),
     ),

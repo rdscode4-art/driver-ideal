@@ -17,21 +17,25 @@ class ChatScreen extends StatelessWidget {
         children: [
           // Chat messages
           Expanded(
-            child: Obx(() => ListView.builder(
-              controller: controller.scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: controller.messages.length,
-              itemBuilder: (context, index) {
-                final message = controller.messages[index];
-                return _buildMessage(message);
-              },
-            )),
+            child: Obx(
+              () => ListView.builder(
+                controller: controller.scrollController,
+                padding: const EdgeInsets.all(16),
+                itemCount: controller.messages.length,
+                itemBuilder: (context, index) {
+                  final message = controller.messages[index];
+                  return _buildMessage(message);
+                },
+              ),
+            ),
           ),
 
           // Typing indicator
-          Obx(() => controller.isAgentTyping.value
-            ? _buildTypingIndicator()
-            : const SizedBox.shrink()),
+          Obx(
+            () => controller.isAgentTyping.value
+                ? _buildTypingIndicator()
+                : const SizedBox.shrink(),
+          ),
 
           // Message input
           _buildMessageInput(),
@@ -76,13 +80,12 @@ class ChatScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Obx(() => Text(
-                  controller.agentStatus.value,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 12,
+                Obx(
+                  () => Text(
+                    controller.agentStatus.value,
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
                   ),
-                )),
+                ),
               ],
             ),
           ),
@@ -132,7 +135,8 @@ class ChatScreen extends StatelessWidget {
             ),
           ],
         ),
-    ]);
+      ],
+    );
   }
 
   Widget _buildMessage(Map<String, dynamic> message) {
@@ -141,7 +145,9 @@ class ChatScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isUser
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
@@ -154,16 +160,18 @@ class ChatScreen extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(Icons.support_agent, color: Colors.white, size: 16),
+              child: const Icon(
+                Icons.support_agent,
+                color: Colors.white,
+                size: 16,
+              ),
             ),
             const SizedBox(width: 8),
           ],
 
           Flexible(
             child: Container(
-              constraints: BoxConstraints(
-                maxWidth: Get.width * 0.75,
-              ),
+              constraints: BoxConstraints(maxWidth: Get.width * 0.75),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: isUser ? Colors.orange[600] : Colors.white,
@@ -209,7 +217,9 @@ class ChatScreen extends StatelessWidget {
                       if (isUser) ...[
                         const SizedBox(width: 4),
                         Icon(
-                          message['status'] == 'read' ? Icons.done_all : Icons.done,
+                          message['status'] == 'read'
+                              ? Icons.done_all
+                              : Icons.done,
                           color: message['status'] == 'read'
                               ? Colors.blue[300]
                               : Colors.white70,
@@ -257,10 +267,7 @@ class ChatScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Image Attachment',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
                 ),
               ],
             ),
@@ -312,7 +319,11 @@ class ChatScreen extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.support_agent, color: Colors.white, size: 16),
+            child: const Icon(
+              Icons.support_agent,
+              color: Colors.white,
+              size: 16,
+            ),
           ),
           const SizedBox(width: 8),
           Container(
@@ -408,7 +419,10 @@ class ChatScreen extends StatelessWidget {
                     hintText: 'Type your message...',
                     hintStyle: TextStyle(color: Colors.grey[500]),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                   ),
                   maxLines: null,
                   textCapitalization: TextCapitalization.sentences,
@@ -419,29 +433,33 @@ class ChatScreen extends StatelessWidget {
             const SizedBox(width: 8),
 
             // Send button
-            Obx(() => Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.orange[400]!, Colors.orange[600]!],
+            Obx(
+              () => Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.orange[400]!, Colors.orange[600]!],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                borderRadius: BorderRadius.circular(20),
+                child: IconButton(
+                  icon: controller.isSending.value
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                      : const Icon(Icons.send, color: Colors.white),
+                  onPressed: controller.isSending.value
+                      ? null
+                      : () => controller.sendMessage(),
+                ),
               ),
-              child: IconButton(
-                icon: controller.isSending.value
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : const Icon(Icons.send, color: Colors.white),
-                onPressed: controller.isSending.value
-                    ? null
-                    : () => controller.sendMessage(),
-              ),
-            )),
+            ),
           ],
         ),
       ),
@@ -516,7 +534,12 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAttachmentOption(String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildAttachmentOption(
+    String title,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: () {
         Get.back();

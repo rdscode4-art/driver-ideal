@@ -14,7 +14,8 @@ class SocialMediaLinks extends StatelessWidget {
       'web': 'https://www.youtube.com/@ridealmobility',
     },
     'facebook': {
-      'app': 'https://www.facebook.com/profile.php?id=61579358969926', // Updated Facebook URL
+      'app':
+          'https://www.facebook.com/profile.php?id=61579358969926', // Updated Facebook URL
       'web': 'https://www.facebook.com/profile.php?id=61579358969926',
     },
     'twitter': {
@@ -22,7 +23,8 @@ class SocialMediaLinks extends StatelessWidget {
       'web': 'https://x.com/ridealmobi18276',
     },
     'instagram': {
-      'app': 'https://www.instagram.com/ridealmobility__/', // Updated Instagram URL
+      'app':
+          'https://www.instagram.com/ridealmobility__/', // Updated Instagram URL
       'web': 'https://www.instagram.com/ridealmobility__/',
     },
     'telegram': {
@@ -116,18 +118,9 @@ class SocialMediaLinks extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(22),
-                  border: Border.all(
-                    color: color.withOpacity(0.3),
-                    width: 1,
-                  ),
+                  border: Border.all(color: color.withOpacity(0.3), width: 1),
                 ),
-                child: Center(
-                  child: FaIcon(
-                    icon,
-                    color: color,
-                    size: 20,
-                  ),
-                ),
+                child: Center(child: FaIcon(icon, color: color, size: 20)),
               ),
             );
           },
@@ -228,11 +221,7 @@ class SocialMediaLinksEnhanced extends StatelessWidget {
                       color: Colors.blue[100],
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      Icons.share,
-                      color: Colors.blue[700],
-                      size: 20,
-                    ),
+                    child: Icon(Icons.share, color: Colors.blue[700], size: 20),
                   ),
                   const SizedBox(width: 12),
                   Text(
@@ -248,10 +237,7 @@ class SocialMediaLinksEnhanced extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Stay connected with us on social media',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
@@ -375,13 +361,9 @@ class _AnimatedSocialIconState extends State<AnimatedSocialIcon>
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -396,7 +378,10 @@ class _AnimatedSocialIconState extends State<AnimatedSocialIcon>
       onTapDown: (_) => _animationController.forward(),
       onTapUp: (_) => _animationController.reverse(),
       onTapCancel: () => _animationController.reverse(),
-      onTap: () => SocialMediaLinksEnhanced.launchSocialMedia(widget.platform, widget.label),
+      onTap: () => SocialMediaLinksEnhanced.launchSocialMedia(
+        widget.platform,
+        widget.label,
+      ),
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) {
@@ -428,11 +413,7 @@ class _AnimatedSocialIconState extends State<AnimatedSocialIcon>
                 ],
               ),
               child: Center(
-                child: FaIcon(
-                  widget.icon,
-                  color: widget.color,
-                  size: 22,
-                ),
+                child: FaIcon(widget.icon, color: widget.color, size: 22),
               ),
             ),
           );

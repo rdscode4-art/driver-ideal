@@ -22,10 +22,11 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     Get.put(ApiService(), permanent: true);
     Get.put(RazorpayService(), permanent: true);
     controller = Get.put(PaymentController(), permanent: true);
-    
+
     // Fetch plans after frame is rendered
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (controller.availablePlans.isEmpty && !controller.isLoadingPlans.value) {
+      if (controller.availablePlans.isEmpty &&
+          !controller.isLoadingPlans.value) {
         controller.fetchAvailablePlans();
       }
     });
@@ -242,7 +243,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           ),
         );
       }
-      
+
       // Show message if no plans
       if (controller.availablePlans.isEmpty) {
         return Card(
@@ -264,10 +265,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 Text(
                   'Unable to load plans. Please check your internet connection.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
@@ -284,7 +282,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           ),
         );
       }
-      
+
       // Show plans
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +299,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.blue[100],
                   borderRadius: BorderRadius.circular(20),
@@ -387,7 +388,11 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
+                          Icon(
+                            Icons.schedule,
+                            size: 16,
+                            color: Colors.grey[600],
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Duration: ${plan.duration}',

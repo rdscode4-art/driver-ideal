@@ -3,27 +3,29 @@ import 'package:get/get.dart';
 import 'package:rideal_driver/presentation/widgets/contact_info_section.dart';
 
 class AboutScreen extends StatelessWidget {
-   AboutScreen({super.key});
+  AboutScreen({super.key});
 
-  final String aboutContent = '''Rideal is a modern mobility platform dedicated to providing safe, reliable, and affordable rides for everyone. Built with a vision to transform the way India commutes, Rideal connects riders with trusted drivers through a seamless mobile experience. Our mission is not only to make travel more convenient but also to promote road safety, responsible driving, and community well-being.
+  final String aboutContent =
+      '''Rideal is a modern mobility platform dedicated to providing safe, reliable, and affordable rides for everyone. Built with a vision to transform the way India commutes, Rideal connects riders with trusted drivers through a seamless mobile experience. Our mission is not only to make travel more convenient but also to promote road safety, responsible driving, and community well-being.
 
 At Rideal, we believe every journey matters. We are committed to supporting initiatives that prevent accidents, discourage unsafe practices such as drinking and driving, and encourage citizens to contribute towards safer roads. With innovative technology, transparent services, and a strong focus on customer trust, Rideal strives to be more than just a ride-sharing app — we aim to be a partner in building a safer and smarter Bharat.''';
 
   final List<Map<String, String>> coreValues = [
     {
       'title': 'Safety First',
-      'description': 'Every ride is secured with safety protocols and trusted drivers',
-      'icon': 'shield'
+      'description':
+          'Every ride is secured with safety protocols and trusted drivers',
+      'icon': 'shield',
     },
     {
       'title': 'Reliability',
       'description': 'Consistent and dependable service you can count on',
-      'icon': 'verified'
+      'icon': 'verified',
     },
     {
       'title': 'Sustainability',
       'description': 'Contributing to a greener future through shared mobility',
-      'icon': 'eco'
+      'icon': 'eco',
     },
   ];
 
@@ -149,11 +151,7 @@ At Rideal, we believe every journey matters. We are committed to supporting init
                       color: Colors.blue[100],
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      Icons.flag,
-                      color: Colors.blue[700],
-                      size: 24,
-                    ),
+                    child: Icon(Icons.flag, color: Colors.blue[700], size: 24),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -205,7 +203,11 @@ At Rideal, we believe every journey matters. We are committed to supporting init
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(Icons.info_outline, color: Colors.grey[700], size: 20),
+                  child: Icon(
+                    Icons.info_outline,
+                    color: Colors.grey[700],
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(

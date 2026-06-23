@@ -224,6 +224,7 @@ class NonVehicleAuthController extends GetxController {
     required String dlType, // ⭐ NEW
     required String aadhaar,
     required File dlImage,
+    required File dlBackImage, // ⭐ NEW
     required File aadhaarFrontImage,
     required File aadhaarBackImage,
     required File videoKyc,
@@ -252,10 +253,17 @@ class NonVehicleAuthController extends GetxController {
       request.fields['dlType'] = dlType; // ⭐ NEW
       request.fields['aadhaar'] = aadhaar;
 
-      // Add DL image
+      // Add DL front image
       request.files.add(await http.MultipartFile.fromPath(
         'dlImage',
         dlImage.path,
+        contentType: MediaType('image', 'jpeg'),
+      ));
+
+      // Add DL back image
+      request.files.add(await http.MultipartFile.fromPath(
+        'dlBackImage',
+        dlBackImage.path,
         contentType: MediaType('image', 'jpeg'),
       ));
 
@@ -323,7 +331,7 @@ class NonVehicleAuthController extends GetxController {
     }
   }
 
-  // ⭐ UPDATED: Register with 2 Aadhaar images
+  // ⭐ UPDATED: Register with 2 Aadhaar images and 2 DL images
   Future<bool> register({
     required String name,
     required String phone,
@@ -333,6 +341,7 @@ class NonVehicleAuthController extends GetxController {
     required String dlType, // ⭐ NEW
     required String aadhaar,
     required File dlImage,
+    required File dlBackImage, // ⭐ NEW
     required File aadhaarFrontImage, // ⭐ CHANGED: Front image
     required File aadhaarBackImage, // ⭐ NEW: Back image
     required File profileImage,
@@ -360,14 +369,23 @@ class NonVehicleAuthController extends GetxController {
 
       print('✅ Fields added');
 
-      // Add DL image
+      // Add DL front image
       var dlFile = await http.MultipartFile.fromPath(
         'dlImage',
         dlImage.path,
         contentType: MediaType('image', 'jpeg'),
       );
       request.files.add(dlFile);
-      print('✅ DL image added');
+      print('✅ DL front image added');
+
+      // Add DL back image
+      var dlBackFile = await http.MultipartFile.fromPath(
+        'dlBackImage',
+        dlBackImage.path,
+        contentType: MediaType('image', 'jpeg'),
+      );
+      request.files.add(dlBackFile);
+      print('✅ DL back image added');
 
       // ⭐ UPDATED: Add Aadhaar front image
       var aadhaarFrontFile = await http.MultipartFile.fromPath(
@@ -422,7 +440,7 @@ class NonVehicleAuthController extends GetxController {
         '📊 Video file size: ${(await videoKyc.length()) / (1024 * 1024)} MB',
       );
       print(
-        '📤 Sending request with ${request.files.length} files (3 images + 1 profile + 1 video)...',
+        '📤 Sending request with ${request.files.length} files (4 images + 1 profile + 1 video)...',
       );
 
       var streamedResponse = await request.send();
