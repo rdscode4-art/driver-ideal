@@ -46,7 +46,7 @@ class AppPages {
     ),
     // Individual screens (accessible via bottom navigation)
     GetPage(name: Routes.EARNINGS, page: () => const EarningsScreen()),
-    GetPage(name: Routes.SUBSCRIPTION, page: () => const SubscriptionScreen()),
+    GetPage(name: Routes.SUBSCRIPTION, page: () => const NonVehicleSubscriptionPlansScreen()),
     GetPage(
       name: Routes.NONVEHICHLEDASHBOARD,
       middlewares: [AuthMiddleware()],

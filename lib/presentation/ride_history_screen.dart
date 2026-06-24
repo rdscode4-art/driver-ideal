@@ -51,7 +51,11 @@ class RideHistoryScreen extends StatelessWidget {
                 background: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.orange[600]!, Colors.orange[400]!],
+                      colors: [
+                        Color(0xFF0A6B3C), // Dark Green
+                        Color(0xFF0F9D58), // Brand Green
+                        Color(0xFF4CB050), // Light Green
+                      ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -186,7 +190,7 @@ class RideHistoryScreen extends StatelessWidget {
               'Completed',
               controller.getRideCountByStatus('completed').toString(),
               Icons.check_circle,
-              Colors.green[100]!,
+              Colors.white.withOpacity(0.9),
             ),
           ),
           const SizedBox(width: 12),
@@ -217,19 +221,19 @@ class RideHistoryScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(icon, size: 20, color: Colors.orange[700]),
+          Icon(icon, size: 20, color: Colors.green[700]),
           const SizedBox(height: 4),
           Text(
             value,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.orange[800],
+              color: Colors.green[800],
             ),
           ),
           Text(
             title,
-            style: TextStyle(fontSize: 10, color: Colors.orange[700]),
+            style: TextStyle(fontSize: 10, color: Colors.green[700]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -262,9 +266,9 @@ class RideHistoryScreen extends StatelessWidget {
                 onSelected: (selected) {
                   if (selected) controller.applyFilter(filter);
                 },
-                selectedColor: Colors.orange[100],
+                selectedColor: const Color(0xFFE8F5E9), // lightGreen
                 labelStyle: TextStyle(
-                  color: isSelected ? Colors.orange[800] : Colors.grey[600],
+                  color: isSelected ? const Color(0xFF0A6B3C) : Colors.grey[600],
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               );
@@ -426,7 +430,7 @@ class RideHistoryScreen extends StatelessWidget {
         padding: const EdgeInsets.all(40),
         child: Column(
           children: [
-            CircularProgressIndicator(color: Colors.orange[600]),
+            CircularProgressIndicator(color: Colors.green[600]),
             const SizedBox(height: 16),
             Text(
               'Loading trip history...',
@@ -560,7 +564,7 @@ class RideHistoryScreen extends StatelessWidget {
             // Route information
             Row(
               children: [
-                Icon(Icons.local_taxi, size: 20, color: Colors.orange[600]),
+                Icon(Icons.local_taxi, size: 20, color: Colors.green[600]),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(

@@ -50,7 +50,10 @@ Rideal reserves the right to modify or update these Terms at any time. Continued
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.orange[700]!, Colors.orange[500]!],
+                    colors: [
+                      Color(0xFF065F46), // Emerald 800
+                      Color(0xFF10B981), // Emerald 500
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -128,7 +131,7 @@ Rideal reserves the right to modify or update these Terms at any time. Continued
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
-            colors: [Colors.orange[50]!, Colors.white],
+            colors: [Colors.green[50]!, Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -143,12 +146,12 @@ Rideal reserves the right to modify or update these Terms at any time. Continued
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.orange[100],
+                      color: Colors.green[100],
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.gavel,
-                      color: Colors.orange[700],
+                      color: Colors.green[700],
                       size: 24,
                     ),
                   ),
@@ -317,7 +320,7 @@ Rideal reserves the right to modify or update these Terms at any time. Continued
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.orange[700],
+                        color: Colors.green[700],
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -347,7 +350,7 @@ Rideal reserves the right to modify or update these Terms at any time. Continued
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
-            colors: [Colors.blue[50]!, Colors.white],
+            colors: [Colors.green[50]!, Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -422,7 +425,7 @@ Rideal reserves the right to modify or update these Terms at any time. Continued
   Widget _buildContactInfo(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, color: Colors.blue[600], size: 20),
+        Icon(icon, color: Colors.green[600], size: 20),
         const SizedBox(width: 12),
         Text(
           '$label: ',

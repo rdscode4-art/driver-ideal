@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:rideal_driver/core/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -634,8 +635,8 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                                               Colors.grey[300]!,
                                             ]
                                           : [
-                                              Colors.orange[600]!,
-                                              Colors.orange[400]!,
+                                              AppTheme.primary,
+                                              AppTheme.primary.withOpacity(0.8),
                                             ],
                                       begin: Alignment.centerLeft,
                                       end: Alignment.centerRight,
@@ -646,7 +647,7 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                                         color:
                                             (authController.isLoading.value
                                                     ? Colors.grey
-                                                    : Colors.orange)
+                                                    : AppTheme.primary)
                                                 .withOpacity(0.4),
                                         blurRadius: 15,
                                         offset: const Offset(0, 8),
@@ -770,22 +771,22 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
         width: double.infinity,
         height: 140,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.orange[300]!, width: 2),
+          border: Border.all(color: AppTheme.primary.withOpacity(0.4), width: 2),
           borderRadius: BorderRadius.circular(12),
-          color: Colors.orange[50],
+          color: AppTheme.primary.withOpacity(0.05),
         ),
         child: image == null
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.cloud_upload, size: 48, color: Colors.orange[600]),
+                  Icon(Icons.cloud_upload, size: 48, color: AppTheme.primary),
                   const SizedBox(height: 8),
                   Text(
                     label,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Colors.orange[700],
+                      color: AppTheme.primary,
                     ),
                   ),
                   const SizedBox(height: 4),

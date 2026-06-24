@@ -1,5 +1,6 @@
 // import 'dart:io';
 // import 'package:flutter/material.dart';
+import 'package:rideal_driver/core/app_theme.dart';
 // import 'package:flutter/services.dart';
 // import 'package:get/get.dart';
 // import 'package:image_picker/image_picker.dart';
@@ -57,13 +58,13 @@
 //         return Theme(
 //           data: Theme.of(context).copyWith(
 //             colorScheme: ColorScheme.light(
-//               primary: Colors.orange[600]!,
+//               primary: AppTheme.primary,
 //               onPrimary: Colors.white,
 //               onSurface: Colors.black,
 //             ),
 //             textButtonTheme: TextButtonThemeData(
 //               style: TextButton.styleFrom(
-//                 foregroundColor: Colors.orange[600],
+//                 foregroundColor: AppTheme.primary,
 //               ),
 //             ),
 //           ),
@@ -277,11 +278,11 @@
 //               height: 150,
 //               decoration: BoxDecoration(
 //                 shape: BoxShape.circle,
-//                 border: Border.all(color: Colors.orange[300]!, width: 3),
-//                 color: Colors.orange[50],
+//                 border: Border.all(color: AppTheme.primary.withOpacity(0.4), width: 3),
+//                 color: AppTheme.primary.withOpacity(0.05),
 //                 boxShadow: [
 //                   BoxShadow(
-//                     color: Colors.orange.withOpacity(0.2),
+//                     color: AppTheme.primary.withOpacity(0.2),
 //                     blurRadius: 10,
 //                     offset: const Offset(0, 4),
 //                   ),
@@ -293,7 +294,7 @@
 //                       children: [
 //                         Icon(Icons.person_add,
 //                           size: 50,
-//                           color: Colors.orange[600]
+//                           color: AppTheme.primary
 //                         ),
 //                         const SizedBox(height: 8),
 //                         Text(
@@ -301,7 +302,7 @@
 //                           style: TextStyle(
 //                             fontSize: 14,
 //                             fontWeight: FontWeight.w600,
-//                             color: Colors.orange[700],
+//                             color: AppTheme.primary,
 //                           ),
 //                         ),
 //                       ],
@@ -350,7 +351,7 @@
 //       body: Container(
 //         decoration: BoxDecoration(
 //           gradient: LinearGradient(
-//             colors: [Colors.orange[50]!, Colors.white, Colors.green[50]!],
+//             colors: [AppTheme.primary.withOpacity(0.05), Colors.white, Colors.green[50]!],
 //             begin: Alignment.topLeft,
 //             end: Alignment.bottomRight,
 //           ),
@@ -389,7 +390,7 @@
 //                     child: Card(
 //                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
 //                       elevation: 8,
-//                       shadowColor: Colors.orange.withOpacity(0.2),
+//                       shadowColor: AppTheme.primary.withOpacity(0.2),
 //                       child: Padding(
 //                         padding: const EdgeInsets.all(24.0),
 //                         child: Form(
@@ -414,7 +415,7 @@
 //                                 decoration: InputDecoration(
 //                                   labelText: 'Full Name',
 //                                   hintText: 'Enter your full name',
-//                                   prefixIcon: Icon(Icons.person, color: Colors.orange[600]),
+//                                   prefixIcon: Icon(Icons.person, color: AppTheme.primary),
 //                                   border: OutlineInputBorder(
 //                                     borderRadius: BorderRadius.circular(12),
 //                                   ),
@@ -437,7 +438,7 @@
 //                                   labelText: 'Phone Number',
 //                                   hintText: 'Enter 10 digit mobile number',
 //                                   prefixText: '+91 ',
-//                                   prefixIcon: Icon(Icons.phone, color: Colors.orange[600]),
+//                                   prefixIcon: Icon(Icons.phone, color: AppTheme.primary),
 //                                   helperText: 'Enter your mobile number',
 //                                   border: OutlineInputBorder(
 //                                     borderRadius: BorderRadius.circular(12),
@@ -465,7 +466,7 @@
 //                                         decoration: InputDecoration(
 //                                           labelText: 'Date of Birth',
 //                                           hintText: 'Select your date of birth',
-//                                           prefixIcon: Icon(Icons.calendar_today, color: Colors.orange[600]),
+//                                           prefixIcon: Icon(Icons.calendar_today, color: AppTheme.primary),
 //                                           suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
 //                                           border: OutlineInputBorder(
 //                                             borderRadius: BorderRadius.circular(12),
@@ -548,7 +549,7 @@
 //                                           selectedGender = value!;
 //                                         });
 //                                       },
-//                                       activeColor: Colors.orange[600],
+//                                       activeColor: AppTheme.primary,
 //                                     ),
 //                                   ),
 //                                   Expanded(
@@ -561,7 +562,7 @@
 //                                           selectedGender = value!;
 //                                         });
 //                                       },
-//                                       activeColor: Colors.orange[600],
+//                                       activeColor: AppTheme.primary,
 //                                     ),
 //                                   ),
 //                                 ],
@@ -588,7 +589,7 @@
 //                                   labelText: 'Driving License Number',
 //                                   hintText: 'e.g., DL01 20220012345',
 //                                   helperText: '15 characters (AA00 00000000000)',
-//                                   prefixIcon: Icon(Icons.credit_card, color: Colors.orange[600]),
+//                                   prefixIcon: Icon(Icons.credit_card, color: AppTheme.primary),
 //                                   border: OutlineInputBorder(
 //                                     borderRadius: BorderRadius.circular(12),
 //                                   ),
@@ -620,7 +621,7 @@
 //                                 decoration: InputDecoration(
 //                                   labelText: 'Aadhaar Number',
 //                                   hintText: 'Enter 12 digit Aadhaar number',
-//                                   prefixIcon: Icon(Icons.badge, color: Colors.orange[600]),
+//                                   prefixIcon: Icon(Icons.badge, color: AppTheme.primary),
 //                                   border: OutlineInputBorder(
 //                                     borderRadius: BorderRadius.circular(12),
 //                                   ),
@@ -653,14 +654,14 @@
 //                                   gradient: LinearGradient(
 //                                     colors: authController.isLoading.value
 //                                         ? [Colors.grey[400]!, Colors.grey[300]!]
-//                                         : [Colors.orange[600]!, Colors.orange[400]!],
+//                                         : [AppTheme.primary, AppTheme.primary.withOpacity(0.8)],
 //                                     begin: Alignment.centerLeft,
 //                                     end: Alignment.centerRight,
 //                                   ),
 //                                   borderRadius: BorderRadius.circular(16),
 //                                   boxShadow: [
 //                                     BoxShadow(
-//                                       color: (authController.isLoading.value ? Colors.grey : Colors.orange).withOpacity(0.4),
+//                                       color: (authController.isLoading.value ? Colors.grey : AppTheme.primary).withOpacity(0.4),
 //                                       blurRadius: 15,
 //                                       offset: const Offset(0, 8),
 //                                     ),
@@ -743,22 +744,22 @@
 //         width: double.infinity,
 //         height: 120,
 //         decoration: BoxDecoration(
-//           border: Border.all(color: Colors.orange[300]!, width: 2),
+//           border: Border.all(color: AppTheme.primary.withOpacity(0.4), width: 2),
 //           borderRadius: BorderRadius.circular(12),
-//           color: Colors.orange[50],
+//           color: AppTheme.primary.withOpacity(0.05),
 //         ),
 //         child: image == null
 //             ? Column(
 //                 mainAxisAlignment: MainAxisAlignment.center,
 //                 children: [
-//                   Icon(Icons.cloud_upload, size: 40, color: Colors.orange[600]),
+//                   Icon(Icons.cloud_upload, size: 40, color: AppTheme.primary),
 //                   const SizedBox(height: 8),
 //                   Text(
 //                     label,
 //                     style: TextStyle(
 //                       fontSize: 14,
 //                       fontWeight: FontWeight.w600,
-//                       color: Colors.orange[700],
+//                       color: AppTheme.primary,
 //                     ),
 //                   ),
 //                 ],

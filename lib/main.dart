@@ -23,7 +23,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   print('************************************************');
   print('🚀 APP STARTING - RIDEAL DRIVER');
   print('************************************************');

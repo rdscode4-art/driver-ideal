@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:rideal_driver/core/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -58,12 +59,12 @@ class _NonVehiclePersonalInfoScreenState
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Colors.orange[600]!,
+              primary: AppTheme.primary,
               onPrimary: Colors.white,
               onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(foregroundColor: Colors.orange[600]),
+              style: TextButton.styleFrom(foregroundColor: AppTheme.primary),
             ),
           ),
           child: child!,
@@ -208,11 +209,11 @@ class _NonVehiclePersonalInfoScreenState
             height: 150,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.orange[300]!, width: 3),
-              color: Colors.orange[50],
+              border: Border.all(color: AppTheme.primary.withOpacity(0.4), width: 3),
+              color: AppTheme.primary.withOpacity(0.05),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.orange.withOpacity(0.2),
+                  color: AppTheme.primary.withOpacity(0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -225,7 +226,7 @@ class _NonVehiclePersonalInfoScreenState
                       Icon(
                         Icons.person_add,
                         size: 50,
-                        color: Colors.orange[600],
+                        color: AppTheme.primary,
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -233,7 +234,7 @@ class _NonVehiclePersonalInfoScreenState
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Colors.orange[700],
+                          color: AppTheme.primary,
                         ),
                       ),
                     ],

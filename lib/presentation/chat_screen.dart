@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/chat_controller.dart';
-import 'widgets/app_logo.dart';
+import '../controllers/chat_controller.dart';
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
@@ -46,7 +46,7 @@ class ChatScreen extends StatelessWidget {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.orange[600],
+      backgroundColor: const Color(0xFF10B981),
       elevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -54,19 +54,6 @@ class ChatScreen extends StatelessWidget {
       ),
       title: Row(
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const AppLogo(
-              width: 30,
-              height: 30,
-              margin: EdgeInsets.all(5),
-            ),
-          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -156,7 +143,7 @@ class ChatScreen extends StatelessWidget {
               height: 32,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.orange[400]!, Colors.orange[600]!],
+                  colors: [Color(0xFF34D399), Color(0xFF10B981)],
                 ),
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -174,7 +161,7 @@ class ChatScreen extends StatelessWidget {
               constraints: BoxConstraints(maxWidth: Get.width * 0.75),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isUser ? Colors.orange[600] : Colors.white,
+                color: isUser ? const Color(0xFF10B981) : Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(16),
                   topRight: const Radius.circular(16),
@@ -315,7 +302,7 @@ class ChatScreen extends StatelessWidget {
             height: 32,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.orange[400]!, Colors.orange[600]!],
+                colors: [Color(0xFF34D399), Color(0xFF10B981)],
               ),
               borderRadius: BorderRadius.circular(16),
             ),
@@ -362,7 +349,7 @@ class ChatScreen extends StatelessWidget {
                         width: 4,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: Colors.orange[400],
+                          color: Color(0xFF34D399),
                           shape: BoxShape.circle,
                         ),
                       );
@@ -437,7 +424,7 @@ class ChatScreen extends StatelessWidget {
               () => Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.orange[400]!, Colors.orange[600]!],
+                    colors: [Color(0xFF34D399), Color(0xFF10B981)],
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),

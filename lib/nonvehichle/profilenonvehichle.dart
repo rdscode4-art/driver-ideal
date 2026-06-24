@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideal_driver/core/app_theme.dart';
 import 'package:get/get.dart';
 import 'package:rideal_driver/nonvehichle/documentscreennonvehichle.dart';
 import 'package:rideal_driver/nonvehichle/nonvehichleedit.dart';
@@ -53,7 +54,7 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                   background: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.orange[500]!, Colors.orange[400]!],
+                        colors: [AppTheme.primary, AppTheme.primary.withOpacity(0.8)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -116,10 +117,10 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                                                 fit: BoxFit.cover,
                                                 errorBuilder: (context, error, stackTrace) {
                                                   print('❌ NonVehicle Profile image error: $error');
-                                                  return const Icon(Icons.person, size: 32, color: Colors.orange);
+                                                  return const Icon(Icons.person, size: 32, color: AppTheme.primary);
                                                 },
                                               )
-                                            : const Icon(Icons.person, size: 32, color: Colors.orange),
+                                            : const Icon(Icons.person, size: 32, color: AppTheme.primary),
                                       ),
                                     );
                                   }),
@@ -194,7 +195,7 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                                             decoration: BoxDecoration(
                                               color: controller.isVerified.value
                                                   ? Colors.green[100]
-                                                  : Colors.orange[100],
+                                                  : AppTheme.primary.withOpacity(0.1),
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                             ),
@@ -211,7 +212,7 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                                                           .isVerified
                                                           .value
                                                       ? Colors.green[700]
-                                                      : Colors.orange[700],
+                                                      : AppTheme.primary,
                                                 ),
                                                 const SizedBox(width: 2),
                                                 Text(
@@ -226,7 +227,7 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                                                             .isVerified
                                                             .value
                                                         ? Colors.green[700]
-                                                        : Colors.orange[700],
+                                                        : AppTheme.primary,
                                                   ),
                                                 ),
                                               ],
@@ -290,36 +291,38 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
 
   Widget _buildWalletCard() {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 4,
+      shadowColor: Colors.black12,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
-            colors: [Colors.purple[50]!, Colors.white],
+            colors: [AppTheme.primary.withOpacity(0.05), Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
+          border: Border.all(color: AppTheme.primary.withOpacity(0.1)),
         ),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.purple[100],
+                    color: AppTheme.primary.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.account_balance_wallet,
-                    color: Colors.purple[700],
+                    Icons.account_balance_wallet_rounded,
+                    color: AppTheme.primary,
                     size: 24,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
                 Text(
                   'Wallet Balance',
                   style: TextStyle(
@@ -330,14 +333,15 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             Center(
               child: Obx(() => Text(
                 controller.formattedWallet,
                 style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.purple[700],
+                  fontSize: 36,
+                  fontWeight: FontWeight.w900,
+                  color: AppTheme.primary,
+                  letterSpacing: -1,
                 ),
               )),
             ),
@@ -347,128 +351,128 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
     );
   }
 
- Widget _buildPersonalInfoCard() {
-  return Card(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-    elevation: 2,
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        gradient: LinearGradient(
-          colors: [Colors.blue[50]!, Colors.white],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[100],
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.person, color: Colors.blue[700], size: 24),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'Personal Information',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                ],
-              ),
-              // 🆕 Edit Button
-              IconButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfileScreenNon()));
-                },
-                icon: Icon(Icons.edit, color: Colors.blue[700]),
-                tooltip: 'Edit Profile',
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Obx(() => _buildInfoRow(
-            Icons.person_outline,
-            'Full Name',
-            controller.name.value.isNotEmpty
-                ? controller.name.value
-                : 'Not Set',
-            Colors.blue,
-          )),
-          const SizedBox(height: 16),
-          Obx(() => _buildInfoRow(
-            Icons.phone_outlined,
-            'Phone Number',
-            controller.phone.value.isNotEmpty
-                ? controller.phone.value
-                : 'Not Set',
-            Colors.green,
-          )),
-          const SizedBox(height: 16),
-          Obx(() => _buildInfoRow(
-            Icons.cake_outlined,
-            'Age',
-            controller.age.value.isNotEmpty
-                ? '${controller.age.value} years'
-                : 'Not Set',
-            Colors.orange,
-          )),
-          const SizedBox(height: 16),
-          Obx(() => _buildInfoRow(
-            Icons.wc_outlined,
-            'Gender',
-            controller.formattedGender,
-            Colors.purple,
-          )),
-        ],
-      ),
-    ),
-  );
-}
-  Widget _buildDocumentsCard() {
+  Widget _buildPersonalInfoCard() {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 4,
+      shadowColor: Colors.black12,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          gradient: LinearGradient(
-            colors: [Colors.green[50]!, Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+          border: Border.all(color: Colors.grey[200]!),
         ),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[50],
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.person_rounded, color: Colors.blue[600], size: 24),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      'Personal Information',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                  ],
+                ),
+                // 🆕 Edit Button
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfileScreenNon()));
+                  },
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.grey[50],
+                  ),
+                  icon: Icon(Icons.edit_rounded, color: Colors.blue[600], size: 20),
+                  tooltip: 'Edit Profile',
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Obx(() => _buildInfoRow(
+              Icons.badge_rounded,
+              'Full Name',
+              controller.name.value.isNotEmpty
+                  ? controller.name.value
+                  : 'Not Set',
+              Colors.blue[600]!,
+            )),
+            const SizedBox(height: 20),
+            Obx(() => _buildInfoRow(
+              Icons.phone_rounded,
+              'Phone Number',
+              controller.phone.value.isNotEmpty
+                  ? controller.phone.value
+                  : 'Not Set',
+              AppTheme.primary,
+            )),
+            const SizedBox(height: 20),
+            Obx(() => _buildInfoRow(
+              Icons.cake_rounded,
+              'Age',
+              controller.age.value.isNotEmpty
+                  ? '${controller.age.value} years'
+                  : 'Not Set',
+              Colors.orange[600]!,
+            )),
+            const SizedBox(height: 20),
+            Obx(() => _buildInfoRow(
+              Icons.wc_rounded,
+              'Gender',
+              controller.formattedGender,
+              Colors.purple[600]!,
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDocumentsCard() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 4,
+      shadowColor: Colors.black12,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.green[100],
+                    color: Colors.orange[50],
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.description,
-                    color: Colors.green[700],
+                    Icons.description_rounded,
+                    color: Colors.orange[700],
                     size: 24,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
                 Text(
                   'Documents',
                   style: TextStyle(
@@ -479,26 +483,26 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             Obx(() => _buildInfoRow(
-              Icons.credit_card,
+              Icons.credit_card_rounded,
               'Driving License',
               controller.maskedDL,
-              Colors.blue,
+              Colors.orange[600]!,
             )),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             Obx(() => _buildInfoRow(
-              Icons.badge_outlined,
+              Icons.pin_rounded,
               'Aadhaar Number',
               controller.maskedAadhaar,
-              Colors.orange,
+              Colors.blue[600]!,
             )),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             Obx(() => _buildInfoRow(
-              Icons.verified_user_outlined,
+              Icons.verified_user_rounded,
               'Verification Status',
               controller.verificationStatus.value,
-              controller.isVerified.value ? Colors.green : Colors.orange,
+              controller.isVerified.value ? AppTheme.primary : Colors.orange[700]!,
             )),
           ],
         ),
@@ -506,43 +510,47 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
     );
   }
 
+
   Widget _buildMenuOptionsCard(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 4,
+      shadowColor: Colors.black12,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(20),
           color: Colors.white,
+          border: Border.all(color: Colors.grey[200]!),
         ),
         child: Column(
           children: [
             _buildMenuOption(
-              icon: Icons.description,
+              icon: Icons.description_rounded,
               title: 'My Documents',
               subtitle: 'View uploaded documents',
-              color: Colors.blue,
+              color: Colors.blue[600]!,
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>DocumentsScreen())),
             ),
             _buildDivider(),
             _buildMenuOption(
-              icon: Icons.logout,
+              icon: Icons.logout_rounded,
               title: 'Log Out',
               subtitle: 'Sign out of account',
-              color: Colors.red,
+              color: Colors.orange[700]!,
               onTap: () {
                 _showLogoutDialog(context);
               },
             ),
             _buildDivider(),
             _buildMenuOption(
-              icon: Icons.delete_forever,
+              icon: Icons.delete_forever_rounded,
               title: 'Delete Account',
               subtitle: 'Permanently remove your account',
-              color: Colors.red[800]!,
+              color: Colors.red[700]!,
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const DeleteAccountScreen()));
               },
+              isLast: true,
             ),
           ],
         ),
@@ -554,7 +562,7 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
     return Row(
       children: [
         Icon(icon, color: color, size: 20),
-        const SizedBox(width: 12),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -562,17 +570,19 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: Colors.grey[500],
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
                 ),
               ),
+              const SizedBox(height: 2),
               Text(
                 value,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[800],
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
@@ -588,18 +598,22 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
     required String subtitle,
     required Color color,
     required VoidCallback onTap,
+    bool isLast = false,
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(15),
+      borderRadius: BorderRadius.vertical(
+        top: title == 'My Documents' ? const Radius.circular(20) : Radius.zero,
+        bottom: isLast ? const Radius.circular(20) : Radius.zero,
+      ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
+                color: color.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 22),
@@ -613,18 +627,23 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                     title,
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.bold,
                       color: Colors.grey[800],
                     ),
                   ),
+                  const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    style: TextStyle(
+                      fontSize: 13, 
+                      color: Colors.grey[500],
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 16),
+            Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[400], size: 16),
           ],
         ),
       ),
@@ -632,11 +651,12 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
   }
 
   Widget _buildDivider() {
-    return Divider(
-      height: 1,
-      indent: 60,
-      endIndent: 20,
-      color: Colors.grey[200],
+    return Padding(
+      padding: const EdgeInsets.only(left: 74, right: 24),
+      child: Divider(
+        height: 1,
+        color: Colors.grey[200],
+      ),
     );
   }
 

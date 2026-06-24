@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideal_driver/core/app_theme.dart';
 import 'package:rideal_driver/nonvehichle/non_vehichle_auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rideal_driver/services/location_service.dart';
@@ -404,7 +405,7 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
           ),
           title: Row(
             children: [
-              Icon(Icons.verified_user, color: Colors.orange[700]),
+              Icon(Icons.verified_user, color: AppTheme.primary),
               const SizedBox(width: 8),
               const Expanded(child: Text('Verify Passenger OTP')),
             ],
@@ -427,7 +428,7 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 10,
-                  color: Colors.orange[700],
+                  color: AppTheme.primary,
                 ),
                 decoration: InputDecoration(
                   hintText: '------',
@@ -437,18 +438,18 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
                   ),
                   counterText: '',
                   filled: true,
-                  fillColor: Colors.orange[50],
+                  fillColor: AppTheme.primary.withOpacity(0.05),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.orange[200]!),
+                    borderSide: BorderSide(color: AppTheme.primary.withOpacity(0.2)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.orange[700]!, width: 2),
+                    borderSide: BorderSide(color: AppTheme.primary, width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.orange[200]!),
+                    borderSide: BorderSide(color: AppTheme.primary.withOpacity(0.2)),
                   ),
                 ),
               ),
@@ -500,7 +501,7 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
               icon: const Icon(Icons.play_arrow),
               label: const Text('Start Ride'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange[700],
+                backgroundColor: AppTheme.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -966,7 +967,7 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.orange.withOpacity(0.2),
+                              color: AppTheme.primary.withOpacity(0.2),
                               spreadRadius: 2,
                               blurRadius: 10,
                             ),
@@ -1067,7 +1068,7 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.orange[50]!,
+                              AppTheme.primary.withOpacity(0.05),
                               Colors.green[50]!,
                             ],
                           ),
@@ -1127,7 +1128,7 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
               color: Colors.black.withOpacity(0.3),
               child: Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]!),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primary),
                 ),
               ),
             ),
@@ -1147,13 +1148,13 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: isOngoing ? Border.all(
-          color: isStarted ? Colors.blue[500]! : Colors.orange[500]!,
+          color: isStarted ? Colors.blue[500]! : AppTheme.primary,
           width: 2,
         ) : null,
         boxShadow: [
           BoxShadow(
             color: isOngoing 
-                ? (isStarted ? Colors.blue : Colors.orange).withOpacity(0.2)
+                ? (isStarted ? Colors.blue : AppTheme.primary).withOpacity(0.2)
                 : Colors.grey.withOpacity(0.15),
             spreadRadius: 0,
             blurRadius: 10,
@@ -1424,10 +1425,10 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.orange[50]!, Colors.orange[100]!],
+                      colors: [AppTheme.primary.withOpacity(0.05), AppTheme.primary.withOpacity(0.1)],
                     ),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.orange[300]!, width: 1.5),
+                    border: Border.all(color: AppTheme.primary.withOpacity(0.4), width: 1.5),
                   ),
                   child: Column(
                     children: [
@@ -1435,7 +1436,7 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
                         padding: const EdgeInsets.all(12),
                         child: Row(
                           children: [
-                            Icon(Icons.info_outline, size: 16, color: Colors.orange[700]),
+                            Icon(Icons.info_outline, size: 16, color: AppTheme.primary),
                             const SizedBox(width: 8),
                             const Expanded(
                               child: Text(
@@ -1463,7 +1464,7 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange[700],
+                            backgroundColor: AppTheme.primary,
                             foregroundColor: Colors.white,
                             minimumSize: const Size(double.infinity, 48),
                             shape: RoundedRectangleBorder(
@@ -1641,7 +1642,7 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange[700],
+                  backgroundColor: AppTheme.primary,
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 54),
                   shape: RoundedRectangleBorder(

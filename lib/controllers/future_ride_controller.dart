@@ -23,8 +23,8 @@ class FutureRideController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Comment out the API call since GET endpoint doesn't exist yet
-    // fetchActiveFutureRides();
+    fetchActiveFutureRides();
+    fetchRideRequests();
 
     // Show info message about upcoming feature
     Future.delayed(const Duration(seconds: 1), () {
@@ -164,12 +164,6 @@ class FutureRideController extends GetxController {
     try {
       isLoadingRides.value = true;
       errorMessage.value = '';
-
-      // Show info message that this feature is coming soon
-      showInfoSnackBar(
-        'Loading future rides feature will be available once backend team adds the GET endpoint',
-        title: 'Info',
-      );
 
       // Temporarily return empty list
       activeFutureRides.clear();

@@ -49,7 +49,10 @@ At Rideal, we believe every journey matters. We are committed to supporting init
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.orange[600]!, Colors.orange[400]!],
+                    colors: [
+                      Color(0xFF065F46), // Emerald 800
+                      Color(0xFF10B981), // Emerald 500
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -133,7 +136,7 @@ At Rideal, we believe every journey matters. We are committed to supporting init
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
-            colors: [Colors.blue[50]!, Colors.white],
+            colors: [Colors.green[50]!, Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -148,10 +151,10 @@ At Rideal, we believe every journey matters. We are committed to supporting init
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.blue[100],
+                      color: Colors.green[100],
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(Icons.flag, color: Colors.blue[700], size: 24),
+                    child: Icon(Icons.flag, color: Colors.green[700], size: 24),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -170,7 +173,7 @@ At Rideal, we believe every journey matters. We are committed to supporting init
                           'one ride at a time',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.blue[700],
+                            color: Colors.green[700],
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -255,12 +258,12 @@ At Rideal, we believe every journey matters. We are committed to supporting init
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.orange[100],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(Icons.star, color: Colors.orange[700], size: 20),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.green[100],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(Icons.star, color: Colors.green[700], size: 20),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -300,7 +303,7 @@ At Rideal, we believe every journey matters. We are committed to supporting init
         break;
       default:
         iconData = Icons.star;
-        iconColor = Colors.blue[600]!;
+        iconColor = Colors.green[600]!;
     }
 
     return Container(
@@ -355,7 +358,7 @@ At Rideal, we believe every journey matters. We are committed to supporting init
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
-            colors: [Colors.orange[50]!, Colors.white],
+            colors: [Colors.green[50]!, Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -370,12 +373,12 @@ At Rideal, we believe every journey matters. We are committed to supporting init
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.orange[100],
+                      color: Colors.green[100],
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.security,
-                      color: Colors.orange[700],
+                      color: Colors.green[700],
                       size: 24,
                     ),
                   ),
@@ -398,7 +401,7 @@ At Rideal, we believe every journey matters. We are committed to supporting init
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.orange[200]!),
+                  border: Border.all(color: Colors.green[200]!),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -408,7 +411,7 @@ At Rideal, we believe every journey matters. We are committed to supporting init
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.orange[700],
+                        color: Colors.green[700],
                       ),
                     ),
                     const SizedBox(height: 8),

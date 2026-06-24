@@ -26,7 +26,7 @@ class TicketService {
       }
 
       final response = await http.post(
-        Uri.parse('$_baseUrl/driver/create'),
+        Uri.parse('https://backend.ridealmobility.com/api/driver/create'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -100,39 +100,69 @@ class TicketService {
     }
   }
 
-  Future<Map<String, dynamic>> getTickets() async {
+  Future<Map<String, dynamic>> getTickets(String driverId) async {
     try {
-      final token = await StorageHelper.getAuthToken();
-
-      if (token == null || token.isEmpty) {
+      if (driverId.isEmpty) {
         return {
           'success': false,
-          'message': 'Authentication token not found. Please login again.',
+          'message': 'Driver ID is missing',
         };
       }
 
+      // The backend doesn't strictly need a token for this specific GET route as per requirements, 
+      // but we will pass it anyway if available just in case.
+      final token = await StorageHelper.getAuthToken();
+
       final response = await http.get(
-        Uri.parse('$_baseUrl/tickets'),
+        Uri.parse('https://backend.ridealmobility.com/api/tickets/driver/$driverId'),
         headers: {
-          'Authorization': 'Bearer $token',
+          if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
       );
 
+      print('Get Tickets API Response Status: ${response.statusCode}');
+      print('Get Tickets API Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        
+        List<dynamic> ticketsList = [];
         if (data['success'] == true) {
-          return {
-            'success': true,
-            'tickets': data['tickets'] ?? [],
-          };
+          if (data['tickets'] != null) {
+            ticketsList = data['tickets'];
+          } else if (data['data'] != null) {
+            ticketsList = data['data'];
+          }
+        } else if (data is List) {
+           ticketsList = data;
         }
+
+        final parsedTickets = ticketsList.map((json) {
+          try {
+            return Ticket.fromJson(json as Map<String, dynamic>);
+          } catch (e) {
+            print('Error parsing ticket: $e');
+            return null;
+          }
+        }).where((ticket) => ticket != null).toList();
+
+        return {
+          'success': true,
+          'tickets': parsedTickets,
+        };
+      } else if (response.statusCode == 404) {
+        // Handle "No tickets found" gracefully without throwing an error
+        return {
+          'success': true,
+          'tickets': [],
+        };
       }
 
       return {
         'success': false,
-        'message': 'Failed to fetch tickets',
+        'message': 'Failed to fetch tickets. Status: ${response.statusCode}',
       };
     } catch (e) {
       print('Network error fetching tickets: $e');

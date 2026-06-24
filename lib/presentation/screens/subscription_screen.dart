@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../controllers/payment_controller.dart';
 import '../../services/new_razorpay_service.dart';
 import '../../services/api_service.dart';
+import '../../core/theme/app_colors.dart';
 
 /// 🎯 Complete Subscription Screen
 class SubscriptionScreen extends StatefulWidget {
@@ -41,7 +42,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           'Choose Subscription',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: Colors.blue[700],
+        backgroundColor: primaryGreen,
         elevation: 2,
         centerTitle: true,
         actions: [
@@ -93,8 +94,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue[600]!, Colors.blue[400]!],
+          gradient: const LinearGradient(
+            colors: [darkGreen, primaryGreen],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -273,7 +274,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   icon: const Icon(Icons.refresh),
                   label: const Text('Retry'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[700],
+                    backgroundColor: primaryGreen,
                     foregroundColor: Colors.white,
                   ),
                 ),
@@ -304,15 +305,15 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.blue[100],
+                  color: primaryGreen.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   '${controller.availablePlans.length} plans',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue[700],
+                    color: primaryGreen,
                   ),
                 ),
               ),
@@ -341,7 +342,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
               side: isSelected
-                  ? BorderSide(color: Colors.blue[700]!, width: 2)
+                  ? const BorderSide(color: primaryGreen, width: 2)
                   : BorderSide.none,
             ),
             child: InkWell(
@@ -362,7 +363,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: isSelected
-                                  ? Colors.blue[700]
+                                  ? primaryGreen
                                   : Colors.black87,
                             ),
                           ),
@@ -373,7 +374,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: isSelected
-                                ? Colors.blue[700]
+                                ? primaryGreen
                                 : Colors.green[700],
                           ),
                         ),
@@ -488,7 +489,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 );
               },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue[700],
+          backgroundColor: primaryGreen,
           foregroundColor: Colors.white,
           elevation: 4,
           shape: RoundedRectangleBorder(

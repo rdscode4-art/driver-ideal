@@ -7,6 +7,7 @@ import 'package:rideal_driver/presentation/privacy_policy_screen.dart';
 import 'package:rideal_driver/presentation/refundpolicyscreen.dart';
 import 'package:rideal_driver/presentation/terms_of_service_screen.dart';
 import 'package:get/get.dart';
+import 'package:rideal_driver/presentation/support_screen.dart';
 import '../controllers/profile_controller.dart';
 import '../controllers/auth_controller.dart';
 import '../core/app_theme.dart';
@@ -162,34 +163,34 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 12.w),
                 children: [
                   _buildDrawerItem(
-                    icon: Icons.chat_bubble_outline_rounded,
-                    title: "Help And Support",
-                    color: Colors.blue,
-                    onTap: () => _navigateTo(context, ChatScreen()),
+                    icon: Icons.support_agent_rounded,
+                    title: "Help & Support",
+                    color: const Color(0xFF0F9D58),
+                    onTap: () => _navigateTo(context, const SupportScreen()),
                   ),
                   _buildDrawerItem(
                     icon: Icons.receipt_long_rounded,
                     title: "Refund Policy",
-                    color: Colors.orange,
+                    color: const Color(0xFF0F9D58),
                     onTap: () => _navigateTo(context, const RefundPolicyPage()),
                   ),
                   _buildDrawerItem(
                     icon: Icons.gavel_rounded,
                     title: "Terms & Conditions",
-                    color: Colors.teal,
+                    color: const Color(0xFF0F9D58),
                     onTap: () =>
                         _navigateTo(context, const TermsOfServiceScreen()),
                   ),
                   _buildDrawerItem(
                     icon: Icons.info_outline_rounded,
                     title: "About Us",
-                    color: Colors.indigo,
+                    color: const Color(0xFF0F9D58),
                     onTap: () => _navigateTo(context, AboutScreen()),
                   ),
                   _buildDrawerItem(
                     icon: Icons.security_rounded,
                     title: "Privacy Policy",
-                    color: Colors.deepPurple,
+                    color: const Color(0xFF0F9D58),
                     onTap: () =>
                         _navigateTo(context, const PrivacyPolicyScreen()),
                   ),
@@ -215,9 +216,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         horizontal: 16.w,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.red[50],
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(color: Colors.red[100]!),
+                        border: Border.all(color: Colors.red[600]!, width: 1.5),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -278,10 +279,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
         leading: Container(
           padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: const Color(0xFFE8F5E9), // lightGreen
             borderRadius: BorderRadius.circular(12.r),
           ),
-          child: Icon(icon, color: color, size: 22.w),
+          child: Icon(icon, color: const Color(0xFF0A6B3C), size: 22.w), // darkGreen
         ),
         title: Text(
           title,

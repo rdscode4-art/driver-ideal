@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/models/ticket.dart';
 import '../services/ticket_service.dart';
 import '../core/utils/app_snackbar.dart';
+import '../core/token_manager.dart';
 
 class SupportController extends GetxController {
   final TicketService _ticketService = TicketService();
@@ -33,6 +34,29 @@ class SupportController extends GetxController {
     try {
       isLoading.value = true;
       supportTickets.value = [];
+      
+      final tokenManager = Get.find<TokenManager>();
+      final driverId = tokenManager.userId.value;
+      
+      if (driverId != null && driverId.isNotEmpty) {
+        final result = await _ticketService.getTickets(driverId);
+        if (result['success'] == true) {
+          final List<Ticket> tickets = List<Ticket>.from(result['tickets']);
+          // Sort by newest first
+          tickets.sort((a, b) {
+            try {
+              return DateTime.parse(b.createdAt).compareTo(DateTime.parse(a.createdAt));
+            } catch (_) {
+              return 0;
+            }
+          });
+          supportTickets.value = tickets;
+        } else {
+          showErrorSnackBar(result['message'] ?? 'Failed to load tickets');
+        }
+      }
+    } catch (e) {
+      print('Error loading initial tickets: $e');
     } finally {
       isLoading.value = false;
     }

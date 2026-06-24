@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:rideal_driver/controllers/profile_controller.dart';
 import '../../core/utils/app_snackbar.dart';
+import '../../core/theme/app_colors.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -193,9 +194,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         centerTitle: true,
         elevation: 0,
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.orange[500]!, Colors.orange[400]!],
+              colors: [darkGreen, primaryGreen],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -219,12 +220,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.orange[300]!,
+                          color: primaryGreen,
                           width: 4,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.orange.withOpacity(0.3),
+                            color: primaryGreen.withValues(alpha: 0.3),
                             blurRadius: 15,
                             offset: const Offset(0, 5),
                           ),
@@ -251,23 +252,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           width: 140,
                                           height: 140,
                                           fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                                print(
-                                                  '❌ EditProfile image error: $error',
-                                                );
-                                                return Icon(
-                                                  Icons.person,
-                                                  size: 60,
-                                                  color: Colors.orange[300],
-                                                );
-                                              },
-                                        )
-                                      : Icon(
-                                          Icons.person,
-                                          size: 60,
-                                          color: Colors.orange[300],
-                                        )),
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  print(
+                                                    '❌ EditProfile image error: $error',
+                                                  );
+                                                  return const Icon(
+                                                    Icons.person,
+                                                    size: 60,
+                                                    color: primaryGreen,
+                                                  );
+                                                },
+                                          )
+                                        : const Icon(
+                                            Icons.person,
+                                            size: 60,
+                                            color: primaryGreen,
+                                          )),
                           ),
                         );
                       }),
@@ -280,17 +281,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                               colors: [
-                                Colors.orange[600]!,
-                                Colors.orange[400]!,
+                                darkGreen,
+                                primaryGreen,
                               ],
                             ),
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 3),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.orange.withOpacity(0.4),
+                                color: primaryGreen.withValues(alpha: 0.4),
                                 blurRadius: 8,
                                 offset: const Offset(0, 3),
                               ),
@@ -328,9 +329,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.person_outline,
-                              color: Colors.orange[600],
+                              color: primaryGreen,
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -351,9 +352,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           decoration: InputDecoration(
                             labelText: 'Full Name',
                             hintText: 'Enter your full name',
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.person,
-                              color: Colors.orange[600],
+                              color: primaryGreen,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -364,8 +365,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: Colors.orange[600]!,
+                              borderSide: const BorderSide(
+                                color: primaryGreen,
                                 width: 2,
                               ),
                             ),
@@ -417,15 +418,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     gradient: LinearGradient(
                       colors: isLoading
                           ? [Colors.grey[400]!, Colors.grey[300]!]
-                          : [Colors.orange[600]!, Colors.orange[400]!],
+                          : [darkGreen, primaryGreen],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: (isLoading ? Colors.grey : Colors.orange)
-                            .withOpacity(0.4),
+                        color: (isLoading ? Colors.grey : primaryGreen)
+                            .withValues(alpha: 0.4),
                         blurRadius: 15,
                         offset: const Offset(0, 8),
                       ),

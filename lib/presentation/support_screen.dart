@@ -15,7 +15,7 @@ class SupportScreen extends StatelessWidget {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text('Support & Help'),
-        backgroundColor: Colors.orange[600],
+        backgroundColor: const Color(0xFF10B981),
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -24,13 +24,13 @@ class SupportScreen extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              color: Colors.orange[600],
+              color: const Color(0xFF10B981),
               child: const TabBar(
                 indicatorColor: Colors.white,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.white70,
                 tabs: [
-                  // Tab(text: 'Get Help'),
+                  Tab(text: 'Get Help'),
                   Tab(text: 'My Tickets'),
                 ],
               ),
@@ -38,7 +38,7 @@ class SupportScreen extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  // _buildGetHelpTab(controller, screenWidth, screenHeight),
+                  _buildGetHelpTab(controller, screenWidth, screenHeight),
                   _buildMyTicketsTab(controller, screenWidth, screenHeight),
                 ],
               ),
@@ -48,7 +48,7 @@ class SupportScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showNewTicketDialog(controller),
-        backgroundColor: Colors.orange[600],
+        backgroundColor: const Color(0xFF10B981),
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New Ticket', style: TextStyle(color: Colors.white)),
       ),
@@ -119,7 +119,7 @@ class SupportScreen extends StatelessWidget {
           icon: Icons.account_circle,
           title: 'Account Issues',
           subtitle: 'Profile, verification, login problems',
-          color: Colors.orange[600]!,
+          color: const Color(0xFF10B981),
           onTap: () => _showCategoryHelp('Account Issues'),
           screenWidth: screenWidth,
         ),
@@ -250,28 +250,119 @@ class SupportScreen extends StatelessWidget {
         itemCount: controller.supportTickets.length,
         itemBuilder: (context, index) {
           final ticket = controller.supportTickets[index];
+          final isResolved = ticket.status.toLowerCase() == 'resolved' || ticket.status.toLowerCase() == 'closed';
+          
           return Card(
-            margin: const EdgeInsets.only(bottom: 8),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: controller
-                    .getStatusColor(ticket.status)
-                    .withAlpha(51),
-                child: Icon(
-                  Icons.support_agent,
-                  color: controller.getStatusColor(ticket.status),
-                ),
-              ),
-              title: Text(ticket.ticketTitle),
-              subtitle: Column(
+            margin: const EdgeInsets.only(bottom: 12),
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Status: ${ticket.status.toUpperCase()}'),
-                  Text('Created: ${_formatDateTime(ticket.createdAt)}'),
-                  Text('Priority: ${ticket.priority.toUpperCase()}'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          ticket.ticketTitle,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: controller.getStatusColor(ticket.status).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: controller.getStatusColor(ticket.status).withOpacity(0.5)),
+                        ),
+                        child: Text(
+                          ticket.status.toUpperCase(),
+                          style: TextStyle(
+                            color: controller.getStatusColor(ticket.status),
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    ticket.description,
+                    style: TextStyle(color: Colors.grey[700], fontSize: 14),
+                  ),
+                  const SizedBox(height: 12),
+                  if (isResolved && ticket.resolutionMessage != null && ticket.resolutionMessage!.isNotEmpty) ...[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.green[50],
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.green[200]!),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.check_circle, size: 16, color: Colors.green[700]),
+                              const SizedBox(width: 6),
+                              Text(
+                                'Resolution',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green[800],
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            ticket.resolutionMessage!,
+                            style: TextStyle(color: Colors.green[900], fontSize: 13),
+                          ),
+                          if (ticket.resolvedAt != null) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              'Resolved: ${_formatDateTime(ticket.resolvedAt!)}',
+                              style: TextStyle(color: Colors.green[700], fontSize: 11),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  Divider(color: Colors.grey[200]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.access_time, size: 14, color: Colors.grey[500]),
+                          const SizedBox(width: 4),
+                          Text(
+                            _formatDateTime(ticket.createdAt),
+                            style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        'ID: ${ticket.id.length > 8 ? ticket.id.substring(ticket.id.length - 8) : ticket.id}',
+                        style: TextStyle(color: Colors.grey[400], fontSize: 11),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             ),
           );
         },
@@ -391,7 +482,7 @@ class SupportScreen extends StatelessWidget {
               color: Colors.grey[800],
             ),
           ),
-          iconColor: Colors.orange[600],
+          iconColor: const Color(0xFF10B981),
           collapsedIconColor: Colors.grey[600],
           children: [
             Padding(
@@ -472,13 +563,13 @@ class SupportScreen extends StatelessWidget {
                 vertical: screenWidth * 0.01,
               ),
               decoration: BoxDecoration(
-                color: Colors.orange[50],
+                color: Colors.green[50],
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 ticket['category'],
                 style: TextStyle(
-                  color: Colors.orange[700],
+                  color: Colors.green[700],
                   fontSize: screenWidth * 0.03,
                   fontWeight: FontWeight.w500,
                 ),
@@ -574,7 +665,7 @@ class SupportScreen extends StatelessWidget {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange[600],
+              backgroundColor: const Color(0xFF10B981),
               foregroundColor: Colors.white,
             ),
             child: const Text('Still Need Help?'),

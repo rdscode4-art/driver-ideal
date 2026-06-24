@@ -389,7 +389,7 @@ class _EarningsScreenState extends State<EarningsScreen> {
                 'Today',
                 controller.todayEarnings.value,
                 Icons.today,
-                Colors.blue,
+                const Color(0xFF0A6B3C), // darkGreen
               ),
             ),
             SizedBox(width: 12.w),
@@ -398,7 +398,7 @@ class _EarningsScreenState extends State<EarningsScreen> {
                 'This Week',
                 controller.weekEarnings.value,
                 Icons.calendar_view_week,
-                Colors.orange,
+                const Color(0xFF0F9D58), // primaryGreen
               ),
             ),
           ],
@@ -411,7 +411,7 @@ class _EarningsScreenState extends State<EarningsScreen> {
                 'This Month',
                 controller.monthEarnings.value,
                 Icons.calendar_month,
-                Colors.purple,
+                const Color(0xFF81C784), // accentGreen
               ),
             ),
             SizedBox(width: 12.w),

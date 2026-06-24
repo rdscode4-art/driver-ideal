@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:rideal_driver/core/app_theme.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rideal_driver/nonvehichle/non_vehichle_profile_controller.dart';
@@ -179,7 +180,7 @@ class _EditProfileScreenNonState extends State<EditProfileScreenNon> {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text('Edit Profile'),
-        backgroundColor: Colors.orange[500],
+        backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
@@ -203,7 +204,7 @@ class _EditProfileScreenNonState extends State<EditProfileScreenNon> {
                     Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.orange, width: 3),
+                        border: Border.all(color: AppTheme.primary, width: 3),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.1),
@@ -251,7 +252,7 @@ class _EditProfileScreenNonState extends State<EditProfileScreenNon> {
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.orange,
+                            color: AppTheme.primary,
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
                           ),
@@ -314,7 +315,7 @@ class _EditProfileScreenNonState extends State<EditProfileScreenNon> {
                   child: ElevatedButton(
                     onPressed: isSaving ? null : _saveProfile,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange[500],
+                      backgroundColor: AppTheme.primary,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

@@ -38,8 +38,6 @@ class _RefundPolicyPageState extends State<RefundPolicyPage> {
               ),
               child: Column(
                 children: [
-                  Image.asset("assets/images/logo.png", height: 120),
-                  const SizedBox(height: 16),
                   const Text(
                     'RiDeal Mobility Drive Private Limited',
                     style: TextStyle(

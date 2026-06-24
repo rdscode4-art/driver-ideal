@@ -61,9 +61,8 @@ class _WalletScreenState extends State<WalletScreen>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Color(0xFF065F46), // Emerald 800
-                        Color(0xFF10B981), // Emerald 500
-                        Color(0xFF34D399), // Emerald 400
+                        Color(0xFF0A6B3C), // darkGreen
+                        Color(0xFF0F9D58), // primaryGreen
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -79,12 +78,7 @@ class _WalletScreenState extends State<WalletScreen>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // App Logo
-                          const AppLogo(
-                            width: 120,
-                            height: 120,
-                            margin: EdgeInsets.only(bottom: 15),
-                          ),
+
 
                           // Wallet Balance Card
                           Flexible(
@@ -283,13 +277,13 @@ class _WalletScreenState extends State<WalletScreen>
               decoration: InputDecoration(
                 labelText: 'Payout Amount',
                 hintText: 'Enter amount to withdraw',
-                prefixIcon: const Icon(Icons.currency_rupee, color: Color(0xFF10B981)),
+                prefixIcon: const Icon(Icons.currency_rupee, color: Color(0xFF0F9D58)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.blue[600]!, width: 2),
+                  borderSide: const BorderSide(color: Color(0xFF0F9D58), width: 2),
                 ),
               ),
               validator: (value) {
@@ -319,13 +313,13 @@ class _WalletScreenState extends State<WalletScreen>
               decoration: InputDecoration(
                 labelText: 'Account Holder Name',
                 hintText: 'Enter account holder name',
-                prefixIcon: const Icon(Icons.person, color: Color(0xFF10B981)),
+                prefixIcon: const Icon(Icons.person, color: Color(0xFF0F9D58)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.blue[600]!, width: 2),
+                  borderSide: const BorderSide(color: Color(0xFF0F9D58), width: 2),
                 ),
               ),
               validator: (value) {
@@ -351,14 +345,14 @@ class _WalletScreenState extends State<WalletScreen>
                 hintText: 'Enter bank account number',
                 prefixIcon: const Icon(
                   Icons.account_balance,
-                  color: Color(0xFF10B981),
+                  color: Color(0xFF0F9D58),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF10B981), width: 2),
+                  borderSide: const BorderSide(color: Color(0xFF0F9D58), width: 2),
                 ),
               ),
               validator: (value) {
@@ -385,13 +379,13 @@ class _WalletScreenState extends State<WalletScreen>
               decoration: InputDecoration(
                 labelText: 'IFSC Code',
                 hintText: 'Enter IFSC code',
-                prefixIcon: const Icon(Icons.code, color: Color(0xFF10B981)),
+                prefixIcon: const Icon(Icons.code, color: Color(0xFF0F9D58)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF10B981), width: 2),
+                  borderSide: const BorderSide(color: Color(0xFF0F9D58), width: 2),
                 ),
               ),
               validator: (value) {
@@ -417,7 +411,7 @@ class _WalletScreenState extends State<WalletScreen>
                       ? null
                       : () => _submitPayoutRequest(controller),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF10B981),
+                    backgroundColor: const Color(0xFF0F9D58), // primaryGreen
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:rideal_driver/presentation/widgets/app_logo.dart';
+import 'package:rideal_driver/presentation/widgets/location_search_field.dart';
 import '../controllers/future_ride_controller.dart';
 import '../data/models/future_ride_models.dart';
 import '../routes/app_pages.dart';
@@ -25,11 +26,11 @@ class _FutureRideScreenState extends State<FutureRideScreen>
     FutureRideController(),
   );
 
-  // Orange-Yellow Theme Colors (matching app theme)
-  static const primaryOrange = Color(0xFFF57C00); // Orange 700
-  static const lightOrange = Color(0xFFFFB74D); // Orange 300
-  static const accentYellow = Color(0xFFFFD54F); // Amber 300
-  static const darkOrange = Color(0xFFE65100); // Orange 900
+  // Premium Green Theme Colors
+  static const primaryGreen = Color(0xFF0F9D58); // Brand Green
+  static const lightGreen = Color(0xFFE8F5E9); // Light Green
+  static const accentGreen = Color(0xFF81C784); // Accent Green
+  static const darkGreen = Color(0xFF0A6B3C); // Dark Green
 
   // Form related fields
   final _formKey = GlobalKey<FormState>();
@@ -142,7 +143,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               ),
             ],
           ),
-          backgroundColor: primaryOrange,
+          backgroundColor: primaryGreen,
           duration: Duration(
             seconds: 10,
           ), // Will be dismissed when location is found
@@ -281,7 +282,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: primaryOrange,
+              primary: primaryGreen,
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: Colors.black87,
@@ -306,7 +307,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: primaryOrange,
+              primary: primaryGreen,
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: Colors.black87,
@@ -383,7 +384,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
             'Future Rides',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          backgroundColor: primaryOrange,
+          backgroundColor: primaryGreen,
           automaticallyImplyLeading: false,
         ),
         body: const Center(
@@ -404,7 +405,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
           margin: EdgeInsets.only(bottom: 0.0),
         ),
         centerTitle: true,
-        backgroundColor: Colors.orange[500]!,
+        backgroundColor: primaryGreen,
         automaticallyImplyLeading: false,
         elevation: 3,
         bottom: TabBar(
@@ -455,7 +456,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
             //     decoration: BoxDecoration(
             //       borderRadius: BorderRadius.circular(15),
             //       gradient: LinearGradient(
-            //         colors: [lightOrange.withValues(alpha: 0.1), accentYellow.withValues(alpha: 0.1)],
+            //         colors: [lightGreen.withValues(alpha: 0.1), accentGreen.withValues(alpha: 0.1)],
             //         begin: Alignment.topLeft,
             //         end: Alignment.bottomRight,
             //       ),
@@ -467,7 +468,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
             //           Icon(
             //             Icons.add_road,
             //             size: 48,
-            //             color: primaryOrange,
+            //             color: primaryGreen,
             //           ),
             //           SizedBox(height: 12),
             //           Text(
@@ -475,7 +476,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
             //             style: TextStyle(
             //               fontSize: 22,
             //               fontWeight: FontWeight.bold,
-            //               color: darkOrange,
+            //               color: darkGreen,
             //             ),
             //           ),
             //           SizedBox(height: 8),
@@ -500,46 +501,35 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: darkOrange,
+                color: darkGreen,
               ),
             ),
             const SizedBox(height: 16),
 
-            // From Location
-            TextFormField(
+            LocationSearchField(
               controller: _fromController,
-              decoration: InputDecoration(
-                labelText: 'From Location',
-                labelStyle: const TextStyle(color: primaryOrange),
-                hintText: 'Enter pickup location or tap GPS to detect',
-                prefixIcon: const Icon(Icons.my_location, color: primaryOrange),
-                suffixIcon: _isLoadingLocation
-                    ? const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              primaryOrange,
-                            ),
+              labelText: 'From Location',
+              hintText: 'Enter pickup location or tap GPS',
+              icon: Icons.my_location,
+              suffixIcon: _isLoadingLocation
+                  ? const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            primaryGreen,
                           ),
                         ),
-                      )
-                    : IconButton(
-                        icon: const Icon(Icons.gps_fixed, color: primaryOrange),
-                        onPressed: _getCurrentLocation,
-                        tooltip: 'Detect current location',
                       ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
-                ),
-              ),
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.gps_fixed, color: primaryGreen),
+                      onPressed: _getCurrentLocation,
+                      tooltip: 'Detect current location',
+                    ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter pickup location';
@@ -550,22 +540,11 @@ class _FutureRideScreenState extends State<FutureRideScreen>
 
             const SizedBox(height: 16),
 
-            // To Location
-            TextFormField(
+            LocationSearchField(
               controller: _toController,
-              decoration: InputDecoration(
-                labelText: 'To Location',
-                labelStyle: const TextStyle(color: primaryOrange),
-                hintText: 'Enter destination (e.g., Jaipur)',
-                prefixIcon: const Icon(Icons.location_on, color: Colors.red),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
-                ),
-              ),
+              labelText: 'To Location',
+              hintText: 'Enter destination (e.g., Jaipur)',
+              icon: Icons.location_on,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter destination';
@@ -582,7 +561,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: darkOrange,
+                color: darkGreen,
               ),
             ),
             const SizedBox(height: 16),
@@ -597,7 +576,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: lightOrange.withValues(alpha: 0.5),
+                          color: lightGreen.withValues(alpha: 0.5),
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -605,39 +584,43 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                         children: [
                           const Icon(
                             Icons.calendar_today,
-                            color: primaryOrange,
+                            color: primaryGreen,
                           ),
-                          const SizedBox(width: 12),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Date',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[600],
+                            const SizedBox(width: 12),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Date',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[500],
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                _selectedDate != null
-                                    ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                                    : 'Select date',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: _selectedDate != null
-                                      ? darkOrange
-                                      : Colors.grey[600],
+                                const SizedBox(height: 2),
+                                Text(
+                                  _selectedDate != null
+                                      ? '${_selectedDate!.day.toString().padLeft(2, '0')}/${_selectedDate!.month.toString().padLeft(2, '0')}/${_selectedDate!.year}'
+                                      : 'Select date',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: _selectedDate != null ? FontWeight.w700 : FontWeight.w500,
+                                    color: _selectedDate != null
+                                        ? const Color(0xFF0F9D58)
+                                        : Colors.grey[400],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                // Time Picker
+                  const SizedBox(width: 12),
+                  // Time Picker
                 Expanded(
                   child: InkWell(
                     onTap: _selectTime,
@@ -645,13 +628,13 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: lightOrange.withValues(alpha: 0.5),
+                          color: lightGreen.withValues(alpha: 0.5),
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.access_time, color: primaryOrange),
+                          const Icon(Icons.access_time, color: primaryGreen),
                           const SizedBox(width: 12),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -659,19 +642,23 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                               Text(
                                 'Time',
                                 style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[600],
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[500],
+                                  letterSpacing: 0.5,
                                 ),
                               ),
+                              const SizedBox(height: 2),
                               Text(
                                 _selectedTime != null
                                     ? _selectedTime!.format(context)
                                     : 'Select time',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
+                                  fontWeight: _selectedTime != null ? FontWeight.w700 : FontWeight.w500,
                                   color: _selectedTime != null
-                                      ? darkOrange
-                                      : Colors.grey[600],
+                                      ? const Color(0xFF0F9D58)
+                                      : Colors.grey[400],
                                 ),
                               ),
                             ],
@@ -692,7 +679,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: darkOrange,
+                color: darkGreen,
               ),
             ),
             const SizedBox(height: 16),
@@ -703,14 +690,14 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                 labelText: 'Mobile/Search RiDeal Driver',
-                labelStyle: const TextStyle(color: primaryOrange),
-                prefixIcon: const Icon(Icons.phone, color: primaryOrange),
+                labelStyle: const TextStyle(color: primaryGreen),
+                prefixIcon: const Icon(Icons.phone, color: primaryGreen),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
+                  borderSide: const BorderSide(color: primaryGreen, width: 2),
                 ),
               ),
               validator: (value) {
@@ -729,7 +716,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: darkOrange,
+                color: darkGreen,
               ),
             ),
             const SizedBox(height: 16),
@@ -739,17 +726,17 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               initialValue: _vehicleType,
               decoration: InputDecoration(
                 labelText: 'Vehicle Type',
-                labelStyle: const TextStyle(color: primaryOrange),
+                labelStyle: const TextStyle(color: primaryGreen),
                 prefixIcon: const Icon(
                   Icons.directions_car,
-                  color: primaryOrange,
+                  color: primaryGreen,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
+                  borderSide: const BorderSide(color: primaryGreen, width: 2),
                 ),
               ),
               items: _vehicleTypes.map((String type) {
@@ -772,15 +759,15 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               controller: _vehicleNameController,
               decoration: InputDecoration(
                 labelText: 'Vehicle Name',
-                labelStyle: const TextStyle(color: primaryOrange),
+                labelStyle: const TextStyle(color: primaryGreen),
                 hintText: 'Enter vehicle name (e.g., Toyota Corolla)',
-                prefixIcon: const Icon(Icons.car_repair, color: primaryOrange),
+                prefixIcon: const Icon(Icons.car_repair, color: primaryGreen),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
+                  borderSide: const BorderSide(color: primaryGreen, width: 2),
                 ),
               ),
               validator: (value) {
@@ -798,17 +785,17 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               controller: _vehicleNumberController,
               decoration: InputDecoration(
                 labelText: 'Vehicle Number',
-                labelStyle: const TextStyle(color: primaryOrange),
+                labelStyle: const TextStyle(color: primaryGreen),
                 prefixIcon: const Icon(
                   Icons.confirmation_number,
-                  color: primaryOrange,
+                  color: primaryGreen,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
+                  borderSide: const BorderSide(color: primaryGreen, width: 2),
                 ),
               ),
               validator: (value) {
@@ -826,14 +813,14 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               controller: _vehicleColorController,
               decoration: InputDecoration(
                 labelText: 'Vehicle Color',
-                labelStyle: const TextStyle(color: primaryOrange),
-                prefixIcon: const Icon(Icons.color_lens, color: primaryOrange),
+                labelStyle: const TextStyle(color: primaryGreen),
+                prefixIcon: const Icon(Icons.color_lens, color: primaryGreen),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
+                  borderSide: const BorderSide(color: primaryGreen, width: 2),
                 ),
               ),
               validator: (value) {
@@ -851,14 +838,14 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               initialValue: _availableSeats,
               decoration: InputDecoration(
                 labelText: 'Available Seats',
-                labelStyle: const TextStyle(color: primaryOrange),
-                prefixIcon: const Icon(Icons.event_seat, color: primaryOrange),
+                labelStyle: const TextStyle(color: primaryGreen),
+                prefixIcon: const Icon(Icons.event_seat, color: primaryGreen),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
+                  borderSide: const BorderSide(color: primaryGreen, width: 2),
                 ),
               ),
               items: _seatOptions.map((int seats) {
@@ -883,18 +870,18 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Price per Seat (₹)',
-                labelStyle: const TextStyle(color: primaryOrange),
+                labelStyle: const TextStyle(color: primaryGreen),
                 hintText: 'Enter price per seat in ₹ (e.g., 100)',
                 prefixIcon: const Icon(
                   Icons.currency_rupee,
-                  color: primaryOrange,
+                  color: primaryGreen,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
+                  borderSide: const BorderSide(color: primaryGreen, width: 2),
                 ),
               ),
               validator: (value) {
@@ -919,7 +906,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: darkOrange,
+                color: darkGreen,
               ),
             ),
             const SizedBox(height: 16),
@@ -929,18 +916,18 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               controller: _priceController,
               decoration: InputDecoration(
                 labelText: 'Total Amount (₹)',
-                labelStyle: const TextStyle(color: primaryOrange),
+                labelStyle: const TextStyle(color: primaryGreen),
                 hintText: 'Total amount will be calculated automatically',
                 prefixIcon: const Icon(
                   Icons.currency_rupee,
-                  color: primaryOrange,
+                  color: primaryGreen,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: primaryOrange, width: 2),
+                  borderSide: const BorderSide(color: primaryGreen, width: 2),
                 ),
               ),
               readOnly: true,
@@ -958,13 +945,13 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                       ? null
                       : _createRideOffer,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryOrange,
+                    backgroundColor: primaryGreen,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     elevation: 3,
-                    shadowColor: primaryOrange.withValues(alpha: 0.3),
+                    shadowColor: primaryGreen.withValues(alpha: 0.3),
                   ),
                   child: _futureRideController.isLoading.value
                       ? const Row(
@@ -1010,101 +997,104 @@ class _FutureRideScreenState extends State<FutureRideScreen>
 
   Widget _buildActiveFutureRidesTab() {
     return Obx(() {
-      return SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Header Card
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Container(
+      return RefreshIndicator(
+        onRefresh: _futureRideController.fetchActiveFutureRides,
+        color: const Color(0xFF0F9D58),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Header Card
+              Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(20),
                   gradient: LinearGradient(
                     colors: [
-                      lightOrange.withValues(alpha: 0.1),
-                      accentYellow.withValues(alpha: 0.1),
+                      const Color(0xFF0F9D58).withValues(alpha: 0.15),
+                      const Color(0xFF0F9D58).withValues(alpha: 0.05),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.schedule,
-                        size: 48,
-                        color: primaryOrange,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Active Future Rides',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: darkOrange,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Manage your upcoming scheduled rides',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () =>
-                            _futureRideController.refreshActiveRides(),
-                        icon: const Icon(Icons.refresh, color: primaryOrange),
-                      ),
-                    ],
+                  border: Border.all(
+                    color: const Color(0xFF0F9D58).withValues(alpha: 0.2),
                   ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0F9D58).withValues(alpha: 0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.schedule,
+                        size: 32,
+                        color: Color(0xFF0F9D58),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Active Rides',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF0A6B3C),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Manage your upcoming scheduled rides',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
+              const SizedBox(height: 24),
 
-            const SizedBox(height: 24),
-
-            // Loading or Content
-            if (_futureRideController.isLoadingRides.value)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(40),
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(primaryOrange),
+              // Loading or Content
+              if (_futureRideController.isLoadingRides.value)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(40),
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFF0F9D58)),
+                    ),
                   ),
-                ),
-              )
-            else if (_futureRideController.activeFutureRides.isEmpty)
-              _buildEmptyState(
-                Icons.schedule,
-                'No Active Future Rides',
-                'You don\'t have any scheduled rides yet. Create a ride offer to get started!',
-              )
-            else
-              ...List.generate(_futureRideController.activeFutureRides.length, (
-                index,
-              ) {
-                final ride = _futureRideController.activeFutureRides[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: _buildActiveRideCardFromData(ride),
-                );
-              }),
-          ],
+                )
+              else if (_futureRideController.activeFutureRides.isEmpty)
+                _buildEmptyState(
+                  Icons.schedule,
+                  'No Active Future Rides',
+                  'You don\'t have any scheduled rides yet. Create a ride offer to get started!',
+                )
+              else
+                ...List.generate(_futureRideController.activeFutureRides.length, (
+                  index,
+                ) {
+                  final ride = _futureRideController.activeFutureRides[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _buildActiveRideCardFromData(ride),
+                  );
+                }),
+            ],
+          ),
         ),
       );
     });
@@ -1117,7 +1107,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
     final price = '₹${ride.pricePerPassenger.toInt()} per seat';
     final seatsInfo =
         '${ride.passengersBooked.length} of ${ride.maxPassengers} seats booked';
-    final statusColor = ride.status == 'active' ? primaryOrange : lightOrange;
+    final statusColor = ride.status == 'active' ? primaryGreen : lightGreen;
 
     return Card(
       elevation: 3,
@@ -1187,7 +1177,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: accentYellow.withValues(alpha: 0.1),
+                color: accentGreen.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -1197,7 +1187,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                       const Icon(
                         Icons.directions_car,
                         size: 16,
-                        color: primaryOrange,
+                        color: primaryGreen,
                       ),
                       const SizedBox(width: 8),
                       Text('${ride.vehicle.name} (${ride.vehicle.color})'),
@@ -1211,7 +1201,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.phone, size: 16, color: primaryOrange),
+                      const Icon(Icons.phone, size: 16, color: primaryGreen),
                       const SizedBox(width: 8),
                       Text(ride.driverPhone),
                     ],
@@ -1229,7 +1219,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: primaryOrange,
+                    color: primaryGreen,
                   ),
                 ),
                 Text(
@@ -1247,14 +1237,14 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                       Get.toNamed(Routes.FUTURE_RIDE_DETAILS, arguments: ride);
                     },
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: primaryOrange),
+                      side: const BorderSide(color: primaryGreen),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: const Text(
                       'Edit',
-                      style: TextStyle(color: primaryOrange),
+                      style: TextStyle(color: primaryGreen),
                     ),
                   ),
                 ),
@@ -1824,14 +1814,14 @@ class _FutureRideScreenState extends State<FutureRideScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 40),
-          Icon(icon, size: 80, color: lightOrange.withValues(alpha: 0.7)),
+          Icon(icon, size: 80, color: lightGreen.withValues(alpha: 0.7)),
           const SizedBox(height: 16),
           Text(
             title,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: primaryOrange,
+              color: primaryGreen,
             ),
           ),
           const SizedBox(height: 8),

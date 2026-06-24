@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideal_driver/core/app_theme.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:get/get.dart';
@@ -167,7 +168,7 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
         child: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              color: Colors.orange
+              color: AppTheme.primary
             ),
           ),
           title: Row(
@@ -246,7 +247,7 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                   opacity: _fadeAnimation,
                   child: Column(
                     children: [
-                      // Wallet Balance Card with Action Buttons
+                        // Wallet Balance Card with Action Buttons
                       Padding(
                         padding: const EdgeInsets.all(16),
                         child: Container(
@@ -254,31 +255,50 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Colors.green[700]!, Colors.green[500]!],
+                              colors: [AppTheme.primary.withOpacity(0.9), AppTheme.primary],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.green.withOpacity(0.3),
-                                blurRadius: 15,
-                                offset: const Offset(0, 8),
+                                color: AppTheme.primary.withOpacity(0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                                spreadRadius: -2,
                               ),
                             ],
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    'Wallet Balance',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: const Icon(
+                                          Icons.account_balance_wallet_outlined,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      const Text(
+                                        'Wallet Balance',
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
@@ -289,34 +309,25 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                                       color: Colors.white.withOpacity(0.2),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: const Row(
-                                      children: [
-                                        Icon(
-                                          Icons.account_balance_wallet,
-                                          color: Colors.white,
-                                          size: 14,
-                                        ),
-                                        SizedBox(width: 4),
-                                        Text(
-                                          'Available',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
+                                    child: const Text(
+                                      'Available',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: 20),
                               Text(
                                 '₹${walletBalance.toStringAsFixed(0)}',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 48,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -1,
                                 ),
                               ),
                               const SizedBox(height: 24),
@@ -345,20 +356,21 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                                       ),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.white,
-                                        foregroundColor: Colors.green[700],
+                                        foregroundColor: AppTheme.primary,
                                         padding: const EdgeInsets.symmetric(
                                           vertical: 14,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(14),
                                         ),
-                                        elevation: 0,
+                                        elevation: 4,
+                                        shadowColor: Colors.black12,
                                       ),
                                     ),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
-                                    child: ElevatedButton.icon(
+                                    child: OutlinedButton.icon(
                                       onPressed: () {
                                         Get.to(() => const NonVehiclePayoutHistoryScreen());
                                       },
@@ -370,20 +382,16 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                                           fontSize: 14,
                                         ),
                                       ),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white.withOpacity(0.2),
+                                      style: OutlinedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
                                         foregroundColor: Colors.white,
+                                        side: const BorderSide(color: Colors.white70, width: 1.5),
                                         padding: const EdgeInsets.symmetric(
                                           vertical: 14,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                          side: const BorderSide(
-                                            color: Colors.white,
-                                            width: 1,
-                                          ),
+                                          borderRadius: BorderRadius.circular(14),
                                         ),
-                                        elevation: 0,
                                       ),
                                     ),
                                   ),
@@ -414,22 +422,22 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF4CAF50).withOpacity(0.1),
+                                    color: AppTheme.primary.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: const Row(
+                                  child: Row(
                                     children: [
                                       Icon(
                                         Icons.auto_graph_rounded,
                                         size: 14,
-                                        color: Color(0xFF4CAF50),
+                                        color: AppTheme.primary,
                                       ),
-                                      SizedBox(width: 4),
+                                      const SizedBox(width: 4),
                                       Text(
                                         'All Time',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF4CAF50),
+                                          color: AppTheme.primary,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -445,22 +453,22 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                               'Today',
                               todayEarnings,
                               Icons.today_rounded,
-                              const Color(0xFFFF6B35),
-                              const Color(0xFFFF8C42),
+                              AppTheme.primary,
+                              AppTheme.primary.withOpacity(0.7),
                             ),
                             _buildEnhancedEarningCard(
                               'This Week',
                               weekEarnings,
                               Icons.calendar_view_week_rounded,
-                              const Color(0xFF4CAF50),
-                              const Color(0xFF66BB6A),
+                              Colors.blue[600]!,
+                              Colors.blue[400]!,
                             ),
                             _buildEnhancedEarningCard(
                               'This Month',
                               monthEarnings,
                               Icons.calendar_month_rounded,
-                              const Color(0xFF2196F3),
-                              const Color(0xFF42A5F5),
+                              Colors.purple[600]!,
+                              Colors.purple[400]!,
                             ),
                             
                             const SizedBox(height: 24),
@@ -471,13 +479,13 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    Colors.purple.shade50,
-                                    Colors.blue.shade50,
+                                    AppTheme.primary.withOpacity(0.05),
+                                    AppTheme.primary.withOpacity(0.1),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.purple.shade100,
+                                  color: AppTheme.primary.withOpacity(0.2),
                                   width: 1,
                                 ),
                               ),
@@ -486,12 +494,12 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                                   Container(
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: Colors.purple.shade100,
+                                      color: AppTheme.primary.withOpacity(0.15),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Icon(
                                       Icons.lightbulb_rounded,
-                                      color: Colors.purple.shade700,
+                                      color: AppTheme.primary,
                                       size: 24,
                                     ),
                                   ),
@@ -505,7 +513,7 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.purple.shade700,
+                                            color: AppTheme.primary,
                                           ),
                                         ),
                                         const SizedBox(height: 4),
@@ -548,12 +556,14 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey[100]!),
         boxShadow: [
           BoxShadow(
-            color: startColor.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: startColor.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+            spreadRadius: -2,
           ),
         ],
       ),
@@ -561,7 +571,7 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
         color: Colors.transparent,
         child: InkWell(
           onTap: () {},
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
@@ -574,7 +584,7 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
                         color: startColor.withOpacity(0.3),
@@ -583,7 +593,7 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                       ),
                     ],
                   ),
-                  child: Icon(icon, color: Colors.white, size: 26),
+                  child: Icon(icon, color: Colors.white, size: 24),
                 ),
                 const SizedBox(width: 18),
                 Expanded(
@@ -593,20 +603,22 @@ class _EarningsScreennonvehichleState extends State<EarningsScreennonvehichle> w
                       Text(
                         period,
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 14,
                           color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 0.3,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 4),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
                             '₹${amount.toStringAsFixed(0)}',
                             style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.5,
                               color: isZero ? Colors.grey[400] : const Color(0xFF2C2C2C),
                             ),
                           ),

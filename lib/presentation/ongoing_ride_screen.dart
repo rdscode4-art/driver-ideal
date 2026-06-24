@@ -72,7 +72,7 @@ class OngoingRideScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ongoing Ride'),
-        backgroundColor: Colors.blue[700],
+        backgroundColor: const Color(0xFF0F9D58), // primaryGreen
         foregroundColor: Colors.white,
       ),
       body: Center(
@@ -102,7 +102,7 @@ class OngoingRideScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Get.back(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[700],
+                backgroundColor: const Color(0xFF0F9D58), // primaryGreen
                 foregroundColor: Colors.white,
               ),
               child: const Text('Go Back'),
@@ -236,7 +236,7 @@ class OngoingRideScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.blue[700],
+          color: const Color(0xFF0F9D58), // primaryGreen
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -484,8 +484,8 @@ class OngoingRideScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 24,
-              backgroundColor: Colors.blue[100],
-              child: Icon(Icons.person, color: Colors.blue[700], size: 28),
+              backgroundColor: const Color(0xFFE8F5E9), // lightGreen
+              child: const Icon(Icons.person, color: Color(0xFF0F9D58), size: 28), // primaryGreen
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -525,9 +525,9 @@ class OngoingRideScreen extends StatelessWidget {
                       Text(
                         controller.currentRide.value?.rideType.toUpperCase() ??
                             'RIDE',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
-                          color: Colors.blue[700],
+                          color: Color(0xFF0F9D58), // primaryGreen
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -540,7 +540,7 @@ class OngoingRideScreen extends StatelessWidget {
             if (controller.passengerPhone.value.isNotEmpty)
               IconButton(
                 onPressed: () => controller.callPassenger(),
-                icon: Icon(Icons.phone, color: Colors.green[600]),
+                icon: const Icon(Icons.phone, color: Color(0xFF0F9D58)), // primaryGreen
                 tooltip: 'Call Passenger',
               )
             else
@@ -566,15 +566,15 @@ class OngoingRideScreen extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.blue[600]!, Colors.blue[700]!],
+            colors: [Color(0xFF0A6B3C), Color(0xFF0F9D58)], // darkGreen to primaryGreen
           ),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.blue.withValues(alpha: 0.3),
+              color: const Color(0xFF0F9D58).withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -790,9 +790,9 @@ class OngoingRideScreen extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.green[50],
+          color: const Color(0xFFE8F5E9), // lightGreen
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.green[200]!),
+          border: Border.all(color: const Color(0xFF81C784)), // accentGreen
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1220,18 +1220,14 @@ class OngoingRideScreen extends StatelessWidget {
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  controller.ridePhase.value ==
-                                      RidePhase.GOING_TO_PICKUP
-                                  ? Colors.green[600]
-                                  : Colors.blue[600],
+                              backgroundColor: const Color(0xFF0F9D58), // primaryGreen
                               foregroundColor: Colors.white,
                               elevation: 3,
                               shadowColor:
                                   controller.ridePhase.value ==
                                       RidePhase.GOING_TO_PICKUP
                                   ? Colors.green.withValues(alpha: 0.5)
-                                  : Colors.blue.withValues(alpha: 0.5),
+                                  : Colors.green.withValues(alpha: 0.5),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
@@ -1306,7 +1302,7 @@ class OngoingRideScreen extends StatelessWidget {
                                   : (controller.ridePhase.value ==
                                             RidePhase.PAYMENT_PENDING
                                         ? Colors.purple[600]
-                                        : Colors.orange[600]),
+                                        : const Color(0xFF0F9D58)), // primaryGreen
                               foregroundColor: Colors.white,
                               elevation: 3,
                               shadowColor: Colors.black26,
@@ -1344,7 +1340,7 @@ class OngoingRideScreen extends StatelessWidget {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[700],
+                        backgroundColor: const Color(0xFF0F9D58), // primaryGreen
                         foregroundColor: Colors.white,
                         elevation: 3,
                         shadowColor: Colors.green.withValues(alpha: 0.5),
@@ -1392,7 +1388,7 @@ class OngoingRideScreen extends StatelessWidget {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[600],
+                            backgroundColor: const Color(0xFF0F9D58), // primaryGreen
                             foregroundColor: Colors.white,
                             elevation: 2,
                             shape: RoundedRectangleBorder(
@@ -1454,7 +1450,7 @@ class OngoingRideScreen extends StatelessWidget {
             heroTag: "center_driver",
             mini: true,
             onPressed: () => controller.centerMapOnDriver(),
-            backgroundColor: Colors.blue[600],
+            backgroundColor: Colors.green[600],
             child: const Icon(Icons.my_location, color: Colors.white),
           ),
 
@@ -1492,7 +1488,7 @@ class OngoingRideScreen extends StatelessWidget {
   Color _getPhaseStatusColor(RidePhase phase) {
     switch (phase) {
       case RidePhase.GOING_TO_PICKUP:
-        return Colors.blue[600]!;
+        return Colors.green[600]!;
       case RidePhase.WAITING_FOR_PASSENGER:
         return Colors.orange[600]!;
       case RidePhase.GOING_TO_DROPOFF:
@@ -1672,7 +1668,7 @@ class OngoingRideScreen extends StatelessWidget {
       titleStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
-        color: Colors.blue[800],
+        color: Colors.green[800],
       ),
       content: Padding(
         padding: const EdgeInsets.all(16),
@@ -1702,7 +1698,7 @@ class OngoingRideScreen extends StatelessWidget {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.blue[600]!, width: 2),
+                  borderSide: BorderSide(color: Colors.green[600]!, width: 2),
                 ),
               ),
             ),
@@ -1749,7 +1745,7 @@ class OngoingRideScreen extends StatelessWidget {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[600],
+                      backgroundColor: Colors.green[600],
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -2024,7 +2020,7 @@ class OngoingRideScreen extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.blue[100],
+                          color: Colors.green[100],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -2034,7 +2030,7 @@ class OngoingRideScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue[700],
+                            color: Colors.green[700],
                           ),
                         ),
                       ),
@@ -2073,7 +2069,7 @@ class OngoingRideScreen extends StatelessWidget {
                           print('💳 Payment method changed to: online');
                           selectedPaymentMethod.value = 'online';
                         },
-                        iconColor: Colors.blue,
+                        iconColor: Colors.green,
                       ),
                     ],
                   ),

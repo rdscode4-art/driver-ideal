@@ -28,7 +28,11 @@ class SettingsScreen extends StatelessWidget {
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.orange[600]!, Colors.orange[400]!],
+                    colors: [
+                      Color(0xFF0A6B3C), // Dark Green
+                      Color(0xFF0F9D58), // Brand Green
+                      Color(0xFF4CB050), // Light Green
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -168,7 +172,7 @@ class SettingsScreen extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
-            colors: [Colors.orange[50]!, Colors.white],
+            colors: [Colors.green[50]!, Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -183,11 +187,11 @@ class SettingsScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
-                    colors: [Colors.orange[400]!, Colors.orange[600]!],
+                    colors: [Colors.green[400]!, Colors.green[600]!],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.orange.withValues(alpha: 0.3),
+                      color: Colors.green.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -253,7 +257,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                color: Colors.orange[600],
+                color: Colors.green[600],
                 size: 20,
               ),
             ],
@@ -271,6 +275,7 @@ class SettingsScreen extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
+      shadowColor: Colors.black.withOpacity(0.1),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -281,10 +286,10 @@ class SettingsScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.orange[100],
+                    color: const Color(0xFFE8F5E9), // lightGreen
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(icon, color: Colors.orange[700], size: 20),
+                  child: Icon(icon, color: const Color(0xFF0A6B3C), size: 20),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -322,10 +327,10 @@ class SettingsScreen extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: const Color(0xFFE8F5E9), // lightGreen
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: Colors.grey[700], size: 20),
+              child: Icon(icon, color: const Color(0xFF0F9D58), size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -359,22 +364,24 @@ class SettingsScreen extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () => _showLogoutDialog(),
-        icon: const Icon(Icons.logout, color: Colors.white),
-        label: const Text(
+        icon: Icon(Icons.logout, color: Colors.red[600]),
+        label: Text(
           'Logout',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.red[600],
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red[600],
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.red[600],
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.red[600]!, width: 1.5),
           ),
-          elevation: 3,
+          elevation: 0,
         ),
       ),
     );

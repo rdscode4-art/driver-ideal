@@ -20,7 +20,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Refer & Earn'),
-        backgroundColor: Colors.orange,
+        backgroundColor: const Color(0xFF10B981),
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -30,19 +30,19 @@ class _RewardsScreenState extends State<RewardsScreen> {
           children: [
             // Refer & Earn Header Card
             Card(
-              color: Colors.orange[50],
+              color: Colors.green[50],
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    const Icon(Icons.people, color: Colors.orange, size: 50),
+                    const Icon(Icons.people, color: Color(0xFF10B981), size: 50),
                     const SizedBox(height: 10),
                     const Text(
                       'Refer Friends & Earn',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.orange,
+                        color: Color(0xFF10B981),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -91,7 +91,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                                 IconButton(
                                   icon: const Icon(
                                     Icons.copy,
-                                    color: Colors.orange,
+                                    color: Color(0xFF10B981),
                                   ),
                                   onPressed: () {
                                     Clipboard.setData(
@@ -120,7 +120,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                             icon: const Icon(Icons.share),
                             label: const Text('Share Code'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange,
+                              backgroundColor: const Color(0xFF10B981),
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
@@ -154,7 +154,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                         ),
                         prefixIcon: const Icon(
                           Icons.code,
-                          color: Colors.orange,
+                          color: Color(0xFF10B981),
                         ),
                       ),
                       textCapitalization: TextCapitalization.characters,
@@ -307,7 +307,7 @@ Download the app and start your journey as a driver today!
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: Colors.orange,
+                color: Color(0xFF10B981),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
@@ -321,7 +321,7 @@ Download the app and start your journey as a driver today!
               ),
             ),
             const SizedBox(width: 15),
-            Icon(icon, color: Colors.orange, size: 30),
+            Icon(icon, color: Color(0xFF10B981), size: 30),
             const SizedBox(width: 15),
             Expanded(
               child: Column(

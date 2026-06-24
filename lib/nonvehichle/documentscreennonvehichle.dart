@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideal_driver/core/app_theme.dart';
 import 'package:get/get.dart';
 import 'package:rideal_driver/nonvehichle/documentscontrollernonvehichle.dart';
 
@@ -13,7 +14,7 @@ class DocumentsScreen extends StatelessWidget {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text('My Documents'),
-        backgroundColor: Colors.orange[500],
+        backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -42,7 +43,7 @@ class DocumentsScreen extends StatelessWidget {
                     icon: const Icon(Icons.refresh),
                     label: const Text('Retry'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange[500],
+                      backgroundColor: AppTheme.primary,
                       foregroundColor: Colors.white,
                     ),
                   ),
@@ -96,10 +97,16 @@ class DocumentsScreen extends StatelessWidget {
     bool hasImages = controller.aadhaarImages.isNotEmpty;
     
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 4,
+      shadowColor: Colors.black12,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -108,10 +115,10 @@ class DocumentsScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    color: AppTheme.primary.withOpacity(0.1),
+                    shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.badge_outlined, color: Colors.orange, size: 28),
+                  child: const Icon(Icons.badge_rounded, color: AppTheme.primary, size: 28),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -131,7 +138,9 @@ class DocumentsScreen extends StatelessWidget {
                         controller.maskedAadhaar,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey[600],
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.5,
                         ),
                       ),
                     ],
@@ -141,9 +150,9 @@ class DocumentsScreen extends StatelessWidget {
             ),
             
             if (hasImages) ...[
+              const SizedBox(height: 20),
+              Divider(height: 1, color: Colors.grey[200]),
               const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 12),
               
               // Show all Aadhaar images
               ...List.generate(controller.aadhaarImages.length, (index) {
@@ -153,27 +162,27 @@ class DocumentsScreen extends StatelessWidget {
                     : 'Document';
                 
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 12),
                   child: InkWell(
                     onTap: () => _showImageDialog(imageUrl, 'Aadhaar - $label'),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(12),
                     child: Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.orange[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.orange[200]!),
+                        color: AppTheme.primary.withOpacity(0.04),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppTheme.primary.withOpacity(0.1)),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.image, color: Colors.orange[700], size: 20),
-                          const SizedBox(width: 12),
+                          Icon(Icons.image_rounded, color: AppTheme.primary, size: 20),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Text(
                               label,
                               style: TextStyle(
                                 fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.grey[800],
                               ),
                             ),
@@ -181,18 +190,18 @@ class DocumentsScreen extends StatelessWidget {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.check_circle, size: 16, color: Colors.green[600]),
+                              Icon(Icons.check_circle_rounded, size: 16, color: Colors.green[600]),
                               const SizedBox(width: 4),
                               Text(
                                 'View',
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 13,
                                   color: Colors.green[600],
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(width: 4),
-                              Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 14),
+                              Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[400], size: 14),
                             ],
                           ),
                         ],
@@ -218,20 +227,26 @@ class DocumentsScreen extends StatelessWidget {
     bool hasImage = imageUrl.isNotEmpty;
 
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 4,
+      shadowColor: Colors.black12,
       child: InkWell(
         onTap: hasImage ? () => _showImageDialog(imageUrl, title) : null,
-        borderRadius: BorderRadius.circular(15),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            border: Border.all(color: Colors.grey[200]!),
+          ),
+          padding: const EdgeInsets.all(20),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color, size: 28),
               ),
@@ -253,22 +268,24 @@ class DocumentsScreen extends StatelessWidget {
                       number,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[600],
+                        color: Colors.grey[500],
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.5,
                       ),
                     ),
                     if (hasImage)
                       Padding(
-                        padding: const EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.only(top: 8),
                         child: Row(
                           children: [
-                            Icon(Icons.check_circle, size: 14, color: Colors.green[600]),
+                            Icon(Icons.check_circle_rounded, size: 16, color: Colors.green[600]),
                             const SizedBox(width: 4),
                             Text(
                               'Tap to view document',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 13,
                                 color: Colors.green[600],
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
@@ -278,7 +295,7 @@ class DocumentsScreen extends StatelessWidget {
                 ),
               ),
               if (hasImage)
-                Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 16),
+                Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[400], size: 16),
             ],
           ),
         ),

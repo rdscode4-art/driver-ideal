@@ -294,9 +294,10 @@ class _NonVehicleSubscriptionPlansScreenState
 
               // Continue Button (only show when active)
               if (controller.isSubscriptionActive)
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -349,6 +350,7 @@ class _NonVehicleSubscriptionPlansScreenState
                     ),
                   ),
                 ),
+              ),
             ],
           ),
         );

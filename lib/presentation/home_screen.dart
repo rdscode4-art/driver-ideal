@@ -5,6 +5,7 @@ import 'package:rideal_driver/presentation/drawar.dart';
 import 'package:rideal_driver/presentation/kycdocumentsviewerscreen.dart';
 import 'package:rideal_driver/presentation/widgets/contact_info_section.dart';
 import '../controllers/home_controller.dart';
+import '../controllers/earnings_controller.dart';
 import '../routes/app_pages.dart';
 import 'widgets/social_media_links.dart';
 import '../core/sound_manager.dart';
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // Initialize controller lazily to prevent early creation
     homeController = Get.put(HomeController());
+    Get.put(EarningsController());
 
     // Load initial data when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -143,6 +145,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Quick Actions Section (Enhanced with 4 cards)
                   _buildEnhancedQuickActionsSection(context),
 
+                  // Today's Work Report Section
+                  _buildTodaysWorkReportCard(context),
+
                   // Tip Section
                   _buildTipSection(),
 
@@ -184,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floating: false,
       pinned: true,
       elevation: 0,
-      backgroundColor: const Color(0xFF10B981), // Emerald 500
+      backgroundColor: const Color(0xFF0F9D58), // Brand Green
       actions: [
         IconButton(
           onPressed: () => homeController.refreshData(),
@@ -197,9 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF065F46), // Emerald 800 (for contrast)
-                Color(0xFF10B981), // Emerald 500
-                Color(0xFF34D399), // Emerald 400
+                Color(0xFF0A6B3C), // Dark Green
+                Color(0xFF0F9D58), // Brand Green
+                Color(0xFF4CB050), // Light Green
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -321,9 +326,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12 * scaleFactor),
+          borderRadius: BorderRadius.circular(16 * scaleFactor),
         ),
         elevation: 2,
+        shadowColor: Colors.black.withOpacity(0.1),
         child: Padding(
           padding: EdgeInsets.all(14 * scaleFactor),
           child: Column(
@@ -333,12 +339,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   Obx(
                     () => homeController.isStatusLoading.value
                         ? SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
+                            width: 16 * scaleFactor,
+                            height: 16 * scaleFactor,
+                            child: const CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.orange[600]!,
+                                Color(0xFF0F9D58),
                               ),
                             ),
                           )
@@ -519,7 +525,8 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(12 * scaleFactor),
             ),
             elevation: 3,
-            color: Colors.blue[50],
+            shadowColor: Colors.black.withOpacity(0.1),
+            color: const Color(0xFFE8F5E9), // lightGreen
             child: Padding(
               padding: EdgeInsets.all(14 * scaleFactor),
               child: const Center(child: CircularProgressIndicator()),
@@ -540,7 +547,8 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(12 * scaleFactor),
           ),
           elevation: 3,
-          color: Colors.blue[50],
+          shadowColor: Colors.black.withOpacity(0.1),
+          color: const Color(0xFFE8F5E9), // lightGreen
           child: InkWell(
             onTap: () {
               print('🔔 Ongoing ride card tapped, navigating...');
@@ -558,12 +566,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         padding: EdgeInsets.all(8 * scaleFactor),
                         decoration: BoxDecoration(
-                          color: Colors.blue[100],
+                          color: const Color(0xFF81C784).withOpacity(0.3), // accentGreen light
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.drive_eta,
-                          color: Colors.blue[700],
+                          color: const Color(0xFF0F9D58), // primaryGreen
                           size: 24 * scaleFactor,
                         ),
                       ),
@@ -577,7 +585,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: TextStyle(
                                 fontSize: 16 * scaleFactor,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blue[800],
+                                color: const Color(0xFF0A6B3C), // darkGreen
                               ),
                             ),
                             SizedBox(height: 2 * scaleFactor),
@@ -659,7 +667,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8 * scaleFactor),
-                      border: Border.all(color: Colors.blue[200]!),
+                      border: Border.all(color: const Color(0xFFE8F5E9)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -780,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[600],
+                        backgroundColor: const Color(0xFF0F9D58), // primaryGreen
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
@@ -947,15 +955,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.blue[100],
-                                      borderRadius: BorderRadius.circular(6),
+                                      color: const Color(0xFF81C784).withOpacity(0.3), // accentGreen
+                                      borderRadius: BorderRadius.circular(
+                                        4 * scaleFactor,
+                                      ),
                                     ),
                                     child: Text(
                                       'Ride #${index + 1}',
                                       style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.blue[800],
+                                        fontSize: 10 * scaleFactor,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF0A6B3C), // darkGreen
                                       ),
                                     ),
                                   ),
@@ -1151,6 +1161,92 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildTodaysWorkReportCard(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double scaleFactor = screenWidth / 393;
+    final earningsController = Get.find<EarningsController>();
+
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 14 * scaleFactor,
+        vertical: 8 * scaleFactor,
+      ),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16 * scaleFactor),
+        ),
+        elevation: 2,
+        child: Padding(
+          padding: EdgeInsets.all(16 * scaleFactor),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Today's Work Report",
+                style: TextStyle(
+                  fontSize: 14 * scaleFactor,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[800],
+                ),
+              ),
+              SizedBox(height: 12 * scaleFactor),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Obx(() => Text(
+                            '₹${earningsController.todayEarnings.value.toStringAsFixed(0)}',
+                            style: TextStyle(
+                              fontSize: 18 * scaleFactor,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green[700],
+                            ),
+                          )),
+                      SizedBox(height: 4 * scaleFactor),
+                      Text(
+                        'Earnings',
+                        style: TextStyle(
+                          fontSize: 12 * scaleFactor,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    height: 30 * scaleFactor,
+                    width: 1 * scaleFactor,
+                    color: Colors.grey[300],
+                  ),
+                  Column(
+                    children: [
+                      Obx(() => Text(
+                            '${earningsController.consecutiveTrips.value}',
+                            style: TextStyle(
+                              fontSize: 18 * scaleFactor,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[700],
+                            ),
+                          )),
+                      SizedBox(height: 4 * scaleFactor),
+                      Text(
+                        'Trips',
+                        style: TextStyle(
+                          fontSize: 12 * scaleFactor,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildEnhancedQuickActionsSection(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double scaleFactor = screenWidth / 393;
@@ -1230,12 +1326,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         Expanded(
                           child: _buildEnhancedQuickActionButton(
                             context,
-                            'Live Navigation',
-                            Icons.navigation,
-                            Colors.purple,
-                            'GPS Navigation',
-                            Icons.gps_fixed,
-                            () => Get.toNamed(Routes.MAP),
+                            'Documents',
+                            Icons.description_outlined,
+                            Colors.teal,
+                            'View Documents',
+                            Icons.folder_open,
+                            () => Get.to(
+                              () => const KYCDocumentsViewerScreen(),
+                            ),
                           ),
                         ),
                       ],
@@ -1246,26 +1344,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         Expanded(
                           child: _buildEnhancedQuickActionButton(
                             context,
-                            'Documents',
-                            Icons.description_outlined,
+                            'Subscription',
+                            Icons.card_membership,
                             Colors.teal,
-                            'View Documents', // ✅ Updated subtitle
-                            Icons.folder_open, // ✅ Updated icon
-                            () => Get.to(
-                              () => const KYCDocumentsViewerScreen(),
-                            ), // ✅ Navigate to KYC Documents Viewer
+                            'Manage Plans',
+                            Icons.star,
+                            () => Get.toNamed(Routes.SUBSCRIPTION),
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: _buildEnhancedQuickActionButton(
                             context,
-                            'Referral',
-                            Icons.people_outline,
+                            'Support',
+                            Icons.help_outline,
                             Colors.orange,
-                            'Refer Friends',
-                            Icons.card_giftcard,
-                            () => Get.toNamed(Routes.REWARDS),
+                            'Get Help 24/7',
+                            Icons.support_agent,
+                            () => Get.toNamed(Routes.SUPPORT),
                           ),
                         ),
                       ],

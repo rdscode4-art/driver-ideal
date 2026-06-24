@@ -113,8 +113,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          gradient: LinearGradient(
-            colors: [Colors.purple[50]!, Colors.white],
+          gradient: const LinearGradient(
+            colors: [Color(0xFFF1F8E9), Colors.white], // lightGreen50 to white
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -125,21 +125,21 @@ class _ProfileScreenState extends State<ProfileScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.purple[100]!, Colors.blue[100]!],
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFE8F5E9), Color(0xFF81C784)], // lightGreen to accentGreen
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.purple.withValues(alpha: 0.3),
+                    color: const Color(0xFF0F9D58).withValues(alpha: 0.3), // primaryGreen shadow
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
                 ],
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.account_balance_wallet,
-                color: Colors.purple[700],
+                color: Color(0xFF0A6B3C), // darkGreen
                 size: 28,
               ),
             ),
@@ -185,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 320,
+            expandedHeight: 195,
             backgroundColor: Colors.transparent,
             elevation: 0,
             pinned: true,
@@ -193,11 +193,10 @@ class _ProfileScreenState extends State<ProfileScreen>
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
-                      Color(0xFF065F46), // Emerald 800
-                      Color(0xFF10B981), // Emerald 500
-                      Color(0xFF34D399), // Emerald 400
+                      Color(0xFF0A6B3C), // darkGreen
+                      Color(0xFF0F9D58), // primaryGreen
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -322,7 +321,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ),
                                           decoration: BoxDecoration(
                                             color: isVerified
-                                                ? Colors.green[100]
+                                                ? const Color(0xFFE8F5E9) // lightGreen
                                                 : Colors.amber[100],
                                             borderRadius: BorderRadius.circular(
                                               8,
@@ -337,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     : Icons.pending,
                                                 size: 12,
                                                 color: isVerified
-                                                    ? Colors.green[700]
+                                                    ? const Color(0xFF0F9D58) // primaryGreen
                                                     : Colors.amber[700],
                                               ),
                                               const SizedBox(width: 2),
@@ -347,7 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   fontSize: 10,
                                                   fontWeight: FontWeight.w600,
                                                   color: isVerified
-                                                      ? Colors.green[700]
+                                                      ? const Color(0xFF0F9D58) // primaryGreen
                                                       : Colors.amber[700],
                                                 ),
                                               ),
@@ -468,8 +467,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          gradient: LinearGradient(
-            colors: [Colors.green[50]!, Colors.white],
+          gradient: const LinearGradient(
+            colors: [Color(0xFFF1F8E9), Colors.white], // lightGreen50
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -482,13 +481,13 @@ class _ProfileScreenState extends State<ProfileScreen>
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.green[100],
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFE8F5E9), // lightGreen
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.directions_car,
-                    color: Colors.green[700],
+                    color: Color(0xFF0A6B3C), // darkGreen
                     size: 24,
                   ),
                 ),

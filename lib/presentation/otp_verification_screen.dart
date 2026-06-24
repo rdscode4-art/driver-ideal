@@ -104,16 +104,23 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   SizedBox(height: 20.h),
 
                   // Subtitle
-                  Obx(
-                    () => Text(
-                      'Enter the 6-digit code sent to\n${isVehicle ? authController.tempPhone.value : (args['phone'] ?? '')}',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
-                        fontSize: 16.sp,
-                        color: AppTheme.textSecondary,
+                  isVehicle 
+                    ? Obx(() => Text(
+                        'Enter the 6-digit code sent to\n${authController.tempPhone.value}',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontSize: 16.sp,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ))
+                    : Text(
+                        'Enter the 6-digit code sent to\n${args['phone'] ?? ''}',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontSize: 16.sp,
+                          color: AppTheme.textSecondary,
+                        ),
                       ),
-                    ),
-                  ),
                   SizedBox(height: 40.h),
 
                   // 6-Digit OTP Input Fields
