@@ -54,7 +54,10 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                   background: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [AppTheme.primary, AppTheme.primary.withOpacity(0.8)],
+                        colors: [
+                          AppTheme.primary,
+                          AppTheme.primary.withOpacity(0.8),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -102,9 +105,12 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                                     ],
                                   ),
                                   child: Obx(() {
-                                    final profilePic = controller.profilePicUrl.value;
-                                    print('📸 ProfileScreennonvehichle image: $profilePic');
-                                    
+                                    final profilePic =
+                                        controller.profilePicUrl.value;
+                                    print(
+                                      '📸 ProfileScreennonvehichle image: $profilePic',
+                                    );
+
                                     return CircleAvatar(
                                       radius: 32,
                                       backgroundColor: Colors.white,
@@ -115,12 +121,27 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                                                 width: 64,
                                                 height: 64,
                                                 fit: BoxFit.cover,
-                                                errorBuilder: (context, error, stackTrace) {
-                                                  print('❌ NonVehicle Profile image error: $error');
-                                                  return const Icon(Icons.person, size: 32, color: AppTheme.primary);
-                                                },
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) {
+                                                      print(
+                                                        '❌ NonVehicle Profile image error: $error',
+                                                      );
+                                                      return const Icon(
+                                                        Icons.person,
+                                                        size: 32,
+                                                        color: AppTheme.primary,
+                                                      );
+                                                    },
                                               )
-                                            : const Icon(Icons.person, size: 32, color: AppTheme.primary),
+                                            : const Icon(
+                                                Icons.person,
+                                                size: 32,
+                                                color: AppTheme.primary,
+                                              ),
                                       ),
                                     );
                                   }),
@@ -195,7 +216,8 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                                             decoration: BoxDecoration(
                                               color: controller.isVerified.value
                                                   ? Colors.green[100]
-                                                  : AppTheme.primary.withOpacity(0.1),
+                                                  : AppTheme.primary
+                                                        .withOpacity(0.1),
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                             ),
@@ -335,15 +357,17 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
             ),
             const SizedBox(height: 24),
             Center(
-              child: Obx(() => Text(
-                controller.formattedWallet,
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.w900,
-                  color: AppTheme.primary,
-                  letterSpacing: -1,
+              child: Obx(
+                () => Text(
+                  controller.formattedWallet,
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.primary,
+                    letterSpacing: -1,
+                  ),
                 ),
-              )),
+              ),
             ),
           ],
         ),
@@ -377,7 +401,11 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                         color: Colors.blue[50],
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.person_rounded, color: Colors.blue[600], size: 24),
+                      child: Icon(
+                        Icons.person_rounded,
+                        color: Colors.blue[600],
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Text(
@@ -393,50 +421,65 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                 // 🆕 Edit Button
                 IconButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfileScreenNon()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfileScreenNon(),
+                      ),
+                    );
                   },
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.grey[50],
+                  style: IconButton.styleFrom(backgroundColor: Colors.grey[50]),
+                  icon: Icon(
+                    Icons.edit_rounded,
+                    color: Colors.blue[600],
+                    size: 20,
                   ),
-                  icon: Icon(Icons.edit_rounded, color: Colors.blue[600], size: 20),
                   tooltip: 'Edit Profile',
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            Obx(() => _buildInfoRow(
-              Icons.badge_rounded,
-              'Full Name',
-              controller.name.value.isNotEmpty
-                  ? controller.name.value
-                  : 'Not Set',
-              Colors.blue[600]!,
-            )),
+            Obx(
+              () => _buildInfoRow(
+                Icons.badge_rounded,
+                'Full Name',
+                controller.name.value.isNotEmpty
+                    ? controller.name.value
+                    : 'Not Set',
+                Colors.blue[600]!,
+              ),
+            ),
             const SizedBox(height: 20),
-            Obx(() => _buildInfoRow(
-              Icons.phone_rounded,
-              'Phone Number',
-              controller.phone.value.isNotEmpty
-                  ? controller.phone.value
-                  : 'Not Set',
-              AppTheme.primary,
-            )),
+            Obx(
+              () => _buildInfoRow(
+                Icons.phone_rounded,
+                'Phone Number',
+                controller.phone.value.isNotEmpty
+                    ? controller.phone.value
+                    : 'Not Set',
+                AppTheme.primary,
+              ),
+            ),
             const SizedBox(height: 20),
-            Obx(() => _buildInfoRow(
-              Icons.cake_rounded,
-              'Age',
-              controller.age.value.isNotEmpty
-                  ? '${controller.age.value} years'
-                  : 'Not Set',
-              Colors.orange[600]!,
-            )),
+            Obx(
+              () => _buildInfoRow(
+                Icons.cake_rounded,
+                'Age',
+                controller.age.value.isNotEmpty
+                    ? '${controller.age.value} years'
+                    : 'Not Set',
+                Colors.orange[600]!,
+              ),
+            ),
             const SizedBox(height: 20),
-            Obx(() => _buildInfoRow(
-              Icons.wc_rounded,
-              'Gender',
-              controller.formattedGender,
-              Colors.purple[600]!,
-            )),
+            Obx(
+              () => _buildInfoRow(
+                Icons.wc_rounded,
+                'Gender',
+                controller.formattedGender,
+                Colors.purple[600]!,
+              ),
+            ),
           ],
         ),
       ),
@@ -484,32 +527,39 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
               ],
             ),
             const SizedBox(height: 24),
-            Obx(() => _buildInfoRow(
-              Icons.credit_card_rounded,
-              'Driving License',
-              controller.maskedDL,
-              Colors.orange[600]!,
-            )),
+            Obx(
+              () => _buildInfoRow(
+                Icons.credit_card_rounded,
+                'Driving License',
+                controller.maskedDL,
+                Colors.orange[600]!,
+              ),
+            ),
             const SizedBox(height: 20),
-            Obx(() => _buildInfoRow(
-              Icons.pin_rounded,
-              'Aadhaar Number',
-              controller.maskedAadhaar,
-              Colors.blue[600]!,
-            )),
+            Obx(
+              () => _buildInfoRow(
+                Icons.pin_rounded,
+                'Aadhaar Number',
+                controller.maskedAadhaar,
+                Colors.blue[600]!,
+              ),
+            ),
             const SizedBox(height: 20),
-            Obx(() => _buildInfoRow(
-              Icons.verified_user_rounded,
-              'Verification Status',
-              controller.verificationStatus.value,
-              controller.isVerified.value ? AppTheme.primary : Colors.orange[700]!,
-            )),
+            Obx(
+              () => _buildInfoRow(
+                Icons.verified_user_rounded,
+                'Verification Status',
+                controller.verificationStatus.value,
+                controller.isVerified.value
+                    ? AppTheme.primary
+                    : Colors.orange[700]!,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
-
 
   Widget _buildMenuOptionsCard(BuildContext context) {
     return Card(
@@ -529,7 +579,10 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
               title: 'My Documents',
               subtitle: 'View uploaded documents',
               color: Colors.blue[600]!,
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>DocumentsScreen())),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DocumentsScreen()),
+              ),
             ),
             _buildDivider(),
             _buildMenuOption(
@@ -548,7 +601,12 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
               subtitle: 'Permanently remove your account',
               color: Colors.red[700]!,
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const DeleteAccountScreen()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DeleteAccountScreen(),
+                  ),
+                );
               },
               isLast: true,
             ),
@@ -635,7 +693,7 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: 13, 
+                      fontSize: 13,
                       color: Colors.grey[500],
                       fontWeight: FontWeight.w500,
                     ),
@@ -643,7 +701,11 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[400], size: 16),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Colors.grey[400],
+              size: 16,
+            ),
           ],
         ),
       ),
@@ -653,10 +715,7 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
   Widget _buildDivider() {
     return Padding(
       padding: const EdgeInsets.only(left: 74, right: 24),
-      child: Divider(
-        height: 1,
-        color: Colors.grey[200],
-      ),
+      child: Divider(height: 1, color: Colors.grey[200]),
     );
   }
 

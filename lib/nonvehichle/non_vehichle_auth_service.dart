@@ -23,7 +23,8 @@ class NonVehicleAuthService {
         },
       );
 
-      print('📥 Status: ${response.statusCode}');
+      print('📥 [HISTORY API] Status: ${response.statusCode}');
+      print('📥 [HISTORY API] Body: ${response.body}');
       print('📥 Body: ${response.body}');
 
       if (response.statusCode == 200) {

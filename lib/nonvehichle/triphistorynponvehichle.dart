@@ -919,29 +919,22 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+        centerTitle: true,
         title: const Text(
           'Trip History',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFFF6F00), Color(0xFFFF9100)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        foregroundColor: Colors.white,
         actions: [
           Container(
-            margin: const EdgeInsets.only(right: 8),
+            margin: const EdgeInsets.only(right: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.grey[100],
+              shape: BoxShape.circle,
             ),
             child: IconButton(
-              icon: const Icon(Icons.refresh_rounded),
+              icon: const Icon(Icons.refresh_rounded, color: Colors.black87, size: 20),
               onPressed: () {
                 _loadTripHistory();
               },
@@ -1143,24 +1136,26 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
     final isOngoing = isAccepted || isStarted;
     
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: isOngoing ? Border.all(
-          color: isStarted ? Colors.blue[500]! : AppTheme.primary,
-          width: 2,
-        ) : null,
         boxShadow: [
           BoxShadow(
             color: isOngoing 
                 ? (isStarted ? Colors.blue : AppTheme.primary).withOpacity(0.2)
-                : Colors.grey.withOpacity(0.15),
-            spreadRadius: 0,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+                : Colors.grey.withOpacity(0.08),
+            spreadRadius: isOngoing ? 2 : 1,
+            blurRadius: isOngoing ? 12 : 10,
+            offset: const Offset(0, 2),
           ),
         ],
+        border: Border.all(
+          color: isOngoing 
+              ? (isStarted ? Colors.blue[500]! : AppTheme.primary)
+              : Colors.grey.withOpacity(0.1),
+          width: isOngoing ? 2 : 1,
+        ),
       ),
       child: InkWell(
         onTap: () {
@@ -1168,375 +1163,146 @@ class _TripHistoryScreennonvehichleState extends State<TripHistoryScreennonvehic
         },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header: Passenger name and Status
+              // Top Row: Location & Price
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(top: 2),
+                          padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFFF6F00), Color(0xFFFF9100)],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
+                            color: AppTheme.primary.withOpacity(0.1),
+                            shape: BoxShape.circle,
                           ),
-                          child: const Icon(
-                            Icons.person_rounded,
-                            color: Colors.white,
-                            size: 20,
-                          ),
+                          child: Icon(Icons.my_location_rounded, size: 12, color: AppTheme.primary),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            trip.passengerName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                              color: Color(0xFF212121),
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: _getStatusColor(trip.status).withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: _getStatusColor(trip.status).withOpacity(0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          isStarted ? Icons.directions_car : 
-                          isAccepted ? Icons.check_circle : 
-                          Icons.info,
-                          size: 12,
-                          color: _getStatusColor(trip.status),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          trip.status.toUpperCase(),
-                          style: TextStyle(
-                            color: _getStatusColor(trip.status),
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Date and Time
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF3E0),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.calendar_today_rounded,
-                      size: 14,
-                      color: Color(0xFFFF6F00),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${trip.date} • ${trip.time}',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFFFF6F00),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Service Location
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF4CAF50),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF4CAF50).withOpacity(0.3),
-                            blurRadius: 4,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Service Location',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            trip.pickup,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF212121),
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Distance, Rating, and Fare
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE8F5E9),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.access_time_rounded,
-                              size: 14,
-                              color: Color(0xFF4CAF50),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              trip.distance,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: Color(0xFF4CAF50),
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (trip.rating > 0) ...[
                         const SizedBox(width: 10),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFF8E1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(
-                                Icons.star_rounded,
-                                size: 16,
-                                color: Color(0xFFFFA726),
-                              ),
-                              const SizedBox(width: 4),
                               Text(
-                                trip.rating.toString(),
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Color(0xFFFFA726),
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                trip.pickup,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${trip.date} • ${trip.time}',
+                                style: TextStyle(color: Colors.grey[500], fontSize: 11, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
                         ),
                       ],
-                    ],
+                    ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF4CAF50), Color(0xFF66BB6A)],
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '₹${trip.fare.round()}',
+                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
                       ),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF4CAF50).withOpacity(0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+                      const SizedBox(height: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(trip.status).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(6),
                         ),
-                      ],
-                    ),
-                    child: Text(
-                      '₹${trip.fare.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        child: Text(
+                          (trip.status).toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 10, 
+                            fontWeight: FontWeight.bold,
+                            color: _getStatusColor(trip.status),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
               
-              // START RIDE BUTTON FOR ACCEPTED RIDES
-              if (isAccepted) ...[
-                const SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppTheme.primary.withOpacity(0.05), AppTheme.primary.withOpacity(0.1)],
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppTheme.primary.withOpacity(0.4), width: 1.5),
-                  ),
-                  child: Column(
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Divider(height: 1, thickness: 1),
+              ),
+              
+              // Bottom Row: Rider Info & Duration
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(
-                          children: [
-                            Icon(Icons.info_outline, size: 16, color: AppTheme.primary),
-                            const SizedBox(width: 8),
-                            const Expanded(
-                              child: Text(
-                                'This ride is waiting to be started',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                        child: ElevatedButton.icon(
-                          onPressed: _isLoading ? null : () => _startRideFromHistory(trip),
-                          icon: const Icon(Icons.play_arrow, size: 20),
-                          label: const Text(
-                            'Start Ride Now',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primary,
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size(double.infinity, 48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            elevation: 2,
-                          ),
-                        ),
+                      Icon(Icons.person, size: 16, color: Colors.grey[600]),
+                      const SizedBox(width: 6),
+                      Text(
+                        trip.passengerName,
+                        style: TextStyle(fontSize: 13, color: Colors.grey[800], fontWeight: FontWeight.w600),
                       ),
                     ],
+                  ),
+                  if (trip.distance.isNotEmpty && trip.distance != 'N/A')
+                    Row(
+                      children: [
+                        Icon(Icons.access_time_rounded, size: 16, color: Colors.grey[500]),
+                        const SizedBox(width: 4),
+                        Text(
+                          trip.distance,
+                          style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+              
+              // Action Buttons for Accepted / Started Rides
+              if (isAccepted) ...[
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _startRideFromHistory(trip),
+                    icon: const Icon(Icons.play_arrow, size: 18),
+                    label: const Text('Start Ride', style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      elevation: 0,
+                    ),
                   ),
                 ),
               ],
-              
-              // COMPLETE RIDE BUTTON FOR STARTED RIDES
               if (isStarted) ...[
                 const SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.blue[50]!, Colors.blue[100]!],
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _isLoading ? null : () => _completeRideFromHistory(trip),
+                    icon: const Icon(Icons.flag_rounded, size: 18),
+                    label: const Text('Complete Ride', style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[700],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      elevation: 0,
                     ),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.blue[300]!, width: 1.5),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(
-                          children: [
-                            Icon(Icons.directions_car, size: 18, color: Colors.blue[700]),
-                            const SizedBox(width: 8),
-                            const Expanded(
-                              child: Text(
-                                'Ride is currently in progress',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      //  UNCOMMENT WHEN PAYMENT INTEGRATION COME
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                        child: ElevatedButton.icon(
-                          onPressed: _isLoading ? null : () => _completeRideFromHistory(trip),  // ✅ YE LINE USE
-                          // onPressed: _isLoading ? null : () => _completeRideFromHistory(trip),
-                          icon: const Icon(Icons.flag_rounded, size: 20),
-                          label: const Text(
-                            'Complete Ride',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green[700],
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size(double.infinity, 48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            elevation: 2,
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ],
