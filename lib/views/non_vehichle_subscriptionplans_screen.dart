@@ -53,14 +53,15 @@ class _NonVehicleSubscriptionPlansScreenState
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: false,
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            // Always allow back navigation
-            Navigator.of(context).pop();
-          },
-        ),
+        automaticallyImplyLeading: false,
+        leading: Navigator.canPop(context)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            : null,
         actions: [
           Obx(() {
             if (controller.isSubscriptionActive) {

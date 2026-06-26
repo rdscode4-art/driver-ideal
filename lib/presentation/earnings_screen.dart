@@ -532,7 +532,6 @@ class _EarningsScreenState extends State<EarningsScreen> {
   ) {
     return Container(
       padding: EdgeInsets.all(16.w),
-      height: 110.h,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -547,7 +546,7 @@ class _EarningsScreenState extends State<EarningsScreen> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: EdgeInsets.all(8.w),
@@ -557,6 +556,7 @@ class _EarningsScreenState extends State<EarningsScreen> {
             ),
             child: Icon(icon, color: color, size: 18.w),
           ),
+          SizedBox(height: 12.h),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

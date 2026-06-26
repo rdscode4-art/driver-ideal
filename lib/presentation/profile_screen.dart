@@ -631,11 +631,11 @@ class _ProfileScreenState extends State<ProfileScreen>
         child: Column(
           children: [
             _buildMenuOption(
-              icon: Icons.chat_bubble_outline,
-              title: 'In-App Chat',
-              subtitle: 'Message support',
-              color: Colors.green,
-              onTap: () => Get.toNamed('/chat'),
+              icon: Icons.support_agent,
+              title: 'Help & Support',
+              subtitle: 'Get help with your account',
+              color: Colors.blue,
+              onTap: () => Get.toNamed('/support'),
             ),
             _buildDivider(),
             _buildMenuOption(

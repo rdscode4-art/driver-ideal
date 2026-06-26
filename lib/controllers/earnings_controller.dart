@@ -73,7 +73,10 @@ class EarningsController extends GetxController {
         // REMOVED: _calculateTotalEarnings() - Don't add bonuses to total!
       } else {
         error.value = result['message'];
-        showErrorSnackBar(result['message'] ?? 'Failed to fetch earnings', title: 'Error');
+        // Do not show snackbar at startup if the user just isn't logged in yet
+        if (result['message'] != 'Authentication required. Please login again.') {
+          showErrorSnackBar(result['message'] ?? 'Failed to fetch earnings', title: 'Error');
+        }
       }
     } catch (e) {
       error.value = 'Failed to fetch earnings: $e';

@@ -836,7 +836,11 @@ Future<void> loadSubscriptionPlans() async {
               ElevatedButton(
                 onPressed: () {
                   Get.back(); // Close dialog
-                  Get.back(); // Go back to previous screen
+                  if (_tokenManager.isNonVehicleDriver) {
+                    Get.offAllNamed('/nonvehichledashboard');
+                  } else {
+                    Get.offAllNamed('/dashboard');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,

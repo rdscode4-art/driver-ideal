@@ -941,4 +941,52 @@ class RidesApiService {
       return 'Network error occurred. Please try again later.';
     }
   }
+
+  /// ✅ NEW: Respond to a vehicle rental booking
+  Future<Map<String, dynamic>> respondVehicleBooking({
+    required String bookingId,
+    required String action,
+  }) async {
+    try {
+      final normalizedAction = action.toLowerCase().trim();
+      if (bookingId.isEmpty ||
+          (normalizedAction != 'accept' && normalizedAction != 'reject')) {
+        return {'success': false, 'message': 'Invalid rental booking response action'};
+      }
+
+      final token = await _getAuthToken();
+      if (token == null || token.isEmpty) {
+        return {'success': false, 'message': 'Authentication token not found'};
+      }
+
+      final uri = _buildUri('api/vehicle-bookings/$bookingId/respond');
+      log('📡 [PATCH] $uri');
+
+      final response = await http.patch(
+        uri,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({"action": normalizedAction}),
+      ).timeout(requestTimeout);
+
+      log('📥 [STATUS] ${response.statusCode}');
+      log('📥 [BODY] ${response.body}');
+
+      final decoded = response.body.isNotEmpty ? jsonDecode(response.body) : <String, dynamic>{};
+      
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'success': true, 'data': decoded};
+      }
+
+      final message = decoded is Map<String, dynamic> ? decoded['message']?.toString() : null;
+      return {'success': false, 'message': message ?? 'Failed to respond to rental booking'};
+    } catch (e) {
+      log('❌ Error responding to vehicle booking: $e');
+      return {'success': false, 'message': _getErrorMessage(e)};
+    }
+  }
 }

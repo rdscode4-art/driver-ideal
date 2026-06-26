@@ -20,11 +20,16 @@ class SubscriptionRepository {
   /// ✅ FIXED: Normalizes backend response to expected format
   Future<Map<String, dynamic>> getSubscriptionStatus(String driverId) async {
     try {
-      print('📡 API Call: GET $baseUrl/subscription-status?driverId=$driverId');
+      final isNonVehicle = _tokenManager.isNonVehicleDriver;
+      final endpoint = isNonVehicle
+          ? '$baseUrl/api/non-vehicle-driver/status/$driverId'
+          : '$baseUrl/subscription-status?driverId=$driverId';
+          
+      print('📡 API Call: GET $endpoint');
 
       final response = await http
           .get(
-            Uri.parse('$baseUrl/subscription-status?driverId=$driverId'),
+            Uri.parse(endpoint),
             headers: _getHeaders(),
           )
           .timeout(const Duration(seconds: 30));
@@ -36,9 +41,14 @@ class SubscriptionRepository {
         try {
           final data = json.decode(response.body);
 
-          // ✅ NORMALIZE: Backend response format
-          final bool isSubscribed = data['subscribe'] ?? false;
-          final subscriptionData = data['subscription'];
+          // ✅ NORMALIZE: Handle both vehicle and non-vehicle response formats
+          final isNonVehicle = _tokenManager.isNonVehicleDriver;
+          
+          final bool isSubscribed = isNonVehicle 
+              ? (data['subscribed'] ?? false) 
+              : (data['subscribe'] ?? false);
+              
+          final subscriptionData = isNonVehicle ? data : data['subscription'];
 
           String status;
           DateTime? startDate;
@@ -65,7 +75,7 @@ class SubscriptionRepository {
               print('⚠️ Subscription EXPIRED on: $endDate');
             }
 
-            final plan = subscriptionData['planId'];
+            final plan = isNonVehicle ? subscriptionData['plan'] : subscriptionData['planId'];
             if (plan != null && plan is Map) {
               planId = plan['_id'];
               planName = plan['title'];
@@ -155,10 +165,12 @@ class SubscriptionRepository {
   /// Get available subscription plans
   Future<Map<String, dynamic>> getSubscriptionPlans() async {
     try {
-      print('📡 API Call: GET $baseUrl/api');
+      final isNonVehicle = _tokenManager.isNonVehicleDriver;
+      final endpoint = isNonVehicle ? '$baseUrl/api/non-vehicle-driver/plans' : '$baseUrl/api';
+      print('📡 API Call: GET $endpoint');
 
       final response = await http
-          .get(Uri.parse('$baseUrl/api'), headers: _getHeaders())
+          .get(Uri.parse(endpoint), headers: _getHeaders())
           .timeout(const Duration(seconds: 15));
 
       print('📥 Response Status: ${response.statusCode}');
@@ -238,13 +250,14 @@ class SubscriptionRepository {
     int? amount,
   }) async {
     try {
-      const url = '$baseUrl/buy-subscription';
+      final isNonVehicle = _tokenManager.isNonVehicleDriver;
+      final url = isNonVehicle 
+          ? '$baseUrl/api/non-vehicle-driver/buy-subscription'
+          : '$baseUrl/api/driver/buy-subscription';
       print('📡 API Call: POST $url');
 
       final requestBody = {
-        'driverId': driverId,
-        'planType': planType ?? 'premium',
-        'amount': amount ?? 100,
+        'planId': planId,
       };
 
       print('📤 Request Body: ${json.encode(requestBody)}');
@@ -425,7 +438,11 @@ class SubscriptionRepository {
     required String razorpaySignature,
   }) async {
     try {
-      print('📡 API Call: POST $baseUrl/verify-subscription-payment');
+      final isNonVehicle = _tokenManager.isNonVehicleDriver;
+      final endpoint = isNonVehicle 
+          ? '$baseUrl/api/non-vehicle-driver/verify-payment'
+          : '$baseUrl/api/driver/verify-subscription-payment';
+      print('📡 API Call: POST $endpoint');
 
       // Check if this is a test signature
       bool isTestSignature = razorpaySignature.startsWith('test_signature_');
@@ -459,7 +476,7 @@ class SubscriptionRepository {
 
       final response = await http
           .post(
-            Uri.parse('$baseUrl/verify-subscription-payment'),
+            Uri.parse(endpoint),
             headers: _getHeaders(),
             body: body,
           )

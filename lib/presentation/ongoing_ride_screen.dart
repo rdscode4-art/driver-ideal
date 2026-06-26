@@ -268,17 +268,45 @@ class OngoingRideScreen extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      'Trip Time: ${controller.formattedElapsedTime}',
+                      'Time: ${controller.formattedElapsedTime}',
                       style: const TextStyle(
                         color: Colors.white70,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                   ],
                 ),
               ),
+              
+              // Action Icons: Navigate and Center
+              IconButton(
+                onPressed: controller.isNavigationButtonLoading
+                    ? null
+                    : controller.navigateWithAPI,
+                icon: controller.isNavigationButtonLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : const Icon(Icons.navigation, color: Colors.white, size: 22),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+              ),
+              IconButton(
+                onPressed: () => controller.autoFitMarkersOnMap(),
+                icon: const Icon(Icons.center_focus_strong, color: Colors.white, size: 22),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+              ),
+              const SizedBox(width: 4),
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
@@ -443,21 +471,15 @@ class OngoingRideScreen extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: EdgeInsets.zero, // Removed bottom padding completely
               child: Column(
                 children: [
                   //=====================================//
                   //=====================================//
                   //=====================================//
                   //=====================================//
-                  // Passenger Info Section
-                  _buildPassengerInfo(controller),
-
-                  // // Navigation Info Section
-                  // _buildNavigationInfo(controller),
-
-                  // Location Details Section
-                  _buildLocationDetails(controller),
+                  // Combined Passenger & Location Info
+                  _buildCombinedRideInfo(controller),
 
                   // Action Buttons Section
                   _buildActionButtons(controller, context),
@@ -470,90 +492,133 @@ class OngoingRideScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPassengerInfo(OngoingRideController controller) {
+  Widget _buildCombinedRideInfo(OngoingRideController controller) {
     return Obx(
       () => Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.grey[50],
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey[200]!),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: const Color(0xFFE8F5E9), // lightGreen
-              child: const Icon(Icons.person, color: Color(0xFF0F9D58), size: 28), // primaryGreen
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    controller.passengerName.value.isNotEmpty
-                        ? controller.passengerName.value
-                        : 'Passenger',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  // Show phone number if available
-                  if (controller.passengerPhone.value.isNotEmpty)
-                    Text(
-                      controller.passengerPhone.value,
-                      style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-                    )
-                  else
-                    Text(
-                      'Phone number not available',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey[500],
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  const SizedBox(height: 4),
-                  Row(
+          ],
+        ),
+        child: Column(
+          children: [
+            // Passenger Row
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 16,
+                  backgroundColor: const Color(0xFFE8F5E9), // lightGreen
+                  child: const Icon(Icons.person, color: Color(0xFF0F9D58), size: 18), // primaryGreen
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.star, color: Colors.amber[600], size: 16),
-                      const SizedBox(width: 4),
-                      Text(
-                        controller.currentRide.value?.rideType.toUpperCase() ??
-                            'RIDE',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF0F9D58), // primaryGreen
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            controller.passengerName.value.isNotEmpty
+                                ? controller.passengerName.value
+                                : 'Passenger',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.amber[100],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.star, color: Colors.amber[800], size: 10),
+                                const SizedBox(width: 2),
+                                Text(
+                                  controller.currentRide.value?.rideType.toUpperCase() ?? 'RIDE',
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    color: Colors.amber[900],
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
+                      if (controller.passengerPhone.value.isNotEmpty)
+                        Text(
+                          controller.passengerPhone.value,
+                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        )
                     ],
                   ),
-                ],
-              ),
+                ),
+                // Call button
+                if (controller.passengerPhone.value.isNotEmpty)
+                  InkWell(
+                    onTap: () => controller.callPassenger(),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8F5E9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.phone, color: Color(0xFF0F9D58), size: 18),
+                    ),
+                  )
+              ],
             ),
-            // Call button - only show if phone available
-            if (controller.passengerPhone.value.isNotEmpty)
-              IconButton(
-                onPressed: () => controller.callPassenger(),
-                icon: const Icon(Icons.phone, color: Color(0xFF0F9D58)), // primaryGreen
-                tooltip: 'Call Passenger',
-              )
-            else
-              IconButton(
-                onPressed: () {
-                  showWarningSnackBar(
-                    'Passenger phone number is not available',
-                    title: 'Phone Not Available',
-                  );
-                },
-                icon: Icon(Icons.phone_disabled, color: Colors.grey[400]),
-                tooltip: 'Phone not available',
-              ),
+            
+            Divider(height: 16, color: Colors.grey[200]),
+            
+            // Location Details (Compact)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.my_location, color: Colors.green, size: 16),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    controller.currentRide.value?.pickupaddress ?? 'Not specified',
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.location_on, color: Colors.red, size: 16),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    controller.currentRide.value?.dropaddress ?? 'Not specified',
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -959,119 +1024,7 @@ class OngoingRideScreen extends StatelessWidget {
   }
 
   Widget _buildLocationDetails(OngoingRideController controller) {
-    return Obx(
-      () => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey[200]!),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Trip Details',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[800],
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Pickup location
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  margin: const EdgeInsets.only(top: 6),
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Pickup Location',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        controller.currentRide.value?.pickupaddress ??
-                            'Not specified',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            // Connecting line
-            Container(
-              margin: const EdgeInsets.only(left: 4, top: 8, bottom: 8),
-              width: 2,
-              height: 20,
-              color: Colors.grey[300],
-            ),
-
-            // Dropoff location
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  margin: const EdgeInsets.only(top: 6),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Dropoff Location',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        controller.currentRide.value?.dropaddress ??
-                            'Not specified',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    return const SizedBox.shrink(); // Replaced by _buildCombinedRideInfo
   }
 
   Widget _buildActionButtons(
@@ -1080,109 +1033,11 @@ class OngoingRideScreen extends StatelessWidget {
   ) {
     return Obx(
       () => Container(
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         child: Column(
           children: [
-            // Trip Status Card - Always visible for context
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    _getPhaseStatusColor(controller.ridePhase.value),
-                    _getPhaseStatusColor(
-                      controller.ridePhase.value,
-                    ).withValues(alpha: 0.8),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: _getPhaseStatusColor(
-                      controller.ridePhase.value,
-                    ).withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Icon(
-                          _getPhaseIcon(controller.ridePhase.value),
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _getRidePhaseText(controller.ridePhase.value),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              _getPhaseSubtitle(controller.ridePhase.value),
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Trip time
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          controller.formattedElapsedTime,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+            // Trip Status Card removed as per request to optimize space
 
-                  // Progress indicator
-                  const SizedBox(height: 12),
-                  LinearProgressIndicator(
-                    value: _getProgressValue(controller.ridePhase.value),
-                    backgroundColor: Colors.white.withValues(alpha: 0.3),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             // Primary Action Buttons - ALWAYS ENABLED like Ola/Uber
             Column(
@@ -1197,7 +1052,7 @@ class OngoingRideScreen extends StatelessWidget {
                             RidePhase.WAITING_FOR_PASSENGER)
                       Expanded(
                         child: SizedBox(
-                          height: 56,
+                          height: 40,
                           child: ElevatedButton.icon(
                             onPressed: () =>
                                 _handleArrivedAtPickup(controller, context),
@@ -1232,8 +1087,8 @@ class OngoingRideScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
+                                horizontal: 6,
+                                vertical: 4,
                               ), // Better padding
                             ),
                           ),
@@ -1252,7 +1107,7 @@ class OngoingRideScreen extends StatelessWidget {
                     if (controller.ridePhase.value != RidePhase.COMPLETED)
                       Expanded(
                         child: SizedBox(
-                          height: 56,
+                          height: 40,
                           child: ElevatedButton.icon(
                             onPressed: controller.isLoading.value
                                 ? null
@@ -1310,8 +1165,8 @@ class OngoingRideScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
+                                horizontal: 6,
+                                vertical: 4,
                               ),
                             ),
                           ),
@@ -1320,11 +1175,10 @@ class OngoingRideScreen extends StatelessWidget {
                   ],
                 ),
 
-                // Trip Completed State
                 if (controller.ridePhase.value == RidePhase.COMPLETED)
                   SizedBox(
                     width: double.infinity,
-                    height: 56,
+                    height: 40,
                     child: ElevatedButton.icon(
                       onPressed: () => Get.offAllNamed('/'),
                       icon: const Icon(
@@ -1348,88 +1202,13 @@ class OngoingRideScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
+                          horizontal: 6,
+                          vertical: 4,
                         ), // Better padding
                       ),
                     ),
                   ),
 
-                const SizedBox(height: 16),
-
-                // Secondary Action Buttons Row
-                Row(
-                  children: [
-                    // Navigate button with API integration
-                    Expanded(
-                      child: SizedBox(
-                        height: 48,
-                        child: ElevatedButton.icon(
-                          onPressed: controller.isNavigationButtonLoading
-                              ? null
-                              : controller.navigateWithAPI,
-                          icon: controller.isNavigationButtonLoading
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                  ),
-                                )
-                              : const Icon(Icons.navigation, size: 18),
-                          label: Text(
-                            controller.navigationButtonText,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0F9D58), // primaryGreen
-                            foregroundColor: Colors.white,
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    // Center Map button
-                    Expanded(
-                      child: SizedBox(
-                        height: 48,
-                        child: ElevatedButton.icon(
-                          onPressed: () => controller.autoFitMarkersOnMap(),
-                          icon: const Icon(Icons.center_focus_strong, size: 18),
-                          label: const Text(
-                            'Center Map',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey[600],
-                            foregroundColor: Colors.white,
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 12),
               ],
             ),
           ],

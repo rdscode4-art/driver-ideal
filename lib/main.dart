@@ -16,6 +16,8 @@ import 'fcm_service.dart';
 import 'core/services/android_gpu_fixer.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:device_preview/device_preview.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
@@ -65,7 +67,12 @@ void main() async {
   // 🧪 API Test (uncomment for testing)
   // APIIntegrationTest.runAllTests();
 
-  runApp(const MyApp());
+  runApp(
+    DevicePreview(
+      enabled: false,
+      builder: (context) => const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -74,11 +81,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812), // Standard iPhone X / 11 Pro size
+      designSize: const Size(411, 891), // Increased base size to make UI components noticeably smaller
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
         return GetMaterialApp(
+          locale: DevicePreview.locale(context),
+          useInheritedMediaQuery: true,
           title: 'Rideal Partner',
           navigatorKey: navigatorKey,
           scaffoldMessengerKey: scaffoldMessengerKey,
@@ -89,7 +98,7 @@ class MyApp extends StatelessWidget {
           transitionDuration: const Duration(milliseconds: 300),
           getPages: AppPages.routes,
           builder: (context, child) {
-            return child ?? const SizedBox.shrink();
+            return DevicePreview.appBuilder(context, child ?? const SizedBox.shrink());
           },
         );
       },

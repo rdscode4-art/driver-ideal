@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'core/utils/app_snackbar.dart';
 import 'package:rideal_driver/subscriptioncontroller.dart';
 import 'models/active_subscription_model.dart';
+import 'core/token_manager.dart';
 
 class Plan {
   final String id;
@@ -68,7 +69,12 @@ void showEmergencyBypass(BuildContext context) {
             );
 
             Future.delayed(const Duration(seconds: 1), () {
-              Get.offAllNamed('/dashboard');
+              final tokenManager = Get.find<TokenManager>();
+              if (tokenManager.isNonVehicleDriver) {
+                Get.offAllNamed('/nonvehichledashboard');
+              } else {
+                Get.offAllNamed('/dashboard');
+              }
             });
           },
           child: const Text('Skip Payment'),
@@ -133,14 +139,15 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: false,
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            // Always allow back navigation
-            Navigator.of(context).pop();
-          },
-        ),
+        automaticallyImplyLeading: false,
+        leading: Navigator.canPop(context)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            : null,
         actions: [
           Obx(() {
             if (controller.subscriptionActive.value) {

@@ -21,6 +21,7 @@ import 'package:rideal_driver/presentation/screens/payout_history_screen.dart';
 import 'package:rideal_driver/views/documentsuploadscreen.dart';
 import 'package:rideal_driver/views/non_vehichle_subscriptionplans_screen.dart';
 import 'package:rideal_driver/views/personalinfoscreen.dart';
+import 'package:rideal_driver/subscriptionscreen.dart';
 import '../controllers/ride_history_controller.dart';
 import '../presentation/role_selection_screen.dart';
 import '../presentation/login_screen.dart';
@@ -46,7 +47,7 @@ class AppPages {
     ),
     // Individual screens (accessible via bottom navigation)
     GetPage(name: Routes.EARNINGS, page: () => const EarningsScreen()),
-    GetPage(name: Routes.SUBSCRIPTION, page: () => const NonVehicleSubscriptionPlansScreen()),
+    GetPage(name: Routes.SUBSCRIPTION, page: () => const SubscriptionPlansScreen()),
     GetPage(
       name: Routes.NONVEHICHLEDASHBOARD,
       middlewares: [AuthMiddleware()],
