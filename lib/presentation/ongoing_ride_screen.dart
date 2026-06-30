@@ -40,27 +40,26 @@ class OngoingRideScreen extends StatelessWidget {
 
           return Column(
             children: [
-              // Google Maps View - Half of available screen height
-              SizedBox(
-                height: mapHeight,
+              // Google Maps View - Fills remaining screen height
+              Expanded(
                 child: Stack(
                   children: [
                     _buildMapView(controller),
 
-                    // Top Info Bar overlaid on map
-                    _buildTopInfoBar(controller),
+                    // Unified Top Overlay
+                    _buildUnifiedTopOverlay(controller, context),
 
-                    // Navigation data overlay on map
-                    _buildMapNavigationOverlay(controller),
+                    // Left Floating Action Button (Navigate)
+                    _buildLeftFloatingButtons(controller),
 
-                    // Floating Action Buttons overlaid on map
-                    _buildFloatingButtons(controller),
+                    // Right Floating Action Buttons (Center Maps)
+                    _buildRightFloatingButtons(controller),
                   ],
                 ),
               ),
 
-              // Bottom Panel - Other half of screen (scrollable)
-              Expanded(child: _buildBottomPanelExpanded(controller, context)),
+              // Bottom Panel - Wraps content snugly
+              _buildBottomPanelExpanded(controller, context),
             ],
           );
         }),
@@ -227,205 +226,112 @@ class OngoingRideScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTopInfoBar(OngoingRideController controller) {
+  Widget _buildUnifiedTopOverlay(OngoingRideController controller, BuildContext context) {
     return Positioned(
-      top: 8,
-      left: 0,
-      right: 0,
+      top: 12,
+      left: 12,
+      right: 12,
       child: Container(
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF0F9D58), // primaryGreen
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
         child: Obx(
-          () => Row(
+          () => Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(
-                onPressed: () => Get.back(),
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+              // Top Row: Back, Phase, Timer, Fare
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                child: Row(
                   children: [
-                    Text(
-                      _getRidePhaseText(controller.ridePhase.value),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      'Time: ${controller.formattedElapsedTime}',
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              // Action Icons: Navigate and Center
-              IconButton(
-                onPressed: controller.isNavigationButtonLoading
-                    ? null
-                    : controller.navigateWithAPI,
-                icon: controller.isNavigationButtonLoading
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    InkWell(
+                      onTap: () => Get.back(),
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          shape: BoxShape.circle,
                         ),
-                      )
-                    : const Icon(Icons.navigation, color: Colors.white, size: 22),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-              ),
-              IconButton(
-                onPressed: () => controller.autoFitMarkersOnMap(),
-                icon: const Icon(Icons.center_focus_strong, color: Colors.white, size: 22),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-              ),
-              const SizedBox(width: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  controller.currentRide.value?.formattedFare ?? '₹0.00',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMapNavigationOverlay(OngoingRideController controller) {
-    return Positioned(
-      top: 60, // Below the top info bar
-      left: 0,
-      right: 0,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.black54,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Obx(
-          () => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Distance and ETA information
-              if (controller.hasNavigationData.value &&
-                  !controller.hasNavigationError.value)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Distance: ${controller.navigationDistance.value}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                        child: const Icon(Icons.arrow_back, color: Colors.black87, size: 20),
                       ),
                     ),
-                    Text(
-                      'ETA: ${controller.navigationDuration.value}',
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                )
-              else
-                // Loading or error state
-                Row(
-                  children: [
-                    if (controller.isLoadingNavigation.value)
-                      const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            _getRidePhaseText(controller.ridePhase.value),
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      )
-                    else if (controller.hasNavigationError.value)
-                      Icon(Icons.error, color: Colors.red[300], size: 16),
-                    const SizedBox(width: 8),
-                    Text(
-                      controller.hasNavigationError.value
-                          ? (controller.navigationError.value.isNotEmpty
-                                ? controller.navigationError.value
-                                : 'Error loading navigation')
-                          : 'Calculating route...',
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
+                          Row(
+                            children: [
+                              Icon(Icons.timer_outlined, size: 12, color: Colors.grey[600]),
+                              const SizedBox(width: 4),
+                              Text(
+                                controller.formattedElapsedTime,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              if (controller.hasNavigationData.value && !controller.hasNavigationError.value) ...[
+                                Text(' • ', style: TextStyle(color: Colors.grey[400], fontWeight: FontWeight.bold)),
+                                Icon(Icons.directions_car, size: 12, color: Colors.grey[600]),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    '${controller.navigationDuration.value} (${controller.navigationDistance.value})',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.green[50],
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.green[200]!),
+                      ),
+                      child: Text(
+                        controller.currentRide.value?.formattedFare ?? '₹0.00',
+                        style: TextStyle(
+                          color: Colors.green[800],
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-
-              // Refresh button
-              IconButton(
-                onPressed: controller.isLoadingNavigation.value
-                    ? null
-                    : () => controller.refreshNavigationData(),
-                icon: Icon(
-                  Icons.refresh,
-                  color: controller.isLoadingNavigation.value
-                      ? Colors.white54
-                      : Colors.white,
-                  size: 20,
-                ),
-                padding: const EdgeInsets.all(4),
-                constraints: const BoxConstraints(),
               ),
             ],
           ),
@@ -468,22 +374,25 @@ class OngoingRideScreen extends StatelessWidget {
           ),
 
           // Scrollable content
-          Expanded(
+          Flexible(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.zero, // Removed bottom padding completely
-              child: Column(
-                children: [
-                  //=====================================//
-                  //=====================================//
-                  //=====================================//
-                  //=====================================//
-                  // Combined Passenger & Location Info
-                  _buildCombinedRideInfo(controller),
-
-                  // Action Buttons Section
-                  _buildActionButtons(controller, context),
-                ],
+              child: SafeArea(
+                top: false,
+                child: Column(
+                  children: [
+                    //=====================================//
+                    //=====================================//
+                    //=====================================//
+                    //=====================================//
+                    // Combined Passenger & Location Info
+                    _buildCombinedRideInfo(controller),
+  
+                    // Action Buttons Section
+                    _buildActionButtons(controller, context),
+                  ],
+                ),
               ),
             ),
           ),
@@ -1211,26 +1120,53 @@ class OngoingRideScreen extends StatelessWidget {
 
               ],
             ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFloatingButtons(OngoingRideController controller) {
+  Widget _buildLeftFloatingButtons(OngoingRideController controller) {
+    return Positioned(
+      bottom: 16,
+      left: 16,
+      child: Obx(
+        () => FloatingActionButton.extended(
+          heroTag: "navigate_map",
+          onPressed: controller.isNavigationButtonLoading ? null : () => controller.navigateWithAPI(),
+          backgroundColor: const Color(0xFF0F9D58), // primaryGreen
+          icon: controller.isNavigationButtonLoading
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                )
+              : const Icon(Icons.navigation, color: Colors.white, size: 20),
+          label: const Text(
+            'Navigate',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRightFloatingButtons(OngoingRideController controller) {
     return Positioned(
       bottom: 16,
       right: 16,
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           // Center on driver location
           FloatingActionButton(
             heroTag: "center_driver",
             mini: true,
             onPressed: () => controller.centerMapOnDriver(),
-            backgroundColor: Colors.green[600],
-            child: const Icon(Icons.my_location, color: Colors.white),
+            backgroundColor: Colors.white,
+            child: Icon(Icons.my_location, color: Colors.grey[800]),
           ),
 
           const SizedBox(height: 8),
@@ -1240,8 +1176,8 @@ class OngoingRideScreen extends StatelessWidget {
             heroTag: "center_target",
             mini: true,
             onPressed: () => controller.centerMapOnTarget(),
-            backgroundColor: Colors.orange[600],
-            child: const Icon(Icons.location_on, color: Colors.white),
+            backgroundColor: Colors.white,
+            child: Icon(Icons.location_on, color: Colors.grey[800]),
           ),
         ],
       ),
@@ -1355,27 +1291,17 @@ class OngoingRideScreen extends StatelessWidget {
         color: Colors.green[700],
       ),
       content: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(
           children: [
-            Icon(Icons.location_on, size: 64, color: Colors.green[600]),
-            const SizedBox(height: 16),
+            Icon(Icons.location_on, size: 48, color: Colors.green[600]),
+            const SizedBox(height: 12),
             Text(
               'Have you arrived at the pickup location?',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+              style: TextStyle(fontSize: 15, color: Colors.grey[800]),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'This will notify the passenger that you have arrived.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
@@ -1384,21 +1310,21 @@ class OngoingRideScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[300],
                       foregroundColor: Colors.black87,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: const Text(
                       'Not Yet',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
@@ -1406,20 +1332,20 @@ class OngoingRideScreen extends StatelessWidget {
                       // Show OTP entry dialog instead of automatic start
                       _showOtpEntryDialog(controller, context);
                     },
-                    icon: const Icon(Icons.check, size: 20),
-                    label: const Text(
-                      'Yes, Arrived',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[600],
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    icon: const Icon(Icons.check, size: 16),
+                    label: const Text(
+                      'Yes, Arrived',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -1430,7 +1356,7 @@ class OngoingRideScreen extends StatelessWidget {
         ),
       ),
       barrierDismissible: false,
-      radius: 16,
+      radius: 12,
     );
   }
 
@@ -1445,54 +1371,59 @@ class OngoingRideScreen extends StatelessWidget {
     Get.defaultDialog(
       title: '🔐 Verify OTP',
       titleStyle: TextStyle(
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: FontWeight.bold,
         color: Colors.green[800],
       ),
       content: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Ask the passenger for the 4-digit OTP to start the ride.',
+              'Ask passenger for 4-digit OTP',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+              style: TextStyle(fontSize: 13, color: Colors.grey[700]),
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: otpController,
-              keyboardType: TextInputType.number,
-              maxLength: 4,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 8,
-              ),
-              decoration: InputDecoration(
-                hintText: '0000',
-                counterText: '',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 48,
+              child: TextField(
+                controller: otpController,
+                keyboardType: TextInputType.number,
+                maxLength: 4,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 8,
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.green[600]!, width: 2),
+                decoration: InputDecoration(
+                  hintText: '0000',
+                  counterText: '',
+                  contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.green[600]!, width: 2),
+                  ),
                 ),
               ),
             ),
             Obx(
               () => errorText.value.isNotEmpty
                   ? Padding(
-                      padding: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.only(top: 6),
                       child: Text(
                         errorText.value,
-                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                        style: const TextStyle(color: Colors.red, fontSize: 11),
                       ),
                     )
                   : const SizedBox.shrink(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
@@ -1501,19 +1432,20 @@ class OngoingRideScreen extends StatelessWidget {
                     child: Text(
                       'CANCEL',
                       style: TextStyle(
+                        fontSize: 13,
                         color: Colors.grey[600],
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
                       final otp = otpController.text.trim();
                       if (otp.length != 4) {
-                        errorText.value = 'Please enter a valid 4-digit OTP';
+                        errorText.value = 'Enter 4-digit OTP';
                         return;
                       }
 
@@ -1526,14 +1458,14 @@ class OngoingRideScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[600],
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: const Text(
                       'VERIFY',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

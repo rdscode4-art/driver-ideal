@@ -95,14 +95,62 @@ class EarningsController extends GetxController {
 
       if (result['success']) {
         final data = result['data'];
-        // Use 'wallet' field for balance if it exists, otherwise fallback to walletBalance
-        walletBalance.value = (data['wallet'] ?? data['walletBalance'] ?? 0.0).toDouble();
+        // Robust parsing for wallet balance/earnings
+        double balance = 0.0;
+        bool balanceFound = false;
+
+        // Check 1: Direct key at root
+        if (data.containsKey('wallet')) {
+          balance = (data['wallet'] ?? 0.0).toDouble();
+          balanceFound = true;
+        } else if (data.containsKey('walletBalance')) {
+          balance = (data['walletBalance'] ?? 0.0).toDouble();
+          balanceFound = true;
+        } else if (data.containsKey('earnings')) {
+          balance = (data['earnings'] ?? 0.0).toDouble();
+          balanceFound = true;
+        } 
         
-        // Use 'earnings' field from wallet API to update specific wallet earnings display
-        if (data['earnings'] != null) {
-          walletEarnings.value = (data['earnings']).toDouble();
-          // Also sync totalEarnings for consistency if this is the primary source
-          totalEarnings.value = walletEarnings.value;
+        // Check 2: Nested inside 'data' key
+        if (!balanceFound && data.containsKey('data')) {
+          final nestedData = data['data'];
+          if (nestedData is Map) {
+            if (nestedData.containsKey('wallet')) {
+              balance = (nestedData['wallet'] ?? 0.0).toDouble();
+              balanceFound = true;
+            } else if (nestedData.containsKey('walletBalance')) {
+              balance = (nestedData['walletBalance'] ?? 0.0).toDouble();
+              balanceFound = true;
+            } else if (nestedData.containsKey('earnings')) {
+              balance = (nestedData['earnings'] ?? 0.0).toDouble();
+              balanceFound = true;
+            }
+          }
+        }
+        
+        // Check 3: Alternative keys
+        if (!balanceFound) {
+          final keys = ['amount', 'total', 'currentBalance'];
+          for (final key in keys) {
+            if (data.containsKey(key)) {
+              balance = (data[key] ?? 0.0).toDouble();
+              balanceFound = true;
+              break;
+            } else if (data.containsKey('data') && data['data'] is Map && data['data'].containsKey(key)) {
+              balance = (data['data'][key] ?? 0.0).toDouble();
+              balanceFound = true;
+              break;
+            }
+          }
+        }
+
+        if (balanceFound) {
+          walletBalance.value = balance;
+          walletEarnings.value = balance;
+          totalEarnings.value = balance;
+        } else {
+          walletBalance.value = 0.0;
+          walletEarnings.value = 0.0;
         }
         
         availableForPayout.value = (data['availableForPayout'] ?? walletBalance.value).toDouble();

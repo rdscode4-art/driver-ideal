@@ -345,7 +345,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
         toAddress: _toController.text.trim(),
         selectedDate: _selectedDate!,
         selectedTime: timeString,
-        pricePerSeat: double.parse(_priceController.text),
+        pricePerSeat: double.parse(_perSeatPriceController.text),
         vehicleName: _vehicleNameController.text.trim(),
         vehicleColor: _vehicleColorController.text.trim(),
         vehicleNumber: _vehicleNumberController.text.trim(),
@@ -582,45 +582,44 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                       ),
                       child: Row(
                         children: [
-                          const Icon(
-                            Icons.calendar_today,
-                            color: primaryGreen,
+                          const Icon(Icons.calendar_today, color: primaryGreen),
+                          const SizedBox(width: 12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Date',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[500],
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _selectedDate != null
+                                    ? '${_selectedDate!.day.toString().padLeft(2, '0')}/${_selectedDate!.month.toString().padLeft(2, '0')}/${_selectedDate!.year}'
+                                    : 'Select date',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: _selectedDate != null
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                  color: _selectedDate != null
+                                      ? const Color(0xFF0F9D58)
+                                      : Colors.grey[400],
+                                ),
+                              ),
+                            ],
                           ),
-                            const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Date',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.grey[500],
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  _selectedDate != null
-                                      ? '${_selectedDate!.day.toString().padLeft(2, '0')}/${_selectedDate!.month.toString().padLeft(2, '0')}/${_selectedDate!.year}'
-                                      : 'Select date',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: _selectedDate != null ? FontWeight.w700 : FontWeight.w500,
-                                    color: _selectedDate != null
-                                        ? const Color(0xFF0F9D58)
-                                        : Colors.grey[400],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  // Time Picker
+                ),
+                const SizedBox(width: 12),
+                // Time Picker
                 Expanded(
                   child: InkWell(
                     onTap: _selectTime,
@@ -655,7 +654,9 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                                     : 'Select time',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  fontWeight: _selectedTime != null ? FontWeight.w700 : FontWeight.w500,
+                                  fontWeight: _selectedTime != null
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
                                   color: _selectedTime != null
                                       ? const Color(0xFF0F9D58)
                                       : Colors.grey[400],
@@ -998,7 +999,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
   Widget _buildActiveFutureRidesTab() {
     return Obx(() {
       return RefreshIndicator(
-        onRefresh: _futureRideController.fetchActiveFutureRides,
+        onRefresh: _futureRideController.fetchRideRequests,
         color: const Color(0xFF0F9D58),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -1067,32 +1068,42 @@ class _FutureRideScreenState extends State<FutureRideScreen>
               const SizedBox(height: 24),
 
               // Loading or Content
-              if (_futureRideController.isLoadingRides.value)
+              if (_futureRideController.isLoadingRequests.value)
                 const Center(
                   child: Padding(
                     padding: EdgeInsets.all(40),
                     child: CircularProgressIndicator(
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(Color(0xFF0F9D58)),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Color(0xFF0F9D58),
+                      ),
                     ),
                   ),
                 )
-              else if (_futureRideController.activeFutureRides.isEmpty)
-                _buildEmptyState(
-                  Icons.schedule,
-                  'No Active Future Rides',
-                  'You don\'t have any scheduled rides yet. Create a ride offer to get started!',
-                )
               else
-                ...List.generate(_futureRideController.activeFutureRides.length, (
-                  index,
-                ) {
-                  final ride = _futureRideController.activeFutureRides[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: _buildActiveRideCardFromData(ride),
-                  );
-                }),
+                Builder(
+                  builder: (context) {
+                    final activeRides = _futureRideController.rideRequests
+                        .where(
+                          (r) => r.status.toLowerCase().trim() != 'completed',
+                        )
+                        .toList();
+                    if (activeRides.isEmpty) {
+                      return _buildEmptyState(
+                        Icons.schedule,
+                        'No Active Future Rides',
+                        'You don\'t have any scheduled rides yet. Create a ride offer to get started!',
+                      );
+                    }
+                    return Column(
+                      children: activeRides.map((ride) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildActiveRideCardFromData(ride),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
             ],
           ),
         ),
@@ -1100,7 +1111,7 @@ class _FutureRideScreenState extends State<FutureRideScreen>
     });
   }
 
-  Widget _buildActiveRideCardFromData(FutureRide ride) {
+  Widget _buildActiveRideCardFromData(FutureRideWithRequests ride) {
     final route = '${ride.fromLocation.address} to ${ride.toLocation.address}';
     final dateTime =
         '${ride.date.day}/${ride.date.month}/${ride.date.year} - ${ride.time}';
@@ -1271,101 +1282,202 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                 ),
               ],
             ),
+            Builder(
+              builder: (context) {
+                // Determine if we can show "End Trip"
+                // Must not have any passenger in 'accepted' or 'started' status
+                bool canCompleteRide = !ride.passengersBooked.any(
+                  (p) => p.status == 'accepted' || p.status == 'started',
+                );
+
+                if (!canCompleteRide) return const SizedBox.shrink();
+
+                return Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Complete Ride API Call
+                          _showCompleteRideConfirmDialog(ride.id);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: const Text(
+                          'Finish Ride',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
+  void _showCompleteRideConfirmDialog(String rideId) {
+    Get.defaultDialog(
+      title: 'Finish Ride',
+      titleStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      content: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Text(
+          'Are you sure you want to finish this ride? This action cannot be undone.',
+          textAlign: TextAlign.center,
+        ),
+      ),
+      confirm: ElevatedButton(
+        onPressed: () async {
+          Get.back(); // close dialog
+          await _futureRideController.completeRide(rideId);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryGreen,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: const Text('Yes, Finish', style: TextStyle(color: Colors.white)),
+      ),
+      cancel: OutlinedButton(
+        onPressed: () => Get.back(),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.grey),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: const Text('Cancel', style: TextStyle(color: Colors.black87)),
+      ),
+    );
+  }
+
   Widget _buildRideRequestsTab() {
     return Obx(() {
-      return SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Header Card with pending requests count
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    const Icon(Icons.inbox, size: 48, color: Colors.black),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Passenger Requests',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            _futureRideController.totalPendingRequests > 0
-                                ? '${_futureRideController.totalPendingRequests} pending request${_futureRideController.totalPendingRequests > 1 ? 's' : ''} from passengers'
-                                : 'Review and manage booking requests from passengers',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () =>
-                          _futureRideController.refreshRideRequests(),
-                      icon: const Icon(Icons.refresh, color: Colors.black),
-                    ),
-                  ],
+      return RefreshIndicator(
+        onRefresh: _futureRideController.fetchRideRequests,
+        color: const Color(0xFF0F9D58),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Header Card with pending requests count
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Loading or Content
-            if (_futureRideController.isLoadingRequests.value)
-              Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(40),
-                  child: Column(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
                     children: [
-                      const CircularProgressIndicator(),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Loading ride requests...',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      const Icon(Icons.inbox, size: 48, color: Colors.black),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Passenger Requests',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _futureRideController.totalPendingRequests > 0
+                                  ? '${_futureRideController.totalPendingRequests} pending request${_futureRideController.totalPendingRequests > 1 ? 's' : ''} from passengers'
+                                  : 'Review and manage booking requests from passengers',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () =>
+                            _futureRideController.refreshRideRequests(),
+                        icon: const Icon(Icons.refresh, color: Colors.black),
                       ),
                     ],
                   ),
                 ),
-              )
-            else if (_futureRideController.rideRequests.isEmpty)
-              _buildEmptyState(
-                Icons.inbox,
-                'No Ride Requests',
-                'You don\'t have any passenger requests at the moment. Passengers will be able to request rides for your future ride offers.',
-              )
-            else
-              ...List.generate(_futureRideController.rideRequests.length, (
-                index,
-              ) {
-                final rideWithRequests =
-                    _futureRideController.rideRequests[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: _buildRideRequestCard(rideWithRequests),
-                );
-              }),
-          ],
+              ),
+
+              const SizedBox(height: 24),
+
+              // Loading or Content
+              if (_futureRideController.isLoadingRequests.value)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: Column(
+                      children: [
+                        const CircularProgressIndicator(),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Loading ride requests...',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else if (_futureRideController.rideRequests.isEmpty)
+                _buildEmptyState(
+                  Icons.inbox,
+                  'No Ride Requests',
+                  'You don\'t have any passenger requests at the moment. Passengers will be able to request rides for your future ride offers.',
+                )
+              else
+                Builder(
+                  builder: (context) {
+                    final activeRideRequests = _futureRideController
+                        .rideRequests
+                        .where((ride) {
+                          return ride.passengersBooked.any(
+                            (b) => b.status != 'completed',
+                          );
+                        })
+                        .toList();
+
+                    if (activeRideRequests.isEmpty) {
+                      return _buildEmptyState(
+                        Icons.inbox,
+                        'No Ride Requests',
+                        'You don\'t have any active passenger requests at the moment.',
+                      );
+                    }
+
+                    return Column(
+                      children: activeRideRequests.map((rideWithRequests) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildRideRequestCard(rideWithRequests),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+            ],
+          ),
         ),
       );
     });
@@ -1456,18 +1568,34 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Passenger Requests (${rideWithRequests.passengersBooked.length})',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 12),
-            ...rideWithRequests.passengersBooked.map(
-              (booking) => _buildPassengerRequestCard(booking),
+            Builder(
+              builder: (context) {
+                final nonCompletedBookings = rideWithRequests.passengersBooked
+                    .where((b) => b.status != 'completed')
+                    .toList();
+
+                if (nonCompletedBookings.isEmpty)
+                  return const SizedBox.shrink();
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 16),
+                    Text(
+                      'Passenger Requests (${nonCompletedBookings.length})',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ...nonCompletedBookings.map(
+                      (booking) => _buildPassengerRequestCard(booking),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -1801,10 +1929,167 @@ class _FutureRideScreenState extends State<FutureRideScreen>
                   ),
                 ],
               ),
+            ] else if (booking.status == 'accepted') ...[
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () =>
+                      _showOTPInputDialog(context, booking.bookingId),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[600],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  child: const Text(
+                    'Start Trip',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ] else if (booking.status == 'started') ...[
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    String? rideId;
+                    for (var ride in _futureRideController.rideRequests) {
+                      if (ride.passengersBooked.any(
+                        (b) => b.bookingId == booking.bookingId,
+                      )) {
+                        rideId = ride.id;
+                        break;
+                      }
+                    }
+                    if (rideId != null) {
+                      final confirm =
+                          await Get.dialog<bool>(
+                            AlertDialog(
+                              title: const Text('Complete Trip'),
+                              content: Text(
+                                'Are you sure you want to complete ${booking.rider.name}\'s trip?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Get.back(result: false),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Get.back(result: true),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.green,
+                                  ),
+                                  child: const Text('Complete'),
+                                ),
+                              ],
+                            ),
+                          ) ??
+                          false;
+
+                      if (confirm) {
+                        await _futureRideController.completeTrip(
+                          rideId,
+                          booking.bookingId,
+                        );
+                      }
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green[700],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  child: const Text(
+                    'Complete Trip',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ],
         ),
       ),
+    );
+  }
+
+  void _showOTPInputDialog(BuildContext context, String bookingId) {
+    String? rideId;
+    for (var ride in _futureRideController.rideRequests) {
+      if (ride.passengersBooked.any((b) => b.bookingId == bookingId)) {
+        rideId = ride.id;
+        break;
+      }
+    }
+
+    if (rideId == null) return;
+
+    final TextEditingController otpController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enter OTP'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Please enter the 4-digit OTP provided by the passenger to start the trip.',
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: otpController,
+                keyboardType: TextInputType.number,
+                maxLength: 4,
+                decoration: const InputDecoration(
+                  labelText: 'OTP',
+                  border: OutlineInputBorder(),
+                  counterText: '',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (otpController.text.length == 4) {
+                  Navigator.of(context).pop();
+                  await _futureRideController.startTrip(
+                    rideId!,
+                    bookingId,
+                    otpController.text,
+                  );
+                } else {
+                  showErrorSnackBar(
+                    'Please enter a valid 4-digit OTP',
+                    title: 'Invalid Input',
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0F9D58),
+              ),
+              child: const Text(
+                'Verify & Start',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

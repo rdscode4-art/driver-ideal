@@ -376,6 +376,10 @@ class FutureRideController extends GetxController {
                 date: rideWithRequests.date,
                 time: rideWithRequests.time,
                 vehicle: rideWithRequests.vehicle,
+                pricePerPassenger: rideWithRequests.pricePerPassenger,
+                maxPassengers: rideWithRequests.maxPassengers,
+                status: rideWithRequests.status,
+                driverPhone: rideWithRequests.driverPhone,
                 passengersBooked: updatedPassengers,
               );
 
@@ -439,6 +443,212 @@ class FutureRideController extends GetxController {
 
   void clearError() {
     errorMessage.value = '';
+  }
+
+  /// Start passenger's trip after verifying OTP
+  Future<bool> startTrip(String rideId, String bookingId, String otp) async {
+    try {
+      isLoading.value = true;
+      
+      final result = await FutureRideApiService.startTrip(
+        rideId: rideId,
+        bookingId: bookingId,
+        otp: otp,
+      );
+      
+      if (result['success']) {
+        // Update local state to "started"
+        final rideIndex = rideRequests.indexWhere((r) => r.id == rideId);
+        if (rideIndex != -1) {
+          final ride = rideRequests[rideIndex];
+          final bookingIndex = ride.passengersBooked.indexWhere((b) => b.bookingId == bookingId);
+          if (bookingIndex != -1) {
+            ride.passengersBooked[bookingIndex].status = 'started';
+            rideRequests.refresh();
+          }
+        }
+        
+        showSuccessSnackBar(result['message'], title: 'Trip Started');
+        return true;
+      } else {
+        showErrorSnackBar(result['message'], title: 'Invalid OTP');
+        return false;
+      }
+    } catch (e) {
+      showErrorSnackBar('Network error. Please try again.');
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Complete a Passenger's Trip
+  Future<bool> completeTrip(String rideId, String bookingId) async {
+    try {
+      isLoading.value = true;
+      
+      final result = await FutureRideApiService.completeTrip(
+        rideId: rideId,
+        bookingId: bookingId,
+      );
+      
+      if (result['success']) {
+        // Update local state to "completed"
+        final rideIndex = rideRequests.indexWhere((r) => r.id == rideId);
+        if (rideIndex != -1) {
+          final ride = rideRequests[rideIndex];
+          final bookingIndex = ride.passengersBooked.indexWhere((b) => b.bookingId == bookingId);
+          if (bookingIndex != -1) {
+            ride.passengersBooked[bookingIndex].status = 'completed';
+            rideRequests.refresh();
+          }
+        }
+        
+        // Show Success popup with commission details
+        _showCommissionSuccessDialog(
+          totalAmount: (result['totalAmount'] ?? 0).toString(),
+          commissionDeducted: (result['commissionDeducted'] ?? 0).toString(),
+          driverShare: (result['driverShare'] ?? 0).toString(),
+          newWalletBalance: (result['newWalletBalance'] ?? 0).toString(),
+        );
+
+        return true;
+      } else {
+        showErrorSnackBar(result['message'], title: 'Error');
+        return false;
+      }
+    } catch (e) {
+      showErrorSnackBar('Network error. Please try again.');
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void _showCommissionSuccessDialog({
+    required String totalAmount,
+    required String commissionDeducted,
+    required String driverShare,
+    required String newWalletBalance,
+  }) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green, size: 60),
+              const SizedBox(height: 16),
+              const Text(
+                'Trip Completed!',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              const Divider(),
+              _buildEarningRow('Total Fare', '₹$totalAmount', isBold: false),
+              const SizedBox(height: 8),
+              _buildEarningRow('Commission Deducted', '- ₹$commissionDeducted', isBold: false, color: Colors.red),
+              const SizedBox(height: 8),
+              const Divider(),
+              _buildEarningRow('Your Earning', '₹$driverShare', isBold: true, color: Colors.green),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('New Wallet Balance', style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text('₹$newWalletBalance', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Get.back(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0F9D58),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: const Text('OK', style: TextStyle(color: Colors.white, fontSize: 16)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  Widget _buildEarningRow(String label, String value, {bool isBold = false, Color? color}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: isBold ? 16 : 14,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: isBold ? 16 : 14,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
+            color: color ?? Colors.black87,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Complete the entire future ride
+  Future<bool> completeRide(String rideId) async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      print('🎯 Completing entire ride $rideId');
+
+      final response = await FutureRideApiService.completeRide(rideId: rideId);
+
+      if (response['success'] == true) {
+        showSuccessSnackBar(
+          response['message'] ?? 'Ride completed successfully!',
+          title: 'Success',
+        );
+
+        // Refresh lists
+        await fetchRideRequests();
+        return true;
+      } else {
+        errorMessage.value = response['message'] ?? 'Failed to complete ride';
+        showErrorSnackBar(
+          errorMessage.value,
+          title: 'Error',
+        );
+        return false;
+      }
+    } catch (e) {
+      errorMessage.value = 'Failed to complete ride: $e';
+      showErrorSnackBar(
+        errorMessage.value,
+        title: 'Error',
+      );
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   /// Reset controller state

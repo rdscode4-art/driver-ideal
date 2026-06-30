@@ -163,4 +163,161 @@ class FutureRideApiService {
       };
     }
   }
+  /// Start a Passenger's Trip
+  static Future<Map<String, dynamic>> startTrip({
+    required String rideId,
+    required String bookingId,
+    required String otp,
+  }) async {
+    try {
+      final token = await StorageHelper.getAuthToken();
+      if (token == null) {
+        return {
+          'success': false,
+          'message': 'Authentication token not found. Please login again.',
+        };
+      }
+
+      print('🔄 Starting trip for ride $rideId, booking $bookingId');
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/future-rides/driver/start-booking/$rideId/$bookingId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'otp': otp,
+        }),
+      );
+
+      print('Start Trip API Response: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        return {
+          'success': true,
+          'message': responseData['msg'] ?? 'Trip started successfully',
+        };
+      } else {
+        final Map<String, dynamic> errorData = jsonDecode(response.body);
+        return {
+          'success': false,
+          'message': errorData['message'] ?? errorData['msg'] ?? 'Failed to start trip',
+        };
+      }
+    } catch (e) {
+      print('❌ Error starting trip: $e');
+      return {
+        'success': false,
+        'message': 'Network error: Please check your internet connection and try again.',
+      };
+    }
+  }
+
+  /// Complete a Passenger's Trip
+  static Future<Map<String, dynamic>> completeTrip({
+    required String rideId,
+    required String bookingId,
+  }) async {
+    try {
+      final token = await StorageHelper.getAuthToken();
+      if (token == null) {
+        return {
+          'success': false,
+          'message': 'Authentication token not found. Please login again.',
+        };
+      }
+
+      print('🔄 Completing trip for ride $rideId, booking $bookingId');
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/future-rides/driver/complete-booking/$rideId/$bookingId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      print('Complete Trip API Response: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        return {
+          'success': true,
+          'message': responseData['msg'] ?? 'Trip completed successfully',
+          'totalAmount': responseData['totalAmount'],
+          'commissionDeducted': responseData['commissionDeducted'],
+          'driverShare': responseData['driverShare'],
+          'newWalletBalance': responseData['newWalletBalance'],
+        };
+      } else {
+        final Map<String, dynamic> errorData = jsonDecode(response.body);
+        return {
+          'success': false,
+          'message': errorData['message'] ?? errorData['msg'] ?? 'Failed to complete trip',
+        };
+      }
+    } catch (e) {
+      print('❌ Error completing trip: $e');
+      return {
+        'success': false,
+        'message': 'Network error: Please check your internet connection and try again.',
+      };
+    }
+  }
+
+  /// Complete the entire Future Ride document
+  static Future<Map<String, dynamic>> completeRide({
+    required String rideId,
+  }) async {
+    try {
+      final token = await StorageHelper.getAuthToken();
+      if (token == null) {
+        return {
+          'success': false,
+          'message': 'Authentication token not found. Please login again.',
+        };
+      }
+
+      print('🔄 Completing entire ride $rideId');
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/future-rides/driver/complete-ride/$rideId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      print('Complete Ride API Response: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        return {
+          'success': true,
+          'message': responseData['msg'] ?? responseData['message'] ?? 'Ride completed successfully',
+          'data': responseData,
+        };
+      } else {
+        final Map<String, dynamic> errorData = jsonDecode(response.body);
+        return {
+          'success': false,
+          'message': errorData['message'] ?? errorData['msg'] ?? 'Failed to complete ride',
+        };
+      }
+    } catch (e) {
+      print('❌ Error completing ride: $e');
+      return {
+        'success': false,
+        'message': 'Network error: Please check your internet connection and try again.',
+      };
+    }
+  }
 }

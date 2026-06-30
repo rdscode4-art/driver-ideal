@@ -88,7 +88,7 @@ class PassengerBooking {
   final String bookingId;
   final Rider rider;
   final int numOfSeats;
-  final String status;
+  String status;
 
   PassengerBooking({
     required this.bookingId,
@@ -114,6 +114,10 @@ class FutureRideWithRequests {
   final DateTime date;
   final String time;
   final Vehicle vehicle;
+  final double pricePerPassenger;
+  final int maxPassengers;
+  final String status;
+  final String driverPhone;
   final List<PassengerBooking> passengersBooked;
 
   FutureRideWithRequests({
@@ -123,6 +127,10 @@ class FutureRideWithRequests {
     required this.date,
     required this.time,
     required this.vehicle,
+    required this.pricePerPassenger,
+    required this.maxPassengers,
+    required this.status,
+    required this.driverPhone,
     required this.passengersBooked,
   });
 
@@ -137,6 +145,10 @@ class FutureRideWithRequests {
       date: DateTime.parse(json['date'] ?? DateTime.now().toIso8601String()),
       time: json['time'] ?? '',
       vehicle: Vehicle.fromJson(json['vehicle'] ?? {}),
+      pricePerPassenger: (json['pricePerPassenger'] ?? 0.0).toDouble(),
+      maxPassengers: json['maxPassengers'] ?? 4,
+      status: json['status'] ?? 'active',
+      driverPhone: json['driverPhone'] ?? '',
       passengersBooked: (json['passengersBooked'] as List<dynamic>? ?? [])
           .map((booking) => PassengerBooking.fromJson(booking))
           .toList(),
