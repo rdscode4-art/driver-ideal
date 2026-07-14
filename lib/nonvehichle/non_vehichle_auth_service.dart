@@ -133,15 +133,20 @@ class NonVehicleAuthService {
   static Future<Map<String, dynamic>> rejectRide(
     String authToken,
     String requestId,
+    {String? cancelReason}
   ) async {
     try {
-      print('📡 [POST] $baseUrl/ride/reject/$requestId');
+      print('🚀 [POST] $baseUrl/ride/reject/$requestId');
+      
+      final body = cancelReason != null ? json.encode({'cancelReason': cancelReason}) : null;
+
       final response = await http.post(
         Uri.parse('$baseUrl/ride/reject/$requestId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $authToken',
         },
+        body: body,
       );
 
       print('📥 Status: ${response.statusCode}');

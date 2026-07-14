@@ -727,7 +727,7 @@ class _HomeScreennonvehichleState extends State<HomeScreennonvehichle> with Widg
 
 
 
-  Future<void> rejectRide(String requestId) async {
+  Future<void> rejectRide(String requestId, {String? reason}) async {
     FCMService.stopRequestSound();
     if (authToken == null) {
       await _loadToken();
@@ -739,17 +739,22 @@ class _HomeScreennonvehichleState extends State<HomeScreennonvehichle> with Widg
 
     setState(() => isLoading = true);
     
-    // 🎵 Stop the request sound immediately when rejecting
+    // 🛑 Stop the request sound immediately when rejecting
     FCMService.stopRequestSound();
 
-    final result = await NonVehicleAuthService.rejectRide(authToken!, requestId);
+    final result = await NonVehicleAuthService.rejectRide(authToken!, requestId, cancelReason: reason);
 
     if (result['success']) {
       _showSuccessSnackbar(result['message']);
       setState(() {
         rideRequests.removeWhere((r) => r.id == requestId);
-        rejectedRideIds.add(requestId); // 🆕 Track so it doesn't ring again
+        ongoingRides.removeWhere((r) => r.id == requestId);
+        if (ongoingRides.isEmpty) {
+          driverStatus = 'online';
+        }
+        rejectedRideIds.add(requestId); // ➕ Track so it doesn't ring again
       });
+      await _saveOngoingRidesToStorage();
     } else {
       if (result['message']?.toLowerCase().contains('token') ?? false) {
         await _tokenManager.handleInvalidToken();
@@ -1746,6 +1751,139 @@ Widget _buildSummaryItem(IconData icon, String label, String value) {
       ),
     );
   }
+  void _showCancelBottomSheet(OngoingRide ride) {
+    String selectedReason = 'I am currently unavailable';
+    final TextEditingController reasonController = TextEditingController();
+    bool isCustomReason = false;
+    
+    final List<String> presetReasons = [
+      'I am currently unavailable',
+      'Vehicle broke down',
+      'Cannot contact customer',
+      'Wrong location',
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 20,
+                right: 20,
+                top: 24,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Cancel Ride',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Please select a reason for cancellation:',
+                    style: TextStyle(fontSize: 14, color: Colors.black87),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: presetReasons.map((reason) {
+                      final isSelected = !isCustomReason && selectedReason == reason;
+                      return ChoiceChip(
+                        label: Text(reason),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          if (selected) {
+                            setModalState(() {
+                              isCustomReason = false;
+                              selectedReason = reason;
+                            });
+                          }
+                        },
+                        selectedColor: Colors.red[50],
+                        labelStyle: TextStyle(
+                          color: isSelected ? Colors.red[700] : Colors.black87,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontSize: 12,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: reasonController,
+                    decoration: InputDecoration(
+                      hintText: 'Other reason (optional)',
+                      hintStyle: TextStyle(fontSize: 13, color: Colors.grey[400]),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.red[300]!),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
+                    onChanged: (val) {
+                      if (val.isNotEmpty && !isCustomReason) {
+                        setModalState(() {
+                          isCustomReason = true;
+                        });
+                      } else if (val.isEmpty && isCustomReason) {
+                        setModalState(() {
+                          isCustomReason = false;
+                        });
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        final reason = isCustomReason && reasonController.text.isNotEmpty
+                            ? reasonController.text
+                            : selectedReason;
+                        Navigator.pop(context);
+                        rejectRide(ride.id, reason: reason);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[600],
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Submit & Cancel Ride',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   Widget _buildOngoingRideCard(OngoingRide ride) {
     final isStarted = ride.status == 'started';
@@ -1874,6 +2012,27 @@ Widget _buildSummaryItem(IconData icon, String label, String value) {
               ),
             ],
           ),
+          if (!isStarted)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: isLoading
+                      ? null
+                      : () => _showCancelBottomSheet(ride),
+                  icon: const Icon(Icons.cancel_outlined, size: 14),
+                  label: const Text('Cancel Ride', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red[600],
+                    side: BorderSide(color: Colors.red[600]!, width: 1.5),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    minimumSize: const Size(0, 42),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
