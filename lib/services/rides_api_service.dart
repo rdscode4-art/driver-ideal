@@ -216,11 +216,15 @@ class RidesApiService {
     }
   }
 
-  Future<Map<String, dynamic>> cancelRide(String rideId) async {
+  Future<Map<String, dynamic>> cancelRide(String rideId, {String? reason}) async {
     try {
+      final payload = <String, dynamic>{'rideId': rideId};
+      if (reason != null && reason.isNotEmpty) {
+        payload['cancelReason'] = reason;
+      }
       final response = await _makePostRequest(
         'rides/rides/reject',
-        {'rideId': rideId},
+        payload,
       );
 
       if (response.statusCode == 200) {

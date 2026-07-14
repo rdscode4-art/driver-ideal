@@ -4,6 +4,7 @@ class RidealSubscriptionPlan {
   final String title;
   final int rate;
   final int durationInMonths;
+  final int durationInDays;
   final String? description;
   final List<String>? features;
   final bool isPopular;
@@ -13,6 +14,7 @@ class RidealSubscriptionPlan {
     required this.title,
     required this.rate,
     required this.durationInMonths,
+    this.durationInDays = 0,
     this.description,
     this.features,
     this.isPopular = false,
@@ -24,7 +26,8 @@ class RidealSubscriptionPlan {
       id: json['_id'] ?? json['id'] ?? '',
       title: json['title'] ?? 'Unknown Plan',
       rate: (json['rate'] ?? 0).toInt(),
-      durationInMonths: (json['durationInMonths'] ?? 1).toInt(),
+      durationInMonths: (json['durationInMonths'] ?? 0).toInt(),
+      durationInDays: (json['durationInDays'] ?? 0).toInt(),
       description: json['description'],
       features: json['features'] != null
           ? List<String>.from(json['features'])
@@ -40,6 +43,7 @@ class RidealSubscriptionPlan {
       'title': title,
       'rate': rate,
       'durationInMonths': durationInMonths,
+      'durationInDays': durationInDays,
       'description': description,
       'features': features,
       'isPopular': isPopular,
@@ -48,11 +52,17 @@ class RidealSubscriptionPlan {
 
   /// Get formatted monthly rate
   String get formattedMonthlyRate {
-    if (durationInMonths <= 1) {
-      return '₹$rate/month';
+    if (durationInMonths > 0) {
+      if (durationInMonths <= 1) {
+        return '₹$rate/month';
+      }
+      final monthlyRate = (rate / durationInMonths).round();
+      return '₹$monthlyRate/month';
+    } else if (durationInDays > 0) {
+      final dailyRate = (rate / durationInDays).round();
+      return '₹$dailyRate/day';
     }
-    final monthlyRate = (rate / durationInMonths).round();
-    return '₹$monthlyRate/month';
+    return '₹$rate';
   }
 
   /// Get formatted total price
@@ -60,13 +70,22 @@ class RidealSubscriptionPlan {
 
   /// Get formatted duration
   String get formattedDuration {
-    if (durationInMonths == 1) {
-      return '1 Month';
-    } else if (durationInMonths == 12) {
-      return '1 Year';
-    } else {
-      return '$durationInMonths Months';
+    if (durationInMonths > 0) {
+      if (durationInMonths == 1) {
+        return '1 Month';
+      } else if (durationInMonths == 12) {
+        return '1 Year';
+      } else {
+        return '$durationInMonths Months';
+      }
+    } else if (durationInDays > 0) {
+      if (durationInDays == 1) {
+        return '1 Day';
+      } else {
+        return '$durationInDays Days';
+      }
     }
+    return 'Custom Duration';
   }
 
   /// Get savings compared to monthly rate

@@ -8,6 +8,7 @@ import 'package:rideal_driver/presentation/widgets/social_media_links.dart';
 import '../controllers/auth_controller.dart';
 import 'package:rideal_driver/nonvehichle/non_vehichle_profile_controller.dart';
 import 'package:rideal_driver/presentation/screens/delete_account_screen.dart';
+import 'package:rideal_driver/nonvehichle/rewards_screen_nonvehichle.dart';
 
 class ProfileScreennonvehichle extends StatefulWidget {
   const ProfileScreennonvehichle({super.key});
@@ -574,6 +575,17 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
         ),
         child: Column(
           children: [
+            _buildMenuOption(
+              icon: Icons.card_giftcard_rounded,
+              title: 'Refer & Earn',
+              subtitle: 'Invite friends & earn rewards',
+              color: Colors.green[600]!,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RewardsScreenNonVehicle()),
+              ),
+            ),
+            _buildDivider(),
             _buildMenuOption(
               icon: Icons.description_rounded,
               title: 'My Documents',

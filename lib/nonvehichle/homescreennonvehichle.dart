@@ -81,16 +81,14 @@ class _HomeScreennonvehichleState extends State<HomeScreennonvehichle> with Widg
       FCMService.stopRequestSound();
       
       // Silent refresh on app resume (no UI loader)
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (authToken != null) {
-          fetchRideRequests(isSilent: true); // Use silent mode
-          if (driverStatus == 'online') {
-            _startPolling();
-          }
-        } else {
-          _initializeAndFetch(); // Still use full init if token is missing
+      if (authToken != null) {
+        fetchRideRequests(isSilent: true); // Use silent mode
+        if (driverStatus == 'online') {
+          _startPolling();
         }
-      });
+      } else {
+        _initializeAndFetch(); // Still use full init if token is missing
+      }
     } else if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
       _stopPolling();
     }
@@ -385,8 +383,8 @@ class _HomeScreennonvehichleState extends State<HomeScreennonvehichle> with Widg
             SoundManager().stopRequestSound();
           }
 
-          // Resolve addresses for all requests
-          final processedRequests = await Future.wait(newRequestsData.map((rideData) async {
+          // Create requests with placeholders for addresses to update UI instantly
+          final initialRequests = newRequestsData.map((rideData) {
             // Handle both flat and nested rider objects
             String riderName = 'Rider';
             if (rideData['rider'] != null && rideData['rider'] is Map) {
@@ -397,8 +395,6 @@ class _HomeScreennonvehichleState extends State<HomeScreennonvehichle> with Widg
               String riderId = rideData['riderId']?.toString() ?? 'Unknown';
               riderName = riderId.length >= 8 ? 'Rider ${riderId.substring(0, 8)}' : 'Rider $riderId';
             }
-
-            final pickup = await _resolveAddressIfNeeded(rideData['pickupLocation'] ?? rideData['pickup'] ?? 'Pickup location will be shared');
 
             double fare = 0.0;
             if (rideData['price'] != null) {
@@ -424,18 +420,44 @@ class _HomeScreennonvehichleState extends State<HomeScreennonvehichle> with Widg
               passengerPhone: (rideData['rider'] != null && rideData['rider'] is Map) 
                   ? (rideData['rider']['phone']?.toString() ?? '') 
                   : (rideData['passengerPhone']?.toString() ?? 'Contact on acceptance'),
-              pickup: pickup,
+              pickup: 'Resolving Location...',
               dropoff: rideData['dropoffLocation']?.toString() ?? 'Location will be shared',
               distance: (rideData['duration'] ?? rideData['hours'] ?? '0').toString() + (rideData['duration'] != null ? '' : ' hours'),
               fare: fare.toInt(),
               estimatedTime: (rideData['duration'] ?? '${rideData['hours'] ?? 0}h').toString(),
               rating: rating,
             );
-          }).toList());
+          }).toList();
 
           setState(() {
-            rideRequests = processedRequests;
+            rideRequests = initialRequests;
           });
+
+          // Perform reverse geocoding in the background
+          for (var rideData in newRequestsData) {
+            _resolveAddressIfNeeded(rideData['pickupLocation'] ?? rideData['pickup'] ?? 'Pickup location will be shared').then((resolvedAddress) {
+              if (mounted) {
+                setState(() {
+                  final reqId = (rideData['rideId'] ?? rideData['_id'] ?? rideData['id'] ?? '').toString();
+                  final index = rideRequests.indexWhere((r) => r.id == reqId);
+                  if (index != -1) {
+                    final oldReq = rideRequests[index];
+                    rideRequests[index] = RideRequest(
+                      id: oldReq.id,
+                      passengerName: oldReq.passengerName,
+                      passengerPhone: oldReq.passengerPhone,
+                      pickup: resolvedAddress,
+                      dropoff: oldReq.dropoff,
+                      distance: oldReq.distance,
+                      fare: oldReq.fare,
+                      estimatedTime: oldReq.estimatedTime,
+                      rating: oldReq.rating,
+                    );
+                  }
+                });
+              }
+            });
+          }
           
           print('✅ Loaded ${rideRequests.length} ride requests');
         } else {

@@ -226,6 +226,110 @@ class OngoingRideScreen extends StatelessWidget {
     );
   }
 
+  void _showCancelRideBottomSheet(BuildContext context, OngoingRideController controller) {
+    final TextEditingController reasonController = TextEditingController();
+    final List<String> presetReasons = [
+      'Vehicle broken down',
+      'Customer unreachable',
+      'Stuck in traffic',
+      'Long pickup distance',
+    ];
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Cancel Ride',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Get.back(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Please select or enter a reason for cancelling this ride:',
+                style: TextStyle(fontSize: 14, color: Colors.black87),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: presetReasons.map((reason) => ActionChip(
+                  label: Text(reason, style: const TextStyle(fontSize: 12)),
+                  backgroundColor: Colors.grey[200],
+                  onPressed: () {
+                    reasonController.text = reason;
+                  },
+                )).toList(),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: reasonController,
+                decoration: InputDecoration(
+                  hintText: 'Enter reason here...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                maxLines: 2,
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (reasonController.text.trim().isEmpty) {
+                      Get.snackbar('Error', 'Please provide a cancellation reason',
+                          snackPosition: SnackPosition.BOTTOM);
+                      return;
+                    }
+                    Get.back(); // close bottom sheet
+                    controller.cancelOngoingRide(reasonController.text.trim());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('SUBMIT & CANCEL RIDE', 
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ),
+      isScrollControlled: true,
+    );
+  }
+
   Widget _buildUnifiedTopOverlay(OngoingRideController controller, BuildContext context) {
     return Positioned(
       top: 12,
@@ -1083,6 +1187,35 @@ class OngoingRideScreen extends StatelessWidget {
                       ),
                   ],
                 ),
+
+                // CANCEL RIDE BUTTON
+                if (controller.ridePhase.value != RidePhase.COMPLETED && controller.ridePhase.value != RidePhase.PAYMENT_PENDING)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 40,
+                      child: OutlinedButton.icon(
+                        onPressed: () => _showCancelRideBottomSheet(context, controller),
+                        icon: const Icon(Icons.cancel_outlined, size: 18),
+                        label: const Text(
+                          'CANCEL RIDE',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red[600],
+                          side: BorderSide(color: Colors.red[600]!, width: 1.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
 
                 if (controller.ridePhase.value == RidePhase.COMPLETED)
                   SizedBox(

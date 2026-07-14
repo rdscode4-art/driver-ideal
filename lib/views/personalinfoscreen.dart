@@ -9,6 +9,7 @@ import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
 import '../controllers/non_vehicle_auth_controller.dart';
 import '../core/utils/app_snackbar.dart';
+import '../routes/app_pages.dart';
 
 class NonVehiclePersonalInfoScreen extends StatefulWidget {
   const NonVehiclePersonalInfoScreen({super.key});
@@ -22,6 +23,7 @@ class _NonVehiclePersonalInfoScreenState
     extends State<NonVehiclePersonalInfoScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController referralController = TextEditingController(); // ⭐ NEW
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final NonVehicleAuthController authController = Get.put(
@@ -520,6 +522,33 @@ class _NonVehiclePersonalInfoScreenState
                                 ],
                               ),
 
+                              const SizedBox(height: 16),
+
+                              // Referral Code Field (Optional)
+                              TextFormField(
+                                controller: referralController,
+                                decoration: InputDecoration(
+                                  labelText: 'Referral Code (Optional)',
+                                  hintText: 'Enter referral code if you have one',
+                                  prefixIcon: Icon(Icons.card_giftcard, color: Colors.green[600]),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.green[600]!),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[50],
+                                ),
+                                textCapitalization: TextCapitalization.characters,
+                              ),
+
                               const SizedBox(height: 32),
 
                               // Continue Button
@@ -589,10 +618,12 @@ class _NonVehiclePersonalInfoScreenState
                                                         );
                                                 if (otpSent) {
                                                   Get.toNamed(
-                                                    '/non-vehicle-otp',
+                                                    Routes.OTP_VERIFICATION,
                                                     arguments: {
                                                       'phone': cleanedPhone,
+                                                      'isLoginFlow': true,
                                                       'isLogin': true,
+                                                      'driverType': 'non_vehicle',
                                                     },
                                                   );
                                                 }
@@ -609,6 +640,7 @@ class _NonVehiclePersonalInfoScreenState
                                                     'gender': selectedGender,
                                                     'profileImage':
                                                         profileImage,
+                                                    'referralCode': referralController.text.trim(), // ⭐ NEW
                                                   },
                                                 );
                                               }
@@ -693,6 +725,7 @@ class _NonVehiclePersonalInfoScreenState
   void dispose() {
     nameController.dispose();
     phoneController.dispose();
+    referralController.dispose();
     super.dispose();
   }
 }

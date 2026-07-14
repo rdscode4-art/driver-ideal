@@ -281,6 +281,9 @@ class SubscriptionPlan {
   /// Duration in months
   final int durationInMonths;
 
+  /// Duration in days
+  final int durationInDays;
+
   /// Plan rate/price in rupees
   final int rate;
 
@@ -301,6 +304,7 @@ class SubscriptionPlan {
     required this.title,
     this.description,
     required this.durationInMonths,
+    this.durationInDays = 0,
     required this.rate,
     this.features = const [],
     this.category,
@@ -315,7 +319,8 @@ class SubscriptionPlan {
       title: json['title']?.toString() ?? 'Unknown Plan',
       description: json['description']?.toString(),
       durationInMonths:
-          _parseInt(json['durationInMonths'] ?? json['duration']) ?? 1,
+          _parseInt(json['durationInMonths'] ?? json['duration']) ?? 0,
+      durationInDays: _parseInt(json['durationInDays']) ?? 0,
       rate: _parseInt(json['rate'] ?? json['price']) ?? 0,
       features: _parseStringList(json['features']),
       category: json['category']?.toString(),
@@ -331,6 +336,7 @@ class SubscriptionPlan {
       'title': title,
       if (description != null) 'description': description,
       'durationInMonths': durationInMonths,
+      'durationInDays': durationInDays,
       'rate': rate,
       'features': features,
       if (category != null) 'category': category,
@@ -375,23 +381,39 @@ class SubscriptionPlan {
 
   /// Get formatted duration display
   String get formattedDuration {
-    if (durationInMonths == 1) return '1 month';
-    if (durationInMonths == 12) return '1 year';
-    if (durationInMonths % 12 == 0) {
-      final years = durationInMonths ~/ 12;
-      return years == 1 ? '1 year' : '$years years';
+    if (durationInMonths > 0) {
+      if (durationInMonths == 1) return '1 month';
+      if (durationInMonths == 12) return '1 year';
+      if (durationInMonths % 12 == 0) {
+        final years = durationInMonths ~/ 12;
+        return years == 1 ? '1 year' : '$years years';
+      }
+      return '$durationInMonths months';
+    } else if (durationInDays > 0) {
+      return '$durationInDays days';
     }
-    return '$durationInMonths months';
+    return 'custom';
   }
 
   /// Get monthly price (for display purposes)
   double get monthlyPrice {
-    return rate / durationInMonths;
+    if (durationInMonths > 0) {
+      return rate / durationInMonths;
+    } else if (durationInDays > 0) {
+      return (rate / durationInDays) * 30; // approximate monthly cost
+    }
+    return rate.toDouble();
   }
 
-  /// Get formatted monthly price
+  /// Get formatted monthly price / daily price
   String get formattedMonthlyPrice {
-    return '₹${monthlyPrice.toStringAsFixed(0)}/month';
+    if (durationInMonths > 0) {
+      return '₹${monthlyPrice.toStringAsFixed(0)}/month';
+    } else if (durationInDays > 0) {
+      final dailyPrice = rate / durationInDays;
+      return '₹${dailyPrice.toStringAsFixed(0)}/day';
+    }
+    return '₹$rate';
   }
 
   /// Check if this is a long-term plan (6+ months)

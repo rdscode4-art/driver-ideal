@@ -21,7 +21,9 @@ import 'dart:async';
 import '../fcm_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-class HomeController extends GetxController {
+import 'package:flutter/widgets.dart';
+
+class HomeController extends GetxController with WidgetsBindingObserver {
   var status = 'Offline'.obs;
   var isLoading = false.obs;
   var kycStatus = 'Pending'.obs;
@@ -32,6 +34,7 @@ class HomeController extends GetxController {
   var driverInfo = Rx<DriverInfo?>(null);
   var hasOngoingRide = false.obs;
   var ongoingRide = Rx<Ride?>(null);
+  var optimisticOnline = Rx<bool?>(null); // For immediate UI feedback on toggle
 
   // KYC verification status
   var isKycVerified = false.obs;
@@ -112,6 +115,9 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
+    print('🛑 HomeController onClose: Cleaning up resources...');
+    WidgetsBinding.instance.removeObserver(this);
+    
     _stopLocationTracking();
     _stopAutoRefresh(); // ✨ Stop auto-refresh when controller is disposed
     _generalLocationTimer?.cancel(); // 📍 Stop general location tracking
@@ -177,17 +183,22 @@ class HomeController extends GetxController {
         loadAvailableRidesCount();
         checkOngoingRide();
         
+        // Close any open dialog or bottom sheet (e.g. if looking at a ride request dialog)
+        if (Get.isDialogOpen == true || Get.isBottomSheetOpen == true) {
+           Get.back();
+        }
+        
         // If there was an ongoing ride, we might need to go back to home
         if (hasOngoingRide.value && ongoingRide.value != null) {
-          final cancelledRideId = message.data['rideId'] ?? message.data['requestId'];
-          if (cancelledRideId == ongoingRide.value!.id) {
-             print('⚠️ Active ride was cancelled by user!');
+          final cancelledRideId = message.data['rideId'] ?? message.data['requestId'] ?? message.data['id'] ?? message.data['_id'];
+          if (cancelledRideId == null || cancelledRideId == ongoingRide.value!.id) {
+             print('🛑 Active ride was cancelled by user! ID: $cancelledRideId');
              hasOngoingRide.value = false;
              ongoingRide.value = null;
-             if (Get.currentRoute == Routes.ONGOING_RIDE) {
-               Get.back();
-               showErrorSnackBar('The rider has cancelled this ride.', title: 'Ride Cancelled');
-             }
+             
+             // Force navigation back to home screen and show error
+             Get.offAllNamed(Routes.HOME);
+             showErrorSnackBar('The rider has cancelled this ride.', title: 'Ride Cancelled');
           }
         }
       } 
@@ -265,7 +276,18 @@ class HomeController extends GetxController {
     await refreshData(isSilent: true);
   }
 
-  // ✨ ENHANCED: Refresh all data with better feedback
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (isOnline) {
+        print('📱 App Resumed: Force refreshing rides for vehicle driver...');
+        loadAvailableRidesCount();
+        checkOngoingRide();
+      }
+    }
+  }
+
+  // Handle manual refresh
   Future<void> refreshData({bool isSilent = false}) async {
     if (!isSilent) {
       print('🔄 Manual refresh triggered');
@@ -454,7 +476,12 @@ class HomeController extends GetxController {
       final response = await DriverApiService.getDriverStatus();
 
       if (response.isSuccess && response.data != null) {
-        final driverStatusData = DriverStatus.fromJson(response.data!);
+        final Map<String, dynamic> responseData = response.data!;
+        final Map<String, dynamic> statusData = responseData.containsKey('driver') 
+            ? responseData['driver'] 
+            : responseData;
+            
+        final driverStatusData = DriverStatus.fromJson(statusData);
         driverStatus.value = driverStatusData;
         status.value = driverStatusData.displayStatus;
 
@@ -504,10 +531,19 @@ class HomeController extends GetxController {
     print('************************************************');
     print('🚀 TOGGLE DRIVER AVAILABILITY CALLED!');
     print('************************************************');
+    
+    // Store previous status outside try block so it's accessible in catch blocks
+    final previousStatus = status.value;
+    
     try {
       final currentlyOnline = driverStatus.value?.isAvailable ?? false;
       final wantsToGoOnline = !currentlyOnline;
 
+      optimisticOnline.value = wantsToGoOnline; // Set optimistic value immediately
+      
+      // Optimistically update status for instant UI change
+      status.value = wantsToGoOnline ? 'Online' : 'Offline';
+      
       isLoading.value = true;
 
       print('🔄 Updating driver availability to: $wantsToGoOnline');
@@ -527,7 +563,12 @@ class HomeController extends GetxController {
       );
 
       if (response.isSuccess && response.data != null) {
-        final driverStatusData = DriverStatus.fromJson(response.data!);
+        final Map<String, dynamic> responseData = response.data!;
+        final Map<String, dynamic> statusData = responseData.containsKey('driver') 
+            ? responseData['driver'] 
+            : responseData;
+            
+        final driverStatusData = DriverStatus.fromJson(statusData);
         driverStatus.value = driverStatusData;
         status.value = driverStatusData.displayStatus;
 
@@ -543,7 +584,7 @@ class HomeController extends GetxController {
           duration: const Duration(seconds: 2),
         );
 
-        // 🔥 IMPORTANT: Jab online ho toh IMMEDIATELY rides load karo
+        // 🚨 IMPORTANT: Jab online ho toh IMMEDIATELY rides load karo
         if (wantsToGoOnline) {
           print('🚀 Driver went online - Loading rides immediately...');
           await loadAvailableRidesCount();
@@ -557,19 +598,24 @@ class HomeController extends GetxController {
             if (isOnline) loadAvailableRidesCount();
           });
         } else {
-          print('🔴 Driver went offline - Clearing rides...');
+          print('🛑 Driver went offline - Clearing rides...');
           availableRidesCount.value = 0;
           nearbyRides.clear();
           nearbyRides.refresh();
         }
       } else {
+        optimisticOnline.value = null; // Revert on failure
+        status.value = previousStatus; // Revert status
         print('❌ Failed to update driver availability: ${response.message}');
         showErrorSnackBar(response.message ?? 'Could not update status. Please try again.', title: 'Update Failed');
       }
     } catch (e) {
+      optimisticOnline.value = null; // Revert on failure
+      status.value = previousStatus; // Revert status
       print('❌ Critical error in toggle: $e');
       showErrorSnackBar('An unexpected error occurred. Please check your internet.');
     } finally {
+      optimisticOnline.value = null; // Clear override, rely on actual state
       isLoading.value = false;
     }
   }
@@ -605,8 +651,8 @@ class HomeController extends GetxController {
     showErrorSnackBar('Your session has expired. Please log in again.', title: 'Authentication Error');
   }
 
-  // Get driver availability status
-  bool get isOnline => driverStatus.value?.isAvailable ?? false;
+  // Get driver availability status with optimistic override for instant UI feedback
+  bool get isOnline => optimisticOnline.value ?? (driverStatus.value?.isAvailable ?? false);
 
   // ✨ ENHANCED: Load ALL available rides (no limit)
  Future<void> loadAvailableRidesCount() async {

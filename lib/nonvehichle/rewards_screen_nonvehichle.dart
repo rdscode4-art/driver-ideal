@@ -3,28 +3,28 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import '../core/utils/app_snackbar.dart';
-import '../controllers/referral_controller.dart';
+import 'non_vehichle_referral_controller.dart';
 import '../data/models/referral_model.dart';
-import '../controllers/profile_controller.dart';
+import 'non_vehichle_profile_controller.dart';
 import 'package:share_plus/share_plus.dart';
 
-class RewardsScreen extends StatefulWidget {
-  const RewardsScreen({super.key});
+class RewardsScreenNonVehicle extends StatefulWidget {
+  const RewardsScreenNonVehicle({super.key});
 
   @override
-  State<RewardsScreen> createState() => _RewardsScreenState();
+  State<RewardsScreenNonVehicle> createState() => _RewardsScreenNonVehicleState();
 }
 
-class _RewardsScreenState extends State<RewardsScreen>
+class _RewardsScreenNonVehicleState extends State<RewardsScreenNonVehicle>
     with SingleTickerProviderStateMixin {
-  final ProfileController _profileController = Get.put(ProfileController());
+  final NonVehichleProfileController _profileController = Get.put(NonVehichleProfileController());
 
-  String get myReferralCode =>
-      _profileController.driverProfile.value?.referralCode ?? 'RIDEAL123';
+  String get myReferralCode => 
+      _profileController.referralCode.value.isNotEmpty ? _profileController.referralCode.value : 'RIDEAL123';
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  final ReferralController _referralController = Get.put(ReferralController());
+  final NonVehicleReferralController _referralController = Get.put(NonVehicleReferralController());
 
   @override
   void initState() {

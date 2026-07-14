@@ -346,6 +346,7 @@ class NonVehicleAuthController extends GetxController {
     required File aadhaarBackImage, // ⭐ NEW: Back image
     required File profileImage,
     required File videoKyc,
+    String? referralCode, // ⭐ NEW: Referral Code
   }) async {
     try {
       isLoading.value = true;
@@ -366,6 +367,10 @@ class NonVehicleAuthController extends GetxController {
       request.fields['dl'] = dl;
       request.fields['dlType'] = dlType; // ⭐ NEW
       request.fields['aadhaar'] = aadhaar;
+      
+      if (referralCode != null && referralCode.isNotEmpty) {
+        request.fields['referralCode'] = referralCode;
+      }
 
       print('✅ Fields added');
 

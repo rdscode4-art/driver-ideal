@@ -25,6 +25,12 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final body = message.notification?.body?.toLowerCase() ?? '';
   final dataType = message.data['type']?.toString().toLowerCase() ?? '';
 
+  if (dataType == 'ride_cancelled') {
+    print('🚫 Background Ride Cancelled! Stopping sound and clearing notifications...');
+    await FCMService.stopRequestSound();
+    return;
+  }
+
   if (dataType.contains('ride') ||
       dataType.contains('booking') ||
       dataType.contains('cancel') ||
@@ -41,7 +47,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
 }
 
-class FCMService {
+class FCMService with WidgetsBindingObserver {
   static final FCMService _instance = FCMService._internal();
   factory FCMService() => _instance;
   FCMService._internal();
@@ -56,6 +62,12 @@ class FCMService {
 
   Future<void> initialize() async {
     try {
+      // Add lifecycle observer to stop sounds on app resume
+      WidgetsBinding.instance.addObserver(this);
+      
+      // Also stop sound immediately on fresh app launch just in case it was ringing in background
+      FCMService.stopRequestSound();
+
       // Request permission for iOS
       NotificationSettings settings = await _messaging.requestPermission(
         alert: true,
@@ -111,6 +123,14 @@ class FCMService {
       }
     } catch (e) {
       print('❌ FCM Initialization Error: $e');
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      print('📱 App Resumed: Stopping any background FCM sounds just in case...');
+      FCMService.stopRequestSound();
     }
   }
 
@@ -217,6 +237,14 @@ class FCMService {
         title.contains('cancelled') ||
         message.data.containsKey('requestId');
 
+    if (dataType == 'ride_cancelled') {
+      print('🚫 Foreground Ride Cancelled! Stopping sound and clearing notifications...');
+      FCMService.stopRequestSound();
+      // Still add to stream so UI can dismiss dialog
+      rideNotificationStream.add(message);
+      return; // Do not show local notification for cancellation
+    }
+
     if (isRideRelated) {
       rideNotificationStream.add(message);
     }
@@ -297,10 +325,18 @@ class FCMService {
 
     if (type.contains('ride') || type.contains('new') || hasRequestId) {
       print('🚀 Navigating to $targetRoute (where requests list is)...');
-      Get.offAllNamed(targetRoute); // Use offAll to ensure we land on Home
+      
+      // Push to stream so active controllers instantly refresh without relying on full page reload
+      rideNotificationStream.add(message);
+      
+      if (Get.currentRoute != targetRoute) {
+        Get.offAllNamed(targetRoute); // Use offAll to ensure we land on Home
+      }
     } else {
       // Default fallback
-      Get.offAllNamed(targetRoute);
+      if (Get.currentRoute != targetRoute) {
+        Get.offAllNamed(targetRoute);
+      }
     }
   }
 

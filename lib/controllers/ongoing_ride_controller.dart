@@ -1318,6 +1318,40 @@ Future<Map<String, dynamic>> completeRideWithPayment(
   }
 
   /// Force complete ride - statically complete the ride regardless of API response
+  Future<void> cancelOngoingRide(String reason) async {
+    try {
+      final rideId = currentRide.value?.id;
+      if (rideId == null) {
+        showErrorSnackBar('No active ride to cancel');
+        return;
+      }
+
+      isLoading.value = true;
+      log('🚫 Cancelling ride: $rideId for reason: $reason');
+
+      final result = await RidesApiService().cancelRide(rideId, reason: reason);
+
+      if (result['success']) {
+        showSuccessSnackBar('Ride has been cancelled successfully');
+        
+        // Stop all tracking and timers
+        _stopLocationTracking();
+        _stopNavigationUpdates();
+        _rideTimer?.cancel();
+        
+        // Return to home screen
+        Get.offAllNamed('/home');
+      } else {
+        showErrorSnackBar(result['message'] ?? 'Failed to cancel ride');
+      }
+    } catch (e) {
+      log('❌ Error cancelling ongoing ride: $e');
+      showErrorSnackBar('An error occurred while cancelling the ride');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> forceCompleteRide() async {
     try {
       isLoading.value = true;

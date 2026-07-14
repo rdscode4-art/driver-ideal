@@ -16,6 +16,7 @@ class SubscriptionPlan {
   final String title;
   final int rate;
   final int durationInMonths;
+  final int durationInDays;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -24,6 +25,7 @@ class SubscriptionPlan {
     required this.title,
     required this.rate,
     required this.durationInMonths,
+    this.durationInDays = 0,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -34,8 +36,9 @@ class SubscriptionPlan {
       title: json['title'] ?? '',
       rate: json['rate'] ?? 0,
       durationInMonths: json['durationInMonths'] ?? 0,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      durationInDays: json['durationInDays'] ?? 0,
+      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime.now(),
     );
   }
 
@@ -45,9 +48,45 @@ class SubscriptionPlan {
       'title': title,
       'rate': rate,
       'durationInMonths': durationInMonths,
+      'durationInDays': durationInDays,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
+  }
+
+  /// Get formatted monthly rate or daily rate
+  String get formattedMonthlyRate {
+    if (durationInMonths > 0) {
+      if (durationInMonths <= 1) {
+        return '₹$rate/month';
+      }
+      final monthlyRate = (rate / durationInMonths).round();
+      return '₹$monthlyRate/month';
+    } else if (durationInDays > 0) {
+      final dailyRate = (rate / durationInDays).round();
+      return '₹$dailyRate/day';
+    }
+    return '₹$rate';
+  }
+
+  /// Get formatted duration
+  String get formattedDuration {
+    if (durationInMonths > 0) {
+      if (durationInMonths == 1) {
+        return '1 Month';
+      } else if (durationInMonths == 12) {
+        return '1 Year';
+      } else {
+        return '$durationInMonths Months';
+      }
+    } else if (durationInDays > 0) {
+      if (durationInDays == 1) {
+        return '1 Day';
+      } else {
+        return '$durationInDays Days';
+      }
+    }
+    return 'Custom Duration';
   }
 }
 
@@ -923,11 +962,17 @@ class NonVehicleSubscriptionController extends GetxController {
     // Set expiry date based on plan duration
     if (_currentPlan != null) {
       final now = DateTime.now();
-      expiryDate.value = DateTime(
-        now.year,
-        now.month + _currentPlan!.durationInMonths,
-        now.day,
-      );
+      if (_currentPlan!.durationInMonths > 0) {
+        expiryDate.value = DateTime(
+          now.year,
+          now.month + _currentPlan!.durationInMonths,
+          now.day,
+        );
+      } else if (_currentPlan!.durationInDays > 0) {
+        expiryDate.value = now.add(Duration(days: _currentPlan!.durationInDays));
+      } else {
+        expiryDate.value = now;
+      }
       startDate.value = now;
 
       print('📅 Set expiry date: ${expiryDate.value}');

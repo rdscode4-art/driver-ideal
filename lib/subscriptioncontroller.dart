@@ -17,6 +17,7 @@ class SubscriptionPlan {
   final String title;
   final int rate;
   final int durationInMonths;
+  final int durationInDays;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -25,6 +26,7 @@ class SubscriptionPlan {
     required this.title,
     required this.rate,
     required this.durationInMonths,
+    this.durationInDays = 0,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -35,6 +37,7 @@ class SubscriptionPlan {
       title: json['title'] ?? '',
       rate: json['rate'] ?? 0,
       durationInMonths: json['durationInMonths'] ?? 0,
+      durationInDays: json['durationInDays'] ?? 0,
       createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime.now(),
     );
@@ -46,9 +49,45 @@ class SubscriptionPlan {
       'title': title,
       'rate': rate,
       'durationInMonths': durationInMonths,
+      'durationInDays': durationInDays,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
+  }
+
+  /// Get formatted monthly rate or daily rate
+  String get formattedMonthlyRate {
+    if (durationInMonths > 0) {
+      if (durationInMonths <= 1) {
+        return '₹$rate/month';
+      }
+      final monthlyRate = (rate / durationInMonths).round();
+      return '₹$monthlyRate/month';
+    } else if (durationInDays > 0) {
+      final dailyRate = (rate / durationInDays).round();
+      return '₹$dailyRate/day';
+    }
+    return '₹$rate';
+  }
+
+  /// Get formatted duration
+  String get formattedDuration {
+    if (durationInMonths > 0) {
+      if (durationInMonths == 1) {
+        return '1 Month';
+      } else if (durationInMonths == 12) {
+        return '1 Year';
+      } else {
+        return '$durationInMonths Months';
+      }
+    } else if (durationInDays > 0) {
+      if (durationInDays == 1) {
+        return '1 Day';
+      } else {
+        return '$durationInDays Days';
+      }
+    }
+    return 'Custom Duration';
   }
 }
 
@@ -98,7 +137,6 @@ class SubscriptionController extends GetxController {
 
   // Razorpay configuration - CRITICAL: Add your actual key secret
   static const String _razorpayKeyId = 'rzp_live_RoLpvsh1Qs9Cfs';
-  
 
   // Test mode configuration
   static const bool _isTestMode =
@@ -143,12 +181,12 @@ class SubscriptionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-print('🔍 ===== DRIVER ID CHECK =====');
-  print('Driver ID: $driverId');
-  print('Driver ID length: ${driverId?.length}');
-  print('Is empty: ${driverId?.isEmpty}');
-  print('============================');
-  
+    print('🔍 ===== DRIVER ID CHECK =====');
+    print('Driver ID: $driverId');
+    print('Driver ID length: ${driverId?.length}');
+    print('Is empty: ${driverId?.isEmpty}');
+    print('============================');
+
     // Ensure we always have some plans to show
     _createDefaultPlans();
 
@@ -279,12 +317,12 @@ print('🔍 ===== DRIVER ID CHECK =====');
         response.message?.contains('user') == true) {
       userMessage = 'Payment was cancelled by you.';
       actionMessage = 'Retry Payment';
-     } 
-     //else if (response.message?.contains('network') == true ||
+    }
+    //else if (response.message?.contains('network') == true ||
     //     response.message?.contains('internet') == true) {
     //   userMessage =
     //       'Network error occurred. Please check your internet connection.';
-    // } 
+    // }
     else if (response.message?.contains('credentials') == true ||
         response.message?.contains('key') == true) {
       userMessage =
@@ -420,7 +458,6 @@ print('🔍 ===== DRIVER ID CHECK =====');
     }
   }
 
-
   Future<void> _loadFromLocalStorage() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -453,78 +490,86 @@ print('🔍 ===== DRIVER ID CHECK =====');
     }
   }
 
-// Replace your loadSubscriptionPlans() method with this fixed version
+  // Replace your loadSubscriptionPlans() method with this fixed version
 
-Future<void> loadSubscriptionPlans() async {
-  try {
-    isLoading.value = true;
-    hasError.value = false;
+  Future<void> loadSubscriptionPlans() async {
+    try {
+      isLoading.value = true;
+      hasError.value = false;
 
-    print('🔄 Loading subscription plans...');
-    
-    final response = await _repository.getSubscriptionPlans();
-    
-    print('🔍 Response received: ${response['success']}');
-    print('🔍 Response data: ${response['data']}');
+      print('🔄 Loading subscription plans...');
 
-    if (response['success'] == true && response['data'] != null) {
-      final plansData = response['data'];
-      
-      // ✅ CRITICAL FIX: Handle both List and Map responses
-      List<dynamic> plansList;
-      
-      if (plansData is List) {
-        plansList = plansData;
-      } else if (plansData is Map && plansData.containsKey('plans')) {
-        plansList = plansData['plans'] as List;
-      } else {
-        print('⚠️ Unexpected data format: ${plansData.runtimeType}');
-        throw Exception('Invalid data format from API');
-      }
+      final response = await _repository.getSubscriptionPlans();
 
-      if (plansList.isNotEmpty) {
-        subscriptionPlans.value = plansList
-            .map((plan) => SubscriptionPlan.fromJson(plan as Map<String, dynamic>))
-            .toList();
-        
-        print('✅ Successfully loaded ${subscriptionPlans.length} plans from API');
-        
-        // Debug: Print plan details
-        for (var plan in subscriptionPlans) {
-          print('📋 Plan: ${plan.title} - ₹${plan.rate} for ${plan.durationInMonths} months');
+      print('🔍 Response received: ${response['success']}');
+      print('🔍 Response data: ${response['data']}');
+
+      if (response['success'] == true && response['data'] != null) {
+        final plansData = response['data'];
+
+        // ✅ CRITICAL FIX: Handle both List and Map responses
+        List<dynamic> plansList;
+
+        if (plansData is List) {
+          plansList = plansData;
+        } else if (plansData is Map && plansData.containsKey('plans')) {
+          plansList = plansData['plans'] as List;
+        } else {
+          print('⚠️ Unexpected data format: ${plansData.runtimeType}');
+          throw Exception('Invalid data format from API');
+        }
+
+        if (plansList.isNotEmpty) {
+          subscriptionPlans.value = plansList
+              .map(
+                (plan) =>
+                    SubscriptionPlan.fromJson(plan as Map<String, dynamic>),
+              )
+              .toList();
+
+          print(
+            '✅ Successfully loaded ${subscriptionPlans.length} plans from API',
+          );
+
+          // Debug: Print plan details
+          for (var plan in subscriptionPlans) {
+            print(
+              '📋 Plan: ${plan.title} - ₹${plan.rate} for ${plan.durationInMonths} months',
+            );
+          }
+        } else {
+          print('⚠️ API returned empty plans list');
+          throw Exception('No plans available');
         }
       } else {
-        print('⚠️ API returned empty plans list');
-        throw Exception('No plans available');
+        throw Exception(response['message'] ?? 'Failed to load plans');
       }
-    } else {
-      throw Exception(response['message'] ?? 'Failed to load plans');
-    }
-  } catch (e) {
-    print('❌ Error loading subscription plans: $e');
-    
-    // ✅ FIX: Don't show error, use fallback plans
-    hasError.value = false;
-    
-    // Ensure we have fallback plans
-    if (subscriptionPlans.isEmpty) {
-      print('📦 Creating fallback plans due to error');
-      _createDefaultPlans();
-    }
+    } catch (e) {
+      print('❌ Error loading subscription plans: $e');
 
-    // Show user-friendly notification only if we have a valid overlay
-    try {
-      showWarningSnackBar(
-        'Using cached subscription plans. Pull to refresh when online.',
-        title: '📶 Offline Mode',
-      );
-    } catch (overlayError) {
-      print('⚠️ Could not show snackbar: $overlayError');
+      // ✅ FIX: Don't show error, use fallback plans
+      hasError.value = false;
+
+      // Ensure we have fallback plans
+      if (subscriptionPlans.isEmpty) {
+        print('📦 Creating fallback plans due to error');
+        _createDefaultPlans();
+      }
+
+      // Show user-friendly notification only if we have a valid overlay
+      try {
+        showWarningSnackBar(
+          'Using cached subscription plans. Pull to refresh when online.',
+          title: '📶 Offline Mode',
+        );
+      } catch (overlayError) {
+        print('⚠️ Could not show snackbar: $overlayError');
+      }
+    } finally {
+      isLoading.value = false;
     }
-  } finally {
-    isLoading.value = false;
   }
-}
+
   void _createDefaultPlans() {
     subscriptionPlans.value = [
       SubscriptionPlan(
@@ -745,7 +790,6 @@ Future<void> loadSubscriptionPlans() async {
     }
   }
 
-
   Future<void> _verifyPayment() async {
     print('\n🔍 ════════════════════════════════════════════════════════');
     print('🔍           STARTING PAYMENT VERIFICATION');
@@ -954,12 +998,15 @@ Future<void> loadSubscriptionPlans() async {
         activeSubscription.value = ActiveSubscriptionModel(
           planName: plan.title,
           amount: plan.rate, // int type as per model
-          duration:
-              '${plan.durationInMonths} ${plan.durationInMonths == 1 ? 'Month' : 'Months'}',
+          duration: plan.formattedDuration,
           status: 'active',
           expiry:
               expiry ??
-              DateTime.now().add(Duration(days: plan.durationInMonths * 30)),
+              (plan.durationInMonths > 0
+                  ? DateTime.now().add(
+                      Duration(days: plan.durationInMonths * 30),
+                    )
+                  : DateTime.now().add(Duration(days: plan.durationInDays))),
         );
         print('💎 ActiveSubscription updated: ${plan.title} - ₹${plan.rate}');
       } else if (!active) {
@@ -1170,10 +1217,7 @@ Future<void> loadSubscriptionPlans() async {
         Get.back();
       }
 
-      showErrorSnackBar(
-        'Failed to setup payment: $e',
-        title: 'Payment Failed',
-      );
+      showErrorSnackBar('Failed to setup payment: $e', title: 'Payment Failed');
     } finally {
       isProcessingPayment.value = false;
     }

@@ -52,6 +52,7 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
   String? age;
   String? gender;
   File? profileImage;
+  String? referralCode; // ⭐ NEW
   bool isReupload = false;
 
   final ImagePicker _picker = ImagePicker();
@@ -65,6 +66,7 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
     age = args?['age'];
     gender = args?['gender'];
     profileImage = args?['profileImage'];
+    referralCode = args?['referralCode']; // ⭐ NEW
     isReupload = args?['isReupload'] ?? false;
   }
 
@@ -711,13 +713,16 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                                                       profileImage:
                                                           profileImage!,
                                                       videoKyc: videoKyc!,
+                                                      referralCode: referralCode, // ⭐ NEW
                                                     );
                                                 if (success) {
                                                   Get.offNamed(
-                                                    '/non-vehicle-otp',
+                                                    Routes.OTP_VERIFICATION,
                                                     arguments: {
                                                       'phone': phone,
+                                                      'isLoginFlow': false,
                                                       'isLogin': false,
+                                                      'driverType': 'non_vehicle',
                                                     },
                                                   );
                                                 }

@@ -97,7 +97,7 @@ class SocialMediaLinks extends StatelessWidget {
   }
 
   Widget _buildSocialIcon({
-    required IconData icon,
+    required dynamic icon,
     required Color color,
     required String platform,
     required String label,
@@ -251,7 +251,7 @@ class SocialMediaLinksEnhanced extends StatelessWidget {
                   final platform = entry.key;
                   final data = entry.value;
                   return AnimatedSocialIcon(
-                    icon: data['icon'] as IconData,
+                    icon: data['icon'] as dynamic,
                     color: data['color'] as Color,
                     platform: platform,
                     label: platform.capitalize!,
@@ -332,7 +332,7 @@ class SocialMediaLinksEnhanced extends StatelessWidget {
 
 // Enhanced version with tap animation
 class AnimatedSocialIcon extends StatefulWidget {
-  final IconData icon;
+  final dynamic icon;
   final Color color;
   final String platform;
   final String label;

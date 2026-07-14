@@ -28,6 +28,7 @@ class NonVehichleProfileController extends GetxController {
   var wallet = 0.0.obs;
   var profilePicUrl = ''.obs;
   var driverId = ''.obs;
+  var referralCode = ''.obs; // 🆕 Added referral code
   
   var isLoading = false.obs;
   var isVerified = false.obs;
@@ -119,6 +120,7 @@ class NonVehichleProfileController extends GetxController {
         dlImage.value = data['dlImage']?.toString() ?? '';
         aadhaarImage.value = data['aadhaarImage']?.toString() ?? '';
         status.value = data['status']?.toString() ?? 'pending';
+        referralCode.value = data['referralCode']?.toString() ?? '';
         
         _updateProfileImageUrl(data['profileImage']?.toString());
         
@@ -246,6 +248,7 @@ class NonVehichleProfileController extends GetxController {
           dynamic aadhaarImg = driver['aadhaarImage'];
           aadhaarImage.value = (aadhaarImg is List && aadhaarImg.isNotEmpty) ? aadhaarImg.first.toString() : (aadhaarImg?.toString() ?? '');
           status.value = driver['status'] ?? 'pending';
+          referralCode.value = driver['referralCode'] ?? '';
           wallet.value = (driver['wallet'] ?? 0).toDouble();
           
           // ⭐ Update profile image with fixed method

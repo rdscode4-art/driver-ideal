@@ -743,7 +743,7 @@ class PlanCard extends StatelessWidget {
                     ],
                   ),
                   child: Text(
-                    '${plan.durationInMonths} Months',
+                    plan.formattedDuration,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -773,7 +773,7 @@ class PlanCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '₹${(plan.rate / plan.durationInMonths).toStringAsFixed(0)} per month',
+              plan.formattedMonthlyRate,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey[600],

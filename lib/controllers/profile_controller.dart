@@ -364,8 +364,9 @@ class ProfileController extends GetxController {
       } else {
         print('❌ Failed to load driver profile: ${response.message}');
 
-        // Only show error if we don't have cached data
-        if (driverProfile.value == null) {
+        // Only show error if we don't have cached data and it's not an auth error
+        if (driverProfile.value == null && 
+            response.message != 'Authentication required. Please login again.') {
           showErrorSnackBar(
             response.message ?? 'Failed to load profile',
             title: 'Error',
@@ -569,11 +570,7 @@ Future<bool> updateProfile({
     final token = prefs.getString('auth_token');
 
     if (token == null) {
-      print('❌ No auth token found');
-      showErrorSnackBar(
-        'Authentication token not found. Please login again.',
-        title: 'Error',
-      );
+      print('🚨 No auth token found. Skipping profile load.');
       return false;
     }
 

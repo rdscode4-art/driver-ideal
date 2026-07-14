@@ -420,12 +420,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       scale: 0.8 * scaleFactor,
                       child: Switch(
                         value: homeController.isOnline,
-                        onChanged:
-                            homeController.isLoading.value ||
-                                homeController.isStatusLoading.value
-                            ? null
-                            : (val) =>
-                                  homeController.toggleDriverAvailability(),
+                        onChanged: (val) {
+                          if (homeController.isLoading.value || 
+                              homeController.isStatusLoading.value) return;
+                          homeController.toggleDriverAvailability();
+                        },
                         activeThumbColor: Colors.green,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
@@ -1356,12 +1355,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         Expanded(
                           child: _buildEnhancedQuickActionButton(
                             context,
-                            'Support',
-                            Icons.help_outline,
-                            Colors.orange,
-                            'Get Help 24/7',
-                            Icons.support_agent,
-                            () => Get.toNamed(Routes.SUPPORT),
+                            'Refer & Earn',
+                            Icons.card_giftcard,
+                            Colors.purple,
+                            'Invite Friends',
+                            Icons.group_add,
+                            () => Get.toNamed(Routes.REWARDS),
                           ),
                         ),
                       ],
