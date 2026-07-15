@@ -22,9 +22,25 @@ class _HomeScreenState extends State<HomeScreen> {
   late final HomeController homeController;
   String selectedPeriod = 'Daily';
 
+  bool _readyForUpdateCheck = false;
+  final _upgrader = Upgrader(
+    durationUntilAlertAgain: const Duration(seconds: 1),
+  );
+
   @override
   void initState() {
     super.initState();
+    Upgrader.clearSavedSettings();
+
+    // Delay upgrader to prevent dialog from being destroyed by route transitions
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _readyForUpdateCheck = true;
+        });
+      }
+    });
+
     // Initialize controller lazily to prevent early creation
     homeController = Get.put(HomeController());
     Get.put(EarningsController());
@@ -50,19 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UpgradeAlert(
-      upgrader: Upgrader(
-        durationUntilAlertAgain: const Duration(seconds: 1),
-        debugLogging: false,
-        debugDisplayAlways: false,
-      ),
-      barrierDismissible: false,
-      showIgnore: false,
-      showLater: false,
-      shouldPopScope: () => false,
-      child: Scaffold(
-        backgroundColor: Colors.grey[50],
-        drawer: const CustomDrawer(),
+    Widget content = Scaffold(
+      backgroundColor: Colors.grey[50],
+      drawer: const CustomDrawer(),
         body: CustomScrollView(
           slivers: [
             _buildEnhancedAppBar(context),
@@ -174,8 +180,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-      ),
-    );
+      );
+
+    if (_readyForUpdateCheck) {
+      return UpgradeAlert(
+        upgrader: _upgrader,
+        barrierDismissible: false,
+        showIgnore: false,
+        showLater: false,
+        shouldPopScope: () => false,
+        child: content,
+      );
+    }
+    
+    return content;
   }
 
   Widget _buildEnhancedAppBar(BuildContext context) {

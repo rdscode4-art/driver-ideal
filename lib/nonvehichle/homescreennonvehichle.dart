@@ -1,8 +1,7 @@
-
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:upgrader/upgrader.dart';
 import 'package:rideal_driver/core/app_theme.dart';
 import 'package:rideal_driver/nonvehichle/nonvehichledashboard.dart';
 import 'package:rideal_driver/nonvehichle/triphistorynponvehichle.dart';
@@ -35,6 +34,11 @@ class _HomeScreennonvehichleState extends State<HomeScreennonvehichle> with Widg
   String driverStatus = 'offline';
   bool isLoading = false;
   
+  bool _readyForUpdateCheck = false;
+  final _upgrader = Upgrader(
+    durationUntilAlertAgain: const Duration(seconds: 1),
+  );
+
   final TokenManager _tokenManager = TokenManager.instance;
   String? authToken;
   
@@ -50,6 +54,17 @@ class _HomeScreennonvehichleState extends State<HomeScreennonvehichle> with Widg
   @override
   void initState() {
     super.initState();
+    Upgrader.clearSavedSettings();
+
+    // Delay upgrader to prevent dialog from being destroyed by route transitions
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _readyForUpdateCheck = true;
+        });
+      }
+    });
+
     // Initialize ProfileController for CustomDrawer
     Get.put(ProfileController());
     WidgetsBinding.instance.addObserver(this);
@@ -1395,7 +1410,7 @@ Widget _buildSummaryItem(IconData icon, String label, String value) {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    Widget content = Scaffold(
       drawer: const CustomDrawer(),
       backgroundColor: Colors.grey[50],
       body: Stack(
@@ -1695,6 +1710,19 @@ Widget _buildSummaryItem(IconData icon, String label, String value) {
         ],
       ),
     );
+
+    if (_readyForUpdateCheck) {
+      return UpgradeAlert(
+        upgrader: _upgrader,
+        barrierDismissible: false,
+        showIgnore: false,
+        showLater: false,
+        shouldPopScope: () => false,
+        child: content,
+      );
+    }
+    
+    return content;
   }
 
   Widget _buildStatCard(String value, String label, IconData icon) {

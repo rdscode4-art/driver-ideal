@@ -9,6 +9,7 @@ import '../controllers/auth_controller.dart';
 import 'package:rideal_driver/nonvehichle/non_vehichle_profile_controller.dart';
 import 'package:rideal_driver/presentation/screens/delete_account_screen.dart';
 import 'package:rideal_driver/nonvehichle/rewards_screen_nonvehichle.dart';
+import 'package:rideal_driver/presentation/support_screen.dart';
 
 class ProfileScreennonvehichle extends StatefulWidget {
   const ProfileScreennonvehichle({super.key});
@@ -594,6 +595,17 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => DocumentsScreen()),
+              ),
+            ),
+            _buildDivider(),
+            _buildMenuOption(
+              icon: Icons.help_outline_rounded,
+              title: 'Support',
+              subtitle: 'Get help with your account',
+              color: Colors.purple[600]!,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SupportScreen()),
               ),
             ),
             _buildDivider(),
