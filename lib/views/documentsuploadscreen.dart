@@ -611,7 +611,7 @@ class _NonVehicleDocumentsScreenState extends State<NonVehicleDocumentsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Record your face while looking around (left, right, up, down) for 10 seconds. (max 2 min, 50MB)',
+                                'Record a video of yourself speaking the information provided in the image below. (max 1 min, 50MB)',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: Colors.grey[700],

@@ -38,6 +38,96 @@ class _NonVehicleSubscriptionPlansScreenState
     });
   }
 
+  void _showPaymentMethodSheet(BuildContext context, SubscriptionPlan plan) {
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Select Payment Method',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[800],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Choose how you want to pay ₹${plan.rate} for ${plan.title}',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 24),
+            
+            // Wallet Option
+            ListTile(
+              onTap: () {
+                Get.back(); // Close sheet
+                controller.buySubscription(plan, paymentMethod: 'wallet');
+              },
+              leading: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange[50],
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.account_balance_wallet, color: Colors.orange[700]),
+              ),
+              title: const Text('Wallet Balance', style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: const Text('Pay instantly using your driver wallet'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.grey[200]!),
+              ),
+            ),
+            const SizedBox(height: 12),
+            
+            // Online Option
+            ListTile(
+              onTap: () {
+                Get.back(); // Close sheet
+                controller.buySubscription(plan, paymentMethod: 'online');
+              },
+              leading: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.credit_card, color: Colors.blue[700]),
+              ),
+              title: const Text('Online Payment', style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: const Text('UPI, Cards, Netbanking via Razorpay'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.grey[200]!),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -287,72 +377,104 @@ class _NonVehicleSubscriptionPlansScreenState
                             isProcessing:
                                 controller.isProcessingPayment.value &&
                                 controller.selectedPlanId.value == plan.id,
-                            onBuy: () => controller.buySubscription(plan),
+                            onBuy: () async {
+                              print('💳 Starting payment process for ${plan.title}');
+                              
+                              // Show processing state while checking wallet balance
+                              controller.isProcessingPayment.value = true;
+                              controller.selectedPlanId.value = plan.id;
+                              
+                              bool hasBalance = await controller.hasEnoughWalletBalance(plan.rate.toDouble());
+                              
+                              // Stop processing state before showing sheet or razorpay
+                              controller.isProcessingPayment.value = false;
+                              
+                              if (hasBalance) {
+                                _showPaymentMethodSheet(context, plan);
+                              } else {
+                                // If not enough balance, directly trigger online payment
+                                controller.buySubscription(plan, paymentMethod: 'online');
+                              }
+                            },
                           );
                         },
                       ),
               ),
 
-              // Continue Button (only show when active)
-              if (controller.isSubscriptionActive)
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.green[600]!, Colors.green[700]!],
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.green.withOpacity(0.4),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Get.offAllNamed('/nonvehichledashboard');
-                        showSuccessSnackBar(
-                          'You can now start accepting rides.',
-                          title: 'Welcome!',
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Continue to Dashboard',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+
+            ],
+          ),
+        );
+      }),
+      bottomNavigationBar: Obx(() {
+        if (!controller.isSubscriptionActive) return const SizedBox.shrink();
+        
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, -2),
               ),
             ],
+          ),
+          child: SafeArea(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.green[600]!, Colors.green[700]!],
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.green.withOpacity(0.4),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Get.offAllNamed('/nonvehichledashboard');
+                  showSuccessSnackBar(
+                    'You can now start accepting rides.',
+                    title: 'Welcome!',
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue to Dashboard',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         );
       }),
@@ -452,7 +574,7 @@ class _NonVehicleSubscriptionPlansScreenState
     Future.delayed(const Duration(milliseconds: 2000), () {
       // Use GetX navigation which doesn't require mounted check
       print('🚀 Redirecting to dashboard after payment success');
-      Get.back(); // Go back to dashboard using GetX navigation
+      Get.offAllNamed('/nonvehichledashboard'); // Go back to dashboard using GetX navigation
     });
   }
 }
@@ -493,13 +615,36 @@ class PlanCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: Text(
-                    plan.title,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green[900],
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (plan.durationInMonths == 12 || plan.durationInDays >= 360 || plan.title.toLowerCase().contains('year'))
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          margin: const EdgeInsets.only(bottom: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            'POPULAR',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ),
+                      Text(
+                        plan.title,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green[900],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(

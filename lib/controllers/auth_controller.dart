@@ -482,7 +482,7 @@ class AuthController extends GetxController {
   }
 
   // Logout with API - Updated to use TokenManager
-  Future<void> logout() async {
+  Future<void> logout({bool isNonVehicle = false}) async {
     try {
       isLoading.value = true;
 
@@ -522,7 +522,11 @@ class AuthController extends GetxController {
       );
 
       // Navigate to login screen
-      Get.offAllNamed('/login');
+      if (isNonVehicle) {
+        Get.offAllNamed(Routes.NON_VEHICLE_LOGIN);
+      } else {
+        Get.offAllNamed('/login');
+      }
     } catch (e) {
       print('Logout API error: $e');
       // Force logout locally even if API fails
@@ -538,7 +542,11 @@ class AuthController extends GetxController {
         title: 'Logged Out',
       );
 
-      Get.offAllNamed('/login');
+      if (isNonVehicle) {
+        Get.offAllNamed(Routes.NON_VEHICLE_LOGIN);
+      } else {
+        Get.offAllNamed('/login');
+      }
     } finally {
       isLoading.value = false;
     }

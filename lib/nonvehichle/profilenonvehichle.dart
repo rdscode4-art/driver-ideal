@@ -761,7 +761,7 @@ class _ProfileScreennonvehichleState extends State<ProfileScreennonvehichle> {
             onPressed: () {
               Get.back();
               final authController = Get.find<AuthController>();
-              authController.logout();
+              authController.logout(isNonVehicle: true);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,

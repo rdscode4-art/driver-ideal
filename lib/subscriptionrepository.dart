@@ -248,6 +248,7 @@ class SubscriptionRepository {
     String planId, {
     String? planType,
     int? amount,
+    String paymentMethod = 'online',
   }) async {
     try {
       final isNonVehicle = _tokenManager.isNonVehicleDriver;
@@ -258,6 +259,7 @@ class SubscriptionRepository {
 
       final requestBody = {
         'planId': planId,
+        'paymentMethod': paymentMethod,
       };
 
       print('📤 Request Body: ${json.encode(requestBody)}');

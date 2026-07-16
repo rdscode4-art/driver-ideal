@@ -500,7 +500,7 @@ class NonVehicleSubscriptionController extends GetxController {
 
   /// Buy subscription - Opens Razorpay payment
   /// Start subscription purchase with proper non-vehicle APIs
-  Future<void> buySubscription(SubscriptionPlan plan) async {
+  Future<void> buySubscription(SubscriptionPlan plan, {String paymentMethod = 'online'}) async {
     try {
       if (driverId == null || driverId!.isEmpty) {
         throw Exception('Driver ID not found. Please login again.');
@@ -509,6 +509,7 @@ class NonVehicleSubscriptionController extends GetxController {
       print('\n🚀 ===== STARTING NON-VEHICLE SUBSCRIPTION PURCHASE =====');
       print('📦 Plan: ${plan.title}');
       print('💰 Amount: ₹${plan.rate}');
+      print('💳 Payment Method: $paymentMethod');
       print('👤 Driver ID: $driverId');
       print('🆔 Plan ID: ${plan.id}');
 
@@ -536,13 +537,26 @@ class NonVehicleSubscriptionController extends GetxController {
         driverId: driverId!,
         planId: plan.id,
         amount: plan.rate * 100, // Convert to paise
+        paymentMethod: paymentMethod,
       );
 
       if (orderResponse['success'] != true) {
         throw Exception(orderResponse['message'] ?? 'Failed to create order');
       }
 
-      final orderData = orderResponse['data'];
+      // Check if wallet payment was successful instantly
+      if (paymentMethod == 'wallet') {
+        print('✅ Wallet payment successful. Subscription activated immediately.');
+        if (Get.isDialogOpen == true) {
+          Get.back();
+        }
+        isProcessingPayment.value = false;
+        showSuccessSnackBar('Subscription activated successfully via Wallet!', title: 'Payment Success');
+        await loadSubscriptionStatus();
+        return; // Skip Razorpay
+      }
+
+      final orderData = orderResponse['data'] ?? orderResponse;
 
       // Handle different response formats - server returns 'orderId' not 'razorpay_order_id'
       final razorpayOrderId =
@@ -619,6 +633,7 @@ class NonVehicleSubscriptionController extends GetxController {
     required String driverId,
     required String planId,
     required int amount,
+    String paymentMethod = 'online',
   }) async {
     try {
       final token = await StorageHelper.getAuthToken();
@@ -633,6 +648,14 @@ class NonVehicleSubscriptionController extends GetxController {
       final client = http.Client();
 
       try {
+        final requestBody = {
+          'driverId': driverId,
+          'planId': planId,
+          'amount': amount, // Amount in paise
+          'paymentMethod': paymentMethod,
+        };
+        print('📤 Request Body: ${jsonEncode(requestBody)}');
+
         final response = await client
             .post(
               Uri.parse(url),
@@ -640,11 +663,7 @@ class NonVehicleSubscriptionController extends GetxController {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer $token',
               },
-              body: jsonEncode({
-                'driverId': driverId,
-                'planId': planId,
-                'amount': amount, // Amount in paise
-              }),
+              body: jsonEncode(requestBody),
             )
             .timeout(
               const Duration(
@@ -1138,5 +1157,41 @@ class NonVehicleSubscriptionController extends GetxController {
     final now = DateTime.now();
     final difference = expiryDate.value!.difference(now);
     return difference.inDays > 0 ? difference.inDays : 0;
+  }
+
+  Future<bool> hasEnoughWalletBalance(double requiredAmount) async {
+    try {
+      if (driverId == null || driverId!.isEmpty) return false;
+      final token = await StorageHelper.getAuthToken();
+      final response = await http.get(
+        Uri.parse('https://backend.ridealmobility.com/api/nonvehicle/ride/driver/$driverId/wallet'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        double balance = 0.0;
+        
+        if (data['wallet'] != null) {
+          balance = double.tryParse(data['wallet'].toString()) ?? 0.0;
+        } else if (data['driver'] != null && data['driver']['wallet'] != null) {
+          balance = double.tryParse(data['driver']['wallet'].toString()) ?? 0.0;
+        } else if (data['_id'] != null && data['wallet'] != null) {
+          balance = double.tryParse(data['wallet'].toString()) ?? 0.0;
+        } else if (data['data'] != null && data['data']['wallet'] != null) {
+          balance = double.tryParse(data['data']['wallet'].toString()) ?? 0.0;
+        }
+        
+        print('💵 Non-Vehicle Wallet Balance: $balance, Required: $requiredAmount');
+        return balance >= requiredAmount;
+      }
+      return false;
+    } catch (e) {
+      print('Error fetching wallet balance: $e');
+      return false;
+    }
   }
 }

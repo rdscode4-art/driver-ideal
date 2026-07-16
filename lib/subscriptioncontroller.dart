@@ -11,6 +11,7 @@ import '../core/token_manager.dart';
 import 'package:crypto/crypto.dart';
 import '../services/razorpay_payment_service.dart';
 import 'models/active_subscription_model.dart';
+import '../controllers/earnings_controller.dart';
 
 class SubscriptionPlan {
   final String id;
@@ -600,7 +601,7 @@ class SubscriptionController extends GetxController {
     print('📦 Created ${subscriptionPlans.length} default subscription plans');
   }
 
-  Future<void> buySubscription(SubscriptionPlan plan) async {
+  Future<void> buySubscription(SubscriptionPlan plan, {String paymentMethod = 'online'}) async {
     try {
       if (driverId == null || driverId!.isEmpty) {
         throw Exception('Driver ID not found. Please login again.');
@@ -609,6 +610,7 @@ class SubscriptionController extends GetxController {
       print('\n🚀 ===== STARTING SUBSCRIPTION PURCHASE =====');
       print('📦 Plan: ${plan.title}');
       print('💰 Amount: ₹${plan.rate}');
+      print('💳 Payment Method: $paymentMethod');
       print('👤 Driver: $driverId');
 
       isProcessingPayment.value = true;
@@ -622,10 +624,26 @@ class SubscriptionController extends GetxController {
         plan.id,
         planType: plan.title,
         amount: plan.rate * 100, // Convert to paise
+        paymentMethod: paymentMethod,
       );
 
       if (response['success'] != true) {
         throw Exception(response['message'] ?? 'Failed to create order');
+      }
+
+      // Check if wallet payment was successful instantly
+      if (paymentMethod == 'wallet') {
+        print('✅ Wallet payment successful. Subscription activated immediately.');
+        isProcessingPayment.value = false;
+        
+        // Optimistically update status to trigger auto-redirect
+        subscriptionActive.value = true;
+        subscriptionStatus.value = 'active';
+        hasSubscription.value = true;
+        
+        showSuccessSnackBar('Subscription activated successfully via Wallet!', title: 'Payment Success');
+        await loadSubscriptionStatus();
+        return; // Skip Razorpay
       }
 
       final orderIdValue = response['orderId']?.toString() ?? '';
@@ -783,9 +801,15 @@ class SubscriptionController extends GetxController {
       selectedPlanId.value = '';
       _currentPlan = null;
 
-      showErrorSnackBar(
-        'Failed to start payment: $e',
-        title: '❌ Payment Error',
+      String errorMessage = e.toString().replaceAll('Exception: ', '');
+      Get.snackbar(
+        'Payment Error',
+        errorMessage,
+        backgroundColor: Colors.red[600],
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(16),
+        icon: const Icon(Icons.error, color: Colors.white),
       );
     }
   }
@@ -1059,6 +1083,19 @@ class SubscriptionController extends GetxController {
       return await StorageHelper.getDriverName() ?? 'Driver';
     } catch (e) {
       return 'Driver';
+    }
+  }
+
+  Future<bool> hasEnoughWalletBalance(double requiredAmount) async {
+    try {
+      final earningsController = Get.isRegistered<EarningsController>()
+          ? Get.find<EarningsController>()
+          : Get.put(EarningsController());
+      await earningsController.fetchWalletData();
+      return earningsController.walletBalance.value >= requiredAmount;
+    } catch (e) {
+      print('Error fetching wallet balance: $e');
+      return false;
     }
   }
 
