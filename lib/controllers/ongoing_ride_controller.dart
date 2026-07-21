@@ -32,6 +32,11 @@ class OngoingRideController extends GetxController {
   final services.RidesApiService _locationApiService =
       services.RidesApiService();
 
+  // Cached Icons
+  final BitmapDescriptor _pickupIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+  final BitmapDescriptor _dropoffIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+  final BitmapDescriptor _driverDefaultIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+
   // Add location controller integration
   late LocationController _locationController;
 var passengerPhoneNumber = ''.obs;
@@ -201,7 +206,7 @@ var currentLocationAddress = 'Getting location...'.obs;
         Marker(
           markerId: const MarkerId('driver'),
           position: LatLng(driverLatitude.value, driverLongitude.value),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          icon: _driverDefaultIcon,
           infoWindow: const InfoWindow(
             title: '🚗 Your Location',
             snippet: 'Driver current position',
@@ -222,23 +227,14 @@ var currentLocationAddress = 'Getting location...'.obs;
         Marker(
           markerId: const MarkerId('pickup'),
           position: LatLng(pickupLatitude.value, pickupLongitude.value),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueGreen,
-          ),
+          icon: _pickupIcon,
           infoWindow: InfoWindow(
             title: '📍 Pickup Location',
             snippet: currentRide.value?.pickupLocation ?? 'Pickup point',
           ),
         ),
       );
-      log(
-        '✅ Added pickup marker at (${pickupLatitude.value}, ${pickupLongitude.value})',
-      );
-    } else {
-      log(
-        '⚠️ Skipping pickup marker - invalid coordinates: (${pickupLatitude.value}, ${pickupLongitude.value})',
-      );
-    }
+      }
 
     // Dropoff marker
     if (_isValidCoordinate(dropoffLatitude.value, dropoffLongitude.value)) {
@@ -246,21 +242,14 @@ var currentLocationAddress = 'Getting location...'.obs;
         Marker(
           markerId: const MarkerId('dropoff'),
           position: LatLng(dropoffLatitude.value, dropoffLongitude.value),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          icon: _dropoffIcon,
           infoWindow: InfoWindow(
             title: '🏁 Dropoff Location',
             snippet: currentRide.value?.dropoffLocation ?? 'Destination',
           ),
         ),
       );
-      log(
-        '✅ Added dropoff marker at (${dropoffLatitude.value}, ${dropoffLongitude.value})',
-      );
-    } else {
-      log(
-        '⚠️ Skipping dropoff marker - invalid coordinates: (${dropoffLatitude.value}, ${dropoffLongitude.value})',
-      );
-    }
+      }
 
     // Update the markers on the map
     markers.assignAll(newMarkers);
@@ -317,14 +306,12 @@ var currentLocationAddress = 'Getting location...'.obs;
       if (ridePhase.value == RidePhase.GOING_TO_PICKUP) {
         if (_isValidCoordinate(pickupLatitude.value, pickupLongitude.value)) {
           points.add(LatLng(pickupLatitude.value, pickupLongitude.value));
-          print('⚠️ Map: No high-res points, using straight line to Pickup');
-        }
+          }
       } else if (ridePhase.value == RidePhase.GOING_TO_DROPOFF ||
           ridePhase.value == RidePhase.WAITING_FOR_PASSENGER) {
         if (_isValidCoordinate(dropoffLatitude.value, dropoffLongitude.value)) {
           points.add(LatLng(dropoffLatitude.value, dropoffLongitude.value));
-          print('⚠️ Map: No high-res points, using straight line to Dropoff');
-        }
+          }
       }
     }
 
@@ -341,11 +328,9 @@ var currentLocationAddress = 'Getting location...'.obs;
           endCap: Cap.roundCap,
         ),
       });
-      log('✅ Polylines updated with ${points.length} points');
-    } else {
+      } else {
       polylines.clear();
-      log('⚠️ Not enough points for polyline: ${points.length}');
-    }
+      }
   }
 
   /// Automatically fit map to show all relevant markers (pickup, dropoff, driver)
@@ -2275,10 +2260,7 @@ Future<Map<String, dynamic>> completeRideWithPayment(
     Set<Marker> newMarkers = {};
     Set<Circle> newCircles = {};
 
-    log('🔍 Updating map markers and circles with current coordinates:');
-    log('🚗 Driver: (${driverLatitude.value}, ${driverLongitude.value})');
-    log('📍 Pickup: (${pickupLatitude.value}, ${pickupLongitude.value})');
-    log('🏁 Dropoff: (${dropoffLatitude.value}, ${dropoffLongitude.value})');
+    
 
     // Driver location circle (small circle mark)
     if (_isValidCoordinate(driverLatitude.value, driverLongitude.value)) {
@@ -2312,9 +2294,9 @@ Future<Map<String, dynamic>> completeRideWithPayment(
       newMarkers.add(
         Marker(
           markerId: const MarkerId('driver'),
-          position: LatLng(driverLatitude.value, driverLongitude.value),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          infoWindow: InfoWindow(
+          position: _animatedPosition ?? LatLng(driverLatitude.value, driverLongitude.value),
+          icon: _driverDefaultIcon,
+          rotation: _animatedRotation,
             title: '🚗 Your Location',
             snippet:
                 'Speed: ${driverSpeed.value.toStringAsFixed(1)} km/h\nAccuracy: ${driverLocationAccuracy.value.toStringAsFixed(1)}m',
@@ -2322,12 +2304,7 @@ Future<Map<String, dynamic>> completeRideWithPayment(
           rotation: driverHeading.value,
         ),
       );
-      log(
-        '✅ Added driver marker and circle at (${driverLatitude.value}, ${driverLongitude.value})',
-      );
-    } else {
-      log('⚠️ Skipping driver marker - invalid coordinates');
-    }
+      }
 
     // Pickup marker
     if (_isValidCoordinate(pickupLatitude.value, pickupLongitude.value)) {
@@ -2335,23 +2312,14 @@ Future<Map<String, dynamic>> completeRideWithPayment(
         Marker(
           markerId: const MarkerId('pickup'),
           position: LatLng(pickupLatitude.value, pickupLongitude.value),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueGreen,
-          ),
+          icon: _pickupIcon,
           infoWindow: InfoWindow(
             title: '📍 Pickup Location',
             snippet: currentRide.value?.pickupLocation ?? 'Pickup point',
           ),
         ),
       );
-      log(
-        '✅ Added pickup marker at (${pickupLatitude.value}, ${pickupLongitude.value})',
-      );
-    } else {
-      log(
-        '⚠️ Skipping pickup marker - invalid coordinates: (${pickupLatitude.value}, ${pickupLongitude.value})',
-      );
-    }
+      }
 
     // Dropoff marker
     if (_isValidCoordinate(dropoffLatitude.value, dropoffLongitude.value)) {
@@ -2359,27 +2327,18 @@ Future<Map<String, dynamic>> completeRideWithPayment(
         Marker(
           markerId: const MarkerId('dropoff'),
           position: LatLng(dropoffLatitude.value, dropoffLongitude.value),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          icon: _dropoffIcon,
           infoWindow: InfoWindow(
             title: '🏁 Dropoff Location',
             snippet: currentRide.value?.dropoffLocation ?? 'Destination',
           ),
         ),
       );
-      log(
-        '✅ Added dropoff marker at (${dropoffLatitude.value}, ${dropoffLongitude.value})',
-      );
-    } else {
-      log(
-        '⚠️ Skipping dropoff marker - invalid coordinates: (${dropoffLatitude.value}, ${dropoffLongitude.value})',
-      );
-    }
+      }
 
     // Update the markers and circles on the map
     markers.assignAll(newMarkers);
     circles.assignAll(newCircles);
-    log(
-      '🗺️ Map updated with ${newMarkers.length} markers and ${newCircles.length} circles',
-    );
+    
   }
 }

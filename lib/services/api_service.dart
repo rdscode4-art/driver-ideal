@@ -66,18 +66,25 @@ class ApiService extends GetxService {
         final payload = json.decode(
           utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
         );
-        final exp = payload['exp'] as int;
-        final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-        final remaining = exp - now;
+        
+        final expValue = payload['exp'];
+        if (expValue != null) {
+          final exp = expValue is int ? expValue : (expValue is double ? expValue.toInt() : int.tryParse(expValue.toString()) ?? 0);
+          final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+          final remaining = exp - now;
 
-        print(
-          '🕒 Token expires in: ${(remaining / 3600).toStringAsFixed(1)} hours',
-        );
-        print('🔍 Token role: ${payload['role']}');
-
-        if (remaining < 300) {
-          // Less than 5 minutes
-          print('⚠️ WARNING: Token expires soon!');
+          print(
+            '🕒 Token expires in: ${(remaining / 3600).toStringAsFixed(1)} hours',
+          );
+          
+          if (remaining < 300) {
+            // Less than 5 minutes
+            print('⚠️ WARNING: Token expires soon!');
+          }
+        }
+        
+        if (payload.containsKey('role')) {
+          print('🔍 Token role: ${payload['role']}');
         }
       }
     } catch (e) {
