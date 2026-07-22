@@ -116,81 +116,6 @@ class OngoingRideScreen extends StatelessWidget {
     return GetBuilder<OngoingRideController>(
       id: 'map_view',
       builder: (_) {
-        Set<Marker> markers = {};
-
-        // Add driver marker (current location)
-        if (controller.driverLatitude.value != 0 &&
-            controller.driverLongitude.value != 0) {
-          markers.add(
-            Marker(
-              markerId: const MarkerId('driver'),
-              position: LatLng(
-                controller.driverLatitude.value,
-                controller.driverLongitude.value,
-              ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueBlue,
-              ),
-              infoWindow: const InfoWindow(
-                title: '🚗 Your Location',
-                snippet: 'Driver current position',
-              ),
-              anchor: const Offset(0.5, 0.5),
-            ),
-          );
-        }
-
-        // Add pickup marker
-        if (controller.pickupLatitude.value != 0 &&
-            controller.pickupLongitude.value != 0) {
-          markers.add(
-            Marker(
-              markerId: const MarkerId('pickup'),
-              position: LatLng(
-                controller.pickupLatitude.value,
-                controller.pickupLongitude.value,
-              ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueGreen,
-              ),
-              infoWindow: InfoWindow(
-                title: '📍 Pickup Location',
-                snippet:
-                    controller.currentRide.value?.pickupaddress ??
-                    controller.currentRide.value?.pickupLocation ??
-                    'Pickup point',
-              ),
-              anchor: const Offset(0.5, 1.0),
-            ),
-          );
-        }
-
-        // Add dropoff marker
-        if (controller.dropoffLatitude.value != 0 &&
-            controller.dropoffLongitude.value != 0) {
-          markers.add(
-            Marker(
-              markerId: const MarkerId('dropoff'),
-              position: LatLng(
-                controller.dropoffLatitude.value,
-                controller.dropoffLongitude.value,
-              ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueRed,
-              ),
-              infoWindow: InfoWindow(
-                title: '🏁 Drop-off Location',
-                snippet:
-                    controller.currentRide.value?.dropaddress ??
-                    controller.currentRide.value?.dropoffLocation ??
-                    'Destination',
-              ),
-              anchor: const Offset(0.5, 1.0),
-            ),
-          );
-        }
-
-        // Smart initial position
         LatLng initialPosition = const LatLng(28.6139, 77.2090);
         if (controller.driverLatitude.value != 0) {
           initialPosition = LatLng(
@@ -209,9 +134,9 @@ class OngoingRideScreen extends StatelessWidget {
             target: initialPosition,
             zoom: 15.0,
           ),
-          markers: markers,
+          markers: controller.markers.toSet(),
           polylines: controller.polylines,
-          myLocationEnabled: true,
+          myLocationEnabled: false,
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
           mapToolbarEnabled: false,

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
@@ -26,7 +28,7 @@ enum RidePhase {
   COMPLETED,
 }
 
-class OngoingRideController extends GetxController {
+class OngoingRideController extends GetxController with GetSingleTickerProviderStateMixin {
   final RidesApiService _ridesApiService = RidesApiService();
   final NavigationApiService _navigationApiService = NavigationApiService();
   final services.RidesApiService _locationApiService =
@@ -36,6 +38,16 @@ class OngoingRideController extends GetxController {
   final BitmapDescriptor _pickupIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
   final BitmapDescriptor _dropoffIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
   final BitmapDescriptor _driverDefaultIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+
+  // Animation variables
+  AnimationController? _carMovementController;
+  Animation<double>? _carMovementAnimation;
+  LatLng? _oldDriverPosition;
+  LatLng? _targetDriverPosition;
+  double _oldDriverHeading = 0.0;
+  double _targetDriverHeading = 0.0;
+  LatLng? _animatedPosition;
+  double _animatedRotation = 0.0;
 
   // Add location controller integration
   late LocationController _locationController;
@@ -56,6 +68,7 @@ var currentLocationAddress = 'Getting location...'.obs;
 
   // Google Maps controller and markers
   GoogleMapController? _mapController;
+  BitmapDescriptor? carIcon;
   var markers = <Marker>{}.obs;
   var polylines = <Polyline>{}.obs;
   var circles = <Circle>{}.obs; // Add circles for driver location
@@ -124,9 +137,60 @@ var currentLocationAddress = 'Getting location...'.obs;
 
   var driverSpeed = 0.0.obs; // Current speed in km/h
 
+  Future<Uint8List> _getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+  }
+
+  Future<void> _loadCarIcon() async {
+    try {
+      final Uint8List markerIcon = await _getBytesFromAsset('assets/images/top_car.png', 140);
+      carIcon = BitmapDescriptor.fromBytes(markerIcon);
+      if (isMapReady.value) {
+        _updateMapMarkers();
+        _updateMapMarkersAndCircles();
+      }
+    } catch (e) {
+      log('Failed to load car icon: $e');
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
+    _loadCarIcon();
+    
+    _carMovementController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+    _carMovementAnimation = CurvedAnimation(
+      parent: _carMovementController!,
+      curve: Curves.linear,
+    );
+    _carMovementController!.addListener(() {
+      if (_oldDriverPosition != null && _targetDriverPosition != null) {
+        final double v = _carMovementAnimation!.value;
+        final lat = (_oldDriverPosition!.latitude * (1 - v)) + (_targetDriverPosition!.latitude * v);
+        final lng = (_oldDriverPosition!.longitude * (1 - v)) + (_targetDriverPosition!.longitude * v);
+        
+        double diff = _targetDriverHeading - _oldDriverHeading;
+        if (diff > 180) diff -= 360;
+        if (diff < -180) diff += 360;
+        double currentHeading = _oldDriverHeading + (diff * v);
+        
+        _animatedPosition = LatLng(lat, lng);
+        _animatedRotation = currentHeading;
+        
+        if (isMapReady.value) {
+          _updatePolylines();
+          _updateMapMarkersAndCircles();
+        }
+      }
+    });
+
     log('🚀 OngoingRideController onInit starting...');
     
     // Defer initialization to avoid "setState during build" issues
@@ -184,6 +248,7 @@ var currentLocationAddress = 'Getting location...'.obs;
 
     log('🗺️ Setting up map markers and camera...');
     _updateMapMarkers();
+    _updatePolylines();
     
     // Auto-fit markers with a slight delay to ensure map is fully rendered
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -206,7 +271,7 @@ var currentLocationAddress = 'Getting location...'.obs;
         Marker(
           markerId: const MarkerId('driver'),
           position: LatLng(driverLatitude.value, driverLongitude.value),
-          icon: _driverDefaultIcon,
+          icon: carIcon ?? _driverDefaultIcon,
           infoWindow: const InfoWindow(
             title: '🚗 Your Location',
             snippet: 'Driver current position',
@@ -287,6 +352,27 @@ var currentLocationAddress = 'Getting location...'.obs;
     }
   }
 
+  List<LatLng> _trimRouteToDriver(List<LatLng> route, LatLng driverLocation) {
+    if (route.isEmpty) return route;
+    
+    int closestIndex = 0;
+    double minDistance = double.infinity;
+    
+    for (int i = 0; i < route.length; i++) {
+      double distance = Geolocator.distanceBetween(
+        driverLocation.latitude,
+        driverLocation.longitude,
+        route[i].latitude,
+        route[i].longitude,
+      );
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = i;
+      }
+    }
+    return route.sublist(closestIndex);
+  }
+
   /// Update polylines on the map based on current ride phase
   void _updatePolylines() {
     List<LatLng> points = [];
@@ -299,8 +385,14 @@ var currentLocationAddress = 'Getting location...'.obs;
     // 2. Use high-resolution route points from navigation data if available
     final navData = currentNavigationData.value;
     if (navData != null && navData.points != null && navData.points!.isNotEmpty) {
-      points.addAll(navData.points!);
-      print('✅ Map: Using ${navData.points!.length} high-res route points');
+      if (_isValidCoordinate(driverLatitude.value, driverLongitude.value)) {
+        final trimmed = _trimRouteToDriver(navData.points!, LatLng(driverLatitude.value, driverLongitude.value));
+        points.addAll(trimmed);
+        print('🗺️ Map: Using ${trimmed.length} high-res route points (trimmed)');
+      } else {
+        points.addAll(navData.points!);
+        print('🗺️ Map: Using ${navData.points!.length} high-res route points');
+      }
     } else {
       // Fallback to straight line if no high-res points available
       if (ridePhase.value == RidePhase.GOING_TO_PICKUP) {
@@ -2187,6 +2279,16 @@ Future<Map<String, dynamic>> completeRideWithPayment(
     }
   }
 
+  void _startSmoothAnimation(LatLng oldPos, LatLng newPos, double oldRot, double newRot) {
+    _oldDriverPosition = oldPos;
+    _targetDriverPosition = newPos;
+    _oldDriverHeading = oldRot;
+    _targetDriverHeading = newRot;
+    
+    _carMovementController?.reset();
+    _carMovementController?.forward();
+  }
+
   /// Update driver location with enhanced position data
   void _updateDriverLocationWithPosition(Position position) {
     driverLatitude.value = position.latitude;
@@ -2196,9 +2298,40 @@ Future<Map<String, dynamic>> completeRideWithPayment(
     driverSpeed.value = position.speed * 3.6; // Convert m/s to km/h
     lastLocationUpdate.value = DateTime.now();
 
-    // Update map display
-    if (isMapReady.value) {
-      _updateMapMarkersAndCircles();
+    final newPos = LatLng(position.latitude, position.longitude);
+    final oldPos = _animatedPosition ?? LatLng(driverLatitude.value, driverLongitude.value);
+    final oldRot = _animatedRotation;
+
+    if (_animatedPosition == null) {
+      _animatedPosition = newPos;
+      _animatedRotation = position.heading;
+      if (isMapReady.value) {
+        _updateMapMarkersAndCircles();
+      }
+    } else {
+      double dist = Geolocator.distanceBetween(
+        oldPos.latitude, oldPos.longitude, 
+        newPos.latitude, newPos.longitude
+      );
+      if (dist > 2000) {
+        _animatedPosition = newPos;
+        _animatedRotation = position.heading;
+        _carMovementController?.stop();
+        if (isMapReady.value) {
+          _updateMapMarkersAndCircles();
+        }
+      } else {
+        double targetHeading = position.heading;
+        if (dist > 1.0) {
+          targetHeading = Geolocator.bearingBetween(
+            oldPos.latitude, oldPos.longitude, 
+            newPos.latitude, newPos.longitude
+          );
+        } else if (targetHeading <= 0) {
+          targetHeading = oldRot; 
+        }
+        _startSmoothAnimation(oldPos, newPos, oldRot, targetHeading);
+      }
     }
 
     // Update distances and navigation
@@ -2295,16 +2428,18 @@ Future<Map<String, dynamic>> completeRideWithPayment(
         Marker(
           markerId: const MarkerId('driver'),
           position: _animatedPosition ?? LatLng(driverLatitude.value, driverLongitude.value),
-          icon: _driverDefaultIcon,
+          icon: carIcon ?? _driverDefaultIcon,
           rotation: _animatedRotation,
+          flat: true,
+          anchor: const Offset(0.5, 0.5),
+          infoWindow: InfoWindow(
             title: '🚗 Your Location',
             snippet:
                 'Speed: ${driverSpeed.value.toStringAsFixed(1)} km/h\nAccuracy: ${driverLocationAccuracy.value.toStringAsFixed(1)}m',
           ),
-          rotation: driverHeading.value,
         ),
       );
-      }
+    }
 
     // Pickup marker
     if (_isValidCoordinate(pickupLatitude.value, pickupLongitude.value)) {

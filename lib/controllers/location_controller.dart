@@ -7,7 +7,7 @@ import '../services/location_api_service.dart';
 import '../data/models/location_detection_model.dart';
 import '../core/utils/app_snackbar.dart';
 
-class LocationController extends GetxController {
+class LocationController extends GetxController with WidgetsBindingObserver {
   // Services and controllers
   final LocationApiService _locationService = LocationApiService();
 
@@ -51,8 +51,48 @@ class LocationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
     // Start location services automatically
     initializeLocationServices();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      print('📱 App resumed in LocationController - Restarting location stream to wake up GPS');
+      _restartLocationStream();
+    }
+  }
+
+  void _restartLocationStream() {
+    // Cancel old subscription
+    _positionStreamSubscription?.cancel();
+    
+    // Force a fresh fetch right away to kickstart hardware
+    Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+      timeLimit: const Duration(seconds: 5),
+    ).then((pos) {
+      print('🔄 Forced location fetch on resume: ${pos.latitude}, ${pos.longitude}');
+      _onLocationUpdate(pos);
+    }).catchError((_) {});
+
+    // Re-subscribe to stream
+    const LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 10,
+    );
+
+    _positionStreamSubscription = Geolocator.getPositionStream(
+      locationSettings: locationSettings,
+    ).listen(
+      (Position position) {
+        _onLocationUpdate(position);
+      },
+      onError: (error) {
+        print('❌ Location tracking error on stream: $error');
+      },
+    );
   }
 
   /// Initialize location services on app start
@@ -494,6 +534,7 @@ Location Controller Status:
 
   @override
   void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
     // Clean up resources
     _autoDetectionTimer?.cancel();
     _positionStreamSubscription?.cancel();

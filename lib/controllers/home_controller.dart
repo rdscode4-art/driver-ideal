@@ -20,6 +20,7 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 import '../fcm_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'location_controller.dart';
 
 import 'package:flutter/widgets.dart';
 
@@ -73,8 +74,9 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   Timer? _generalLocationTimer;
   double _lastUploadedLat = 0.0;
   double _lastUploadedLng = 0.0;
-  static const int generalLocationInterval = 6; // Every 6 seconds
-  static const double movementThreshold = 100.0; // 100 meters
+  // 📍 Location tracking configuration
+  static const int generalLocationInterval = 2; // Every 2 seconds (faster updates for user app)
+  static const double movementThreshold = 10.0; // 10 meters (report smaller movements to prevent user app teleporting)
 
   final RidesApiService _ridesApiService = RidesApiService();
   final VerificationApiService _verificationApiService =
@@ -283,6 +285,9 @@ class HomeController extends GetxController with WidgetsBindingObserver {
         print('📱 App Resumed: Force refreshing rides for vehicle driver...');
         loadAvailableRidesCount();
         checkOngoingRide();
+        
+        // Instantly upload location when app comes back from background
+        _checkAndUploadLocation(forceFetch: true);
       }
     }
   }
@@ -1459,7 +1464,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
 
   // 📍 NEW: General location tracking implementation
   void _startGeneralLocationTracking() {
-    print('📍 Starting general location tracking (6s interval)');
+    print('📍 Starting general location tracking (2s interval, 10m threshold)');
     _generalLocationTimer?.cancel();
     _generalLocationTimer = Timer.periodic(
       const Duration(seconds: generalLocationInterval),
@@ -1469,22 +1474,43 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _checkAndUploadLocation() async {
-    // 📍 Only upload if driver is Online
+  Future<void> _checkAndUploadLocation({bool forceFetch = false}) async {
+    // 🚦 Only upload if driver is Online
     if (status.value.toLowerCase() != 'online') {
       return;
     }
 
     try {
-      // 1. Get current position
+      // 1. Get current position quickly without blocking
       Position? position;
       try {
-        position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-          timeLimit: const Duration(seconds: 3),
-        );
+        if (!forceFetch && Get.isRegistered<LocationController>()) {
+          final locCtrl = Get.find<LocationController>();
+          if (locCtrl.currentLatitude.value != 0.0 && locCtrl.currentLongitude.value != 0.0) {
+            position = Position(
+              longitude: locCtrl.currentLongitude.value,
+              latitude: locCtrl.currentLatitude.value,
+              timestamp: DateTime.now(),
+              accuracy: 10,
+              altitude: 0,
+              altitudeAccuracy: 0,
+              heading: 0,
+              headingAccuracy: 0,
+              speed: 0,
+              speedAccuracy: 0,
+            );
+          }
+        }
+        
+        if (position == null) {
+          // Fallback to last known position for instant response
+          position = await Geolocator.getLastKnownPosition();
+        }
       } catch (e) {
-        // Fallback to last known position if current fails
+        print('Error getting location from controller: $e');
+      }
+      
+      if (position == null || forceFetch) {
         position = await Geolocator.getLastKnownPosition();
       }
 
@@ -1501,21 +1527,23 @@ class HomeController extends GetxController with WidgetsBindingObserver {
         );
       }
 
-      if (distance >= movementThreshold) {
-        print('🏃 Driver moved ${distance.toStringAsFixed(1)}m. Updating location on server...');
-        
-        final response = await _ridesApiService.updateDriverGeneralLocation(
-          lat: position.latitude,
-          lng: position.longitude,
-        );
+      if (!forceFetch && distance < movementThreshold && _lastUploadedLat != 0.0) {
+        return; // Haven't moved enough
+      }
 
-        if (response['success'] == true) {
-          print('✅ General location update successful');
-          _lastUploadedLat = position.latitude;
-          _lastUploadedLng = position.longitude;
-        } else {
-          print('❌ General location update failed: ${response['message']}');
-        }
+      print('🏃 Driver moved ${distance.toStringAsFixed(1)}m. Updating location on server...');
+      
+      final response = await _ridesApiService.updateDriverGeneralLocation(
+        lat: position.latitude,
+        lng: position.longitude,
+      );
+
+      if (response['success'] == true) {
+        print('✅ General location update successful');
+        _lastUploadedLat = position.latitude;
+        _lastUploadedLng = position.longitude;
+      } else {
+        print('❌ General location update failed: ${response['message']}');
       }
     } catch (e) {
       print('⚠️ Error in background location check: $e');
