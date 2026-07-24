@@ -329,76 +329,80 @@ class _NonVehicleSubscriptionPlansScreenState
 
               // Plans List
               Expanded(
-                child: controller.subscriptionPlans.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.inbox,
-                              size: 80,
-                              color: Colors.grey[400],
+                child: () {
+                  final plans = controller.subscriptionPlans.where((plan) => plan.rate == 499).toList();
+                  if (plans.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.inbox,
+                            size: 80,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No plans available',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
                             ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'No plans available',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[600],
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            TextButton.icon(
-                              onPressed: () {
-                                // ❌ REMOVED: Auto-redirect flag
-                                // controller.hasAutoRedirected = false;
-                                controller.refreshSubscriptionStatus();
-                              },
-                              icon: Icon(
-                                Icons.refresh,
-                                color: Colors.orange[700],
-                              ),
-                              label: Text(
-                                'Refresh',
-                                style: TextStyle(color: Colors.orange[700]),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: controller.subscriptionPlans.length,
-                        itemBuilder: (context, index) {
-                          final plan = controller.subscriptionPlans[index];
-                          return PlanCard(
-                            plan: plan,
-                            isProcessing:
-                                controller.isProcessingPayment.value &&
-                                controller.selectedPlanId.value == plan.id,
-                            onBuy: () async {
-                              print('💳 Starting payment process for ${plan.title}');
-                              
-                              // Show processing state while checking wallet balance
-                              controller.isProcessingPayment.value = true;
-                              controller.selectedPlanId.value = plan.id;
-                              
-                              bool hasBalance = await controller.hasEnoughWalletBalance(plan.rate.toDouble());
-                              
-                              // Stop processing state before showing sheet or razorpay
-                              controller.isProcessingPayment.value = false;
-                              
-                              if (hasBalance) {
-                                _showPaymentMethodSheet(context, plan);
-                              } else {
-                                // If not enough balance, directly trigger online payment
-                                controller.buySubscription(plan, paymentMethod: 'online');
-                              }
+                          ),
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: () {
+                              // ❌ REMOVED: Auto-redirect flag
+                              // controller.hasAutoRedirected = false;
+                              controller.refreshSubscriptionStatus();
                             },
-                          );
-                        },
+                            icon: Icon(
+                              Icons.refresh,
+                              color: Colors.orange[700],
+                            ),
+                            label: Text(
+                              'Refresh',
+                              style: TextStyle(color: Colors.orange[700]),
+                            ),
+                          ),
+                        ],
                       ),
+                    );
+                  }
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: plans.length,
+                    itemBuilder: (context, index) {
+                      final plan = plans[index];
+                      return PlanCard(
+                        plan: plan,
+                        isProcessing:
+                            controller.isProcessingPayment.value &&
+                            controller.selectedPlanId.value == plan.id,
+                        onBuy: () async {
+                          print('💳 Starting payment process for ${plan.title}');
+                          
+                          // Show processing state while checking wallet balance
+                          controller.isProcessingPayment.value = true;
+                          controller.selectedPlanId.value = plan.id;
+                          
+                          bool hasBalance = await controller.hasEnoughWalletBalance(plan.rate.toDouble());
+                          
+                          // Stop processing state before showing sheet or razorpay
+                          controller.isProcessingPayment.value = false;
+                          
+                          if (hasBalance) {
+                            _showPaymentMethodSheet(context, plan);
+                          } else {
+                            // If not enough balance, directly trigger online payment
+                            controller.buySubscription(plan, paymentMethod: 'online');
+                          }
+                        },
+                      );
+                    },
+                  );
+                }(),
               ),
 
 
@@ -644,6 +648,32 @@ class PlanCard extends StatelessWidget {
                           color: Colors.green[900],
                         ),
                       ),
+                      if (plan.rate == 499) ...[
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: Colors.blue[100]!),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.shield_outlined, size: 14, color: Colors.blue[700]),
+                              const SizedBox(width: 4),
+                              Text(
+                                'With Insurance',
+                                style: TextStyle(
+                                  color: Colors.blue[800],
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -718,6 +748,10 @@ class PlanCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             _buildFeature(Icons.security, 'Secure payment gateway'),
+            if (plan.rate == 499) ...[
+              const SizedBox(height: 8),
+              _buildFeature(Icons.shield_outlined, 'With Insurance'),
+            ],
 
             const SizedBox(height: 16),
 
